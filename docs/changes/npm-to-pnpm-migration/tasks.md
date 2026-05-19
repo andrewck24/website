@@ -36,13 +36,13 @@ verification.
 
 ## 4. Migrate music-hits
 
-- [ ] 4.1 [P] Add `"packageManager": "pnpm@10.33.0"` to `music-hits/package.json` (packageManager field: pin exact version, update on minor bumps). Verified by reading the file (satisfies spec: pnpm version is pinned via packageManager field).
+- [x] 4.1 [P] Add `"packageManager": "pnpm@10.33.0"` to `music-hits/package.json` (packageManager field: pin exact version, update on minor bumps). Verified by reading the file (satisfies spec: pnpm version is pinned via packageManager field).
 
-- [ ] 4.2 Delete `music-hits/package-lock.json`. Verified when the file no longer exists.
+- [x] 4.2 Delete `music-hits/package-lock.json`. Verified when the file no longer exists.
 
-- [ ] 4.3 Run `pnpm import` in `music-hits` to produce `pnpm-lock.yaml` (lockfile migration strategy: `pnpm import` over fresh install). Verified when `pnpm-lock.yaml` exists.
+- [x] 4.3 Run `pnpm import` in `music-hits` to produce `pnpm-lock.yaml` (lockfile migration strategy: `pnpm import` over fresh install). Verified when `pnpm-lock.yaml` exists.
 
-- [ ] 4.4 Run `pnpm install` in `music-hits` and confirm it exits 0. Verified by exit code and absence of error output.
+- [x] 4.4 Run `pnpm install` in `music-hits` and confirm it exits 0. Verified by exit code and absence of error output.
 
 ## 5. Migrate go-eco
 
