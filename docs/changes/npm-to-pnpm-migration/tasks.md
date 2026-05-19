@@ -64,6 +64,6 @@ verification.
 
 ## 7. Post-migration verification
 
-- [ ] 7.1 Run `du -sh andrewck24/node_modules music-hits/node_modules go-eco/node_modules volleybro/node_modules ~/.pnpm/store/v10` and compare against baseline from task 1.1. Verified when the combined total is measurably smaller (satisfies spec: projects use pnpm as the package manager; satisfies spec: shared pnpm store is active and non-empty).
+- [x] 7.1 Run `du -sh andrewck24/node_modules music-hits/node_modules go-eco/node_modules volleybro/node_modules ~/.pnpm/store/v10` and compare against baseline from task 1.1. Verified when the combined total is measurably smaller (satisfies spec: projects use pnpm as the package manager; satisfies spec: shared pnpm store is active and non-empty).
 
-- [ ] 7.2 Confirm `package-lock.json` is absent and `pnpm-lock.yaml` is present in `andrewck24`, `music-hits`, and `go-eco` by listing repo files. Verified by filesystem check.
+- [x] 7.2 Confirm `package-lock.json` is absent and `pnpm-lock.yaml` is present in `andrewck24`, `music-hits`, and `go-eco` by listing repo files. Verified by filesystem check.
