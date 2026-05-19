@@ -58,9 +58,9 @@ verification.
 
 ## 6. Rebuild volleybro store
 
-- [ ] 6.1 Add `"packageManager": "pnpm@10.33.0"` to `volleybro/package.json` (packageManager field: pin exact version, update on minor bumps). Verified by reading the file (satisfies spec: pnpm version is pinned via packageManager field).
+- [x] 6.1 Add `"packageManager": "pnpm@10.33.0"` to `volleybro/package.json` (packageManager field: pin exact version, update on minor bumps). Verified by reading the file (satisfies spec: pnpm version is pinned via packageManager field).
 
-- [ ] 6.2 Run `pnpm install` in `volleybro` to re-link all packages into the shared store (volleybro store fix: `pnpm install` only, no config changes). Verified when the command exits 0 and `du -sh ~/.pnpm/store/v10` shows a size larger than before task 6.2.
+- [x] 6.2 Run `pnpm install` in `volleybro` to re-link all packages into the shared store (volleybro store fix: `pnpm install` only, no config changes). Verified when the command exits 0 and `du -sh ~/.pnpm/store/v10` shows a size larger than before task 6.2.
 
 ## 7. Post-migration verification
 
