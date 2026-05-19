@@ -12,27 +12,27 @@ verification.
 
 ## 1. Prepare andrewck24
 
-- [ ] 1.1 Record the pre-migration disk baseline: run `du -sh andrewck24/node_modules music-hits/node_modules volleybro/node_modules ~/.pnpm/store/v10` and save the output. Required for post-migration comparison in task 7.1. Verified when the baseline numbers are noted. (migration order: andrewck24 first — this step establishes the baseline before any changes)
+- [x] 1.1 Record the pre-migration disk baseline: run `du -sh andrewck24/node_modules music-hits/node_modules volleybro/node_modules ~/.pnpm/store/v10` and save the output. Required for post-migration comparison in task 7.1. Verified when the baseline numbers are noted. (migration order: andrewck24 first — this step establishes the baseline before any changes)
 
-- [ ] 1.2 [P] Add `"packageManager": "pnpm@10.33.0"` to `andrewck24/package.json` so corepack enforces the correct version (packageManager field: pin exact version, update on minor bumps). Verified by reading `package.json` and confirming the field value is `pnpm@10.33.0` (satisfies spec: packageManager field format).
+- [x] 1.2 [P] Add `"packageManager": "pnpm@10.33.0"` to `andrewck24/package.json` so corepack enforces the correct version (packageManager field: pin exact version, update on minor bumps). Verified by reading `package.json` and confirming the field value is `pnpm@10.33.0` (satisfies spec: packageManager field format).
 
-- [ ] 1.3 [P] Update `.husky/pre-commit` in `andrewck24` to invoke `pnpm exec lint-staged` instead of `npx lint-staged` (husky pre-commit: `pnpm exec lint-staged` over `npx lint-staged`). Verified by reading the file and confirming `pnpm exec lint-staged` is present and `npx lint-staged` is absent (satisfies spec: pre-commit hook uses pnpm exec).
+- [x] 1.3 [P] Update `.husky/pre-commit` in `andrewck24` to invoke `pnpm exec lint-staged` instead of `npx lint-staged` (husky pre-commit: `pnpm exec lint-staged` over `npx lint-staged`). Verified by reading the file and confirming `pnpm exec lint-staged` is present and `npx lint-staged` is absent (satisfies spec: pre-commit hook uses pnpm exec).
 
 ## 2. Migrate andrewck24 lockfile
 
-- [ ] 2.1 Delete `andrewck24/package-lock.json` so pnpm does not encounter a conflicting lockfile format. Verified when the file no longer exists in the repo.
+- [x] 2.1 Delete `andrewck24/package-lock.json` so pnpm does not encounter a conflicting lockfile format. Verified when the file no longer exists in the repo.
 
-- [ ] 2.2 Run `pnpm import` in `andrewck24` to produce `pnpm-lock.yaml` from the deleted `package-lock.json`, preserving resolved versions (lockfile migration strategy: `pnpm import` over fresh install). Verified when `pnpm-lock.yaml` exists and `package-lock.json` is absent.
+- [x] 2.2 Run `pnpm import` in `andrewck24` to produce `pnpm-lock.yaml` from the deleted `package-lock.json`, preserving resolved versions (lockfile migration strategy: `pnpm import` over fresh install). Verified when `pnpm-lock.yaml` exists and `package-lock.json` is absent.
 
-- [ ] 2.3 Run `pnpm install` in `andrewck24` to link packages into the shared store. Verified when the command exits 0 and `du -sh ~/.pnpm/store/v10` returns > 0 B (satisfies spec: shared pnpm store is active and non-empty).
+- [x] 2.3 Run `pnpm install` in `andrewck24` to link packages into the shared store. Verified when the command exits 0 and `du -sh ~/.pnpm/store/v10` returns > 0 B (satisfies spec: shared pnpm store is active and non-empty).
 
 ## 3. Validate andrewck24
 
-- [ ] 3.1 Run `pnpm build` (`next build`) in `andrewck24` and confirm it exits 0 with no `Cannot find module` errors. This validates that pnpm's strict `node_modules` does not surface phantom dependency issues. Verified by build exit code and absence of module resolution errors.
+- [x] 3.1 Run `pnpm build` (`next build`) in `andrewck24` and confirm it exits 0 with no `Cannot find module` errors. This validates that pnpm's strict `node_modules` does not surface phantom dependency issues. Verified by build exit code and absence of module resolution errors.
 
-- [ ] 3.2 Run `pnpm test` (`jest`) in `andrewck24` and confirm all tests pass. Verified when jest exits 0 with no failures.
+- [x] 3.2 Run `pnpm test` (`jest`) in `andrewck24` and confirm all tests pass. Verified when jest exits 0 with no failures.
 
-- [ ] 3.3 Stage a file change and run `git commit --dry-run` in `andrewck24` to confirm the husky pre-commit hook invokes `lint-staged` via `pnpm exec` without errors. Verified when lint-staged completes with no fallback to a global binary (satisfies spec: pre-commit hook uses pnpm exec).
+- [x] 3.3 Stage a file change and run `git commit --dry-run` in `andrewck24` to confirm the husky pre-commit hook invokes `lint-staged` via `pnpm exec` without errors. Verified when lint-staged completes with no fallback to a global binary (satisfies spec: pre-commit hook uses pnpm exec).
 
 ## 4. Migrate music-hits
 
