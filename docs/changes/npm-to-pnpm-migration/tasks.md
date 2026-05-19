@@ -46,15 +46,15 @@ verification.
 
 ## 5. Migrate go-eco
 
-- [ ] 5.1 Add `"packageManager": "pnpm@10.33.0"` to `go-eco/package.json` (packageManager field: pin exact version, update on minor bumps). Note: `go-eco` has no husky hooks, so no pre-commit changes are needed. Verified by reading the file (satisfies spec: pnpm version is pinned via packageManager field).
+- [x] 5.1 Add `"packageManager": "pnpm@10.33.0"` to `go-eco/package.json` (packageManager field: pin exact version, update on minor bumps). Note: `go-eco` has no husky hooks, so no pre-commit changes are needed. Verified by reading the file (satisfies spec: pnpm version is pinned via packageManager field).
 
-- [ ] 5.2 Delete `go-eco/package-lock.json`. Verified when the file no longer exists.
+- [x] 5.2 Delete `go-eco/package-lock.json`. Verified when the file no longer exists.
 
-- [ ] 5.3 Run `pnpm import` in `go-eco` to produce `pnpm-lock.yaml` from the existing `package-lock.json` (177 KB, present without a prior `node_modules` install) (lockfile migration strategy: `pnpm import` over fresh install). Verified when `pnpm-lock.yaml` exists and `package-lock.json` is absent.
+- [x] 5.3 Run `pnpm import` in `go-eco` to produce `pnpm-lock.yaml` from the existing `package-lock.json` (177 KB, present without a prior `node_modules` install) (lockfile migration strategy: `pnpm import` over fresh install). Verified when `pnpm-lock.yaml` exists and `package-lock.json` is absent.
 
-- [ ] 5.4 Run `pnpm install` in `go-eco` and confirm it exits 0. Verified by exit code and absence of error output.
+- [x] 5.4 Run `pnpm install` in `go-eco` and confirm it exits 0. Verified by exit code and absence of error output.
 
-- [ ] 5.5 Run `pnpm build` (Vite build) in `go-eco` and confirm it exits 0 with no module resolution errors. Verified by build exit code.
+- [x] 5.5 Run `pnpm build` (Vite build) in `go-eco` and confirm it exits 0 with no module resolution errors. Verified by build exit code.
 
 ## 6. Rebuild volleybro store
 
