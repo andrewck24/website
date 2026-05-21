@@ -5,6 +5,6 @@ export default createI18nMiddleware(i18n);
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|images|favicon.ico|icon|apple-icon).*)",
+    "/((?!api|studio|_next/static|_next/image|images|favicon.ico|icon|apple-icon).*)",
   ],
 };

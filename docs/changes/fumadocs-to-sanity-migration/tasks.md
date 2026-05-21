@@ -20,7 +20,7 @@
 
 ## 3. Sanity Studio Embedded Route
 
-- [ ] 3.1 Create `src/app/studio/[[...tool]]/page.tsx` fulfilling the Sanity Studio embedded at /studio requirement and Studio Route Contract: render `<NextStudio config={config} />` from `next-sanity`; add studio path exception to the i18n middleware in `src/proxy.ts` (or `src/middleware.ts`) so the studio route is not locale-prefixed. Verified by: `GET /studio` returns HTTP 200 and the Sanity Studio UI loads in the browser; navigating to `/studio` does not redirect to `/zh-TW/studio`.
+- [x] 3.1 Create `src/app/studio/[[...tool]]/page.tsx` fulfilling the Sanity Studio embedded at /studio requirement and Studio Route Contract: render `<NextStudio config={config} />` from `next-sanity`; add studio path exception to the i18n middleware in `src/proxy.ts` (or `src/middleware.ts`) so the studio route is not locale-prefixed. Verified by: `GET /studio` returns HTTP 200 and the Sanity Studio UI loads in the browser; navigating to `/studio` does not redirect to `/zh-TW/studio`.
 
 ## 4. Content Migration
 
