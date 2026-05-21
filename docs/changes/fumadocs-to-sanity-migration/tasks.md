@@ -1,8 +1,8 @@
 ## 1. Sanity Project Setup
 
-- [ ] 1.1 Install Sanity packages and configure environment: run `pnpm create sanity@latest` to create the Sanity project and obtain `SANITY_PROJECT_ID` and `SANITY_DATASET`; install `next-sanity`, `@sanity/client`, `@sanity/image-url`, `@sanity/document-internationalization`, `@sanity/code-input`, and `@portabletext/react`; add all required env vars to `.env.local`. Verified by: `pnpm list next-sanity @sanity/client` shows packages installed; `.env.local` contains `SANITY_PROJECT_ID`, `SANITY_DATASET`, `SANITY_API_TOKEN`.
+- [x] 1.1 Install Sanity packages and configure environment: run `pnpm create sanity@latest` to create the Sanity project and obtain `SANITY_PROJECT_ID` and `SANITY_DATASET`; install `next-sanity`, `@sanity/client`, `@sanity/image-url`, `@sanity/document-internationalization`, `@sanity/code-input`, and `@portabletext/react`; add all required env vars to `.env.local`. Verified by: `pnpm list next-sanity @sanity/client` shows packages installed; `.env.local` contains `SANITY_PROJECT_ID`, `SANITY_DATASET`, `SANITY_API_TOKEN`.
 
-- [ ] 1.2 Create Sanity client and image helper utilities: `src/lib/sanity/client.ts` exports a configured `@sanity/client` instance with `projectId`, `dataset`, `apiVersion`, `useCdn: true`; `src/lib/sanity/image.ts` exports a `urlFor(source)` helper using `@sanity/image-url`. Verified by: TypeScript compilation passes (`pnpm type-check`); `urlFor` can be imported in data layer files.
+- [x] 1.2 Create Sanity client and image helper utilities: `src/lib/sanity/client.ts` exports a configured `@sanity/client` instance with `projectId`, `dataset`, `apiVersion`, `useCdn: true`; `src/lib/sanity/image.ts` exports a `urlFor(source)` helper using `@sanity/image-url`. Verified by: TypeScript compilation passes (`pnpm type-check`); `urlFor` can be imported in data layer files.
 
 ## 2. Sanity Schema — Document Types
 
