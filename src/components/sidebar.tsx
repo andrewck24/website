@@ -16,7 +16,8 @@ import { type ScrollAreaProps } from "@radix-ui/react-scroll-area";
 import { cva } from "class-variance-authority";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import type { LinkProps } from "next/link";
+import type { ComponentPropsWithoutRef } from "react";
+type LinkProps = ComponentPropsWithoutRef<typeof Link>;
 import { ChevronDown, ExternalLink } from "lucide-react";
 import {
   type ComponentProps,

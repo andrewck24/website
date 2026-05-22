@@ -130,7 +130,11 @@ function MenuLinkItem({
         <p className="text-fd-muted-foreground mb-1 text-sm">
           {item.url ? (
             <NavigationMenuLink asChild>
-              <Link href={item.url} external={item.external}>
+              <Link
+                href={item.url}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
+              >
                 {header}
               </Link>
             </NavigationMenuLink>

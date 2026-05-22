@@ -17,7 +17,9 @@ import type {
   NavigationMenuTriggerProps,
 } from "@radix-ui/react-navigation-menu";
 import { cva, type VariantProps } from "class-variance-authority";
-import Link, { type LinkProps } from "next/link";
+import Link from "next/link";
+import type { ComponentPropsWithoutRef } from "react";
+type LinkProps = ComponentPropsWithoutRef<typeof Link>;
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { type ComponentProps, Fragment, useState } from "react";
 
@@ -108,7 +110,11 @@ export function NavbarLinkItem({
       <NavigationMenuItem>
         <NavbarMenuTrigger {...props}>
           {item.url ? (
-            <Link href={item.url} external={item.external}>
+            <Link
+              href={item.url}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+            >
               {item.text}
             </Link>
           ) : (
@@ -157,13 +163,16 @@ export function NavbarMenuTrigger(props: NavigationMenuTriggerProps) {
   );
 }
 
-export function NavbarMenuLink(props: LinkProps) {
+export function NavbarMenuLink(props: LinkProps & { external?: boolean }) {
+  const { external, ...linkProps } = props;
   return (
     <NavigationMenuLink asChild>
       <Link
-        {...props}
+        {...linkProps}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
         className={cn(
-          "bg-fd-card hover:bg-fd-accent/80 hover:text-fd-accent-foreground flex flex-col gap-2 rounded-lg border p-3 transition-colors",
+          "bg-card hover:bg-accent/80 hover:text-accent-foreground flex flex-col gap-2 rounded-lg border p-3 transition-colors",
           props.className
         )}
       >

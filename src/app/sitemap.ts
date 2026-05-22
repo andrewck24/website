@@ -1,42 +1,33 @@
 import { MetadataRoute } from "next";
-import { i18n } from "@/lib/i18n";
+
+const LOCALES = ["zh-TW", "en", "ja"] as const;
+const BASE_URL = "https://andrewck24.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://andrewck24.vercel.app";
-
-  // Generate routes for each language
-  const routes = i18n.languages.flatMap((lang) => [
+  return LOCALES.flatMap((lang) => [
     {
-      url: `${baseUrl}/${lang}`,
+      url: `${BASE_URL}/${lang}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 1,
     },
     {
-      url: `${baseUrl}/${lang}/portfolio`,
+      url: `${BASE_URL}/${lang}/projects`,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/${lang}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/${lang}/blog`,
+      url: `${BASE_URL}/${lang}/notes`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/${lang}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/${lang}/docs`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    },
   ]);
-
-  return routes;
 }

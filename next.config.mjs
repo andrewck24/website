@@ -1,7 +1,3 @@
-import { createMDX } from "fumadocs-mdx/next";
-
-const withMDX = createMDX();
-
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
@@ -9,6 +5,12 @@ const config = {
     viewTransition: true,
   },
   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+      },
+    ],
     localPatterns: [
       {
         pathname: "/images/**",
@@ -18,4 +20,4 @@ const config = {
   },
 };
 
-export default withMDX(config);
+export default config;

@@ -82,10 +82,10 @@
 
 ## 9. Cleanup and Verification
 
-- [ ] 9.1 [P] Remove fumadocs packages from `package.json` (`fumadocs-core`, `fumadocs-mdx`, `fumadocs-ui`) and remove `@orama/stopwords`, `@orama/tokenizers`; run `pnpm install`. Verified by: `pnpm list fumadocs-core` returns "not installed"; `pnpm install` succeeds.
+- [x] 9.1 [P] Remove fumadocs packages from `package.json` (`fumadocs-core`, `fumadocs-mdx`, `fumadocs-ui`) and remove `@orama/stopwords`, `@orama/tokenizers`; run `pnpm install`. Verified by: `pnpm list fumadocs-core` returns "not installed"; `pnpm install` succeeds.
 
-- [ ] 9.2 [P] Delete removed files completing mdx-content-management removal: `source.config.ts`, `src/lib/source.ts`, `src/lib/i18n.ts`, `src/app/api/search/route.ts`, `content/` directory. Verified by: `git status` shows these paths as deleted; no import in `src/` references them.
+- [x] 9.2 [P] Delete removed files completing mdx-content-management removal: `source.config.ts`, `src/lib/source.ts`, `src/lib/i18n.ts`, `src/app/api/search/route.ts`, `content/` directory. Verified by: `git status` shows these paths as deleted; no import in `src/` references them.
 
-- [ ] 9.3 [P] Update `pnpm-workspace.yaml`: remove `esbuild: true` from `allowBuilds`; update `package.json` `postinstall` script to remove `fumadocs-mdx` call. Verified by: `pnpm install` completes without esbuild build step.
+- [x] 9.3 [P] Update `pnpm-workspace.yaml`: remove `esbuild: true` from `allowBuilds`; update `package.json` `postinstall` script to remove `fumadocs-mdx` call. Verified by: `pnpm install` completes without esbuild build step.
 
-- [ ] 9.4 Final verification against acceptance criteria: run `grep -r "fumadocs" src/` and confirm zero matches; run `pnpm build` and confirm it completes without errors; manually visit `/zh-TW/notes`, `/zh-TW/notes/[slug]`, `/zh-TW/projects`, `/zh-TW/projects/[slug]`, `/zh-TW/about`, and `/studio` to confirm all pages return HTTP 200 with correct Sanity-sourced content in all three locales.
+- [x] 9.4 Final verification against acceptance criteria: run `grep -r "fumadocs" src/` and confirm zero matches; run `pnpm build` and confirm it completes without errors; manually visit `/zh-TW/notes`, `/zh-TW/notes/[slug]`, `/zh-TW/projects`, `/zh-TW/projects/[slug]`, `/zh-TW/about`, and `/studio` to confirm all pages return HTTP 200 with correct Sanity-sourced content in all three locales.

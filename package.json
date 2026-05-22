@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "postinstall": "fumadocs-mdx",
+    "postinstall": "",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -30,8 +30,6 @@
     ]
   },
   "dependencies": {
-    "@orama/stopwords": "^3.1.17",
-    "@orama/tokenizers": "^3.1.17",
     "@portabletext/react": "^6.2.0",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-navigation-menu": "^1.2.14",
@@ -46,9 +44,6 @@
     "@sanity/webhook": "^4.0.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "fumadocs-core": "^16.3.0",
-    "fumadocs-mdx": "^14.1.1",
-    "fumadocs-ui": "^16.3.0",
     "lucide-react": "^0.562.0",
     "mermaid": "^11.12.2",
     "motion": "^12.23.26",

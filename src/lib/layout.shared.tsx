@@ -40,7 +40,6 @@ export function baseOptions(locale: string): BaseLayoutProps {
     nav: {
       title: <DynamicIcon />,
       url: `/${locale}`,
-      transparentMode: "top",
     },
     githubUrl: "https://github.com/andrewck24",
     searchToggle: { enabled: false },

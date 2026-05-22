@@ -1,9 +1,8 @@
-import type { MDXPageData } from "@/app/[lang]/about/[[...slug]]/page";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin } from "lucide-react";
 import Link from "next/link";
 
-export function PersonalInfo({ data }: { data: MDXPageData }) {
+export function PersonalInfo() {
   return (
     <div
       data-testid="about-personal-info"
@@ -16,9 +15,7 @@ export function PersonalInfo({ data }: { data: MDXPageData }) {
         <h1 className="mb-6 scroll-m-20 text-4xl font-bold tracking-tight">
           Andrew Tseng
         </h1>
-        {data.description && (
-          <p className="text-fd-muted-foreground mb-10">Software Engineer</p>
-        )}
+        <p className="text-muted-foreground mb-10">Software Engineer</p>
       </div>
       <div
         data-testid="about-social-links"
