@@ -7,25 +7,21 @@ import { GithubInfo } from "@/components/github-info";
 import { LanguageToggle } from "@/components/language-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getMDXComponents } from "@/lib/mdx-components";
-import type { ArticlePageData, BaseArticle, Locale } from "@/types/article";
+import { portableTextComponents } from "@/components/mdx/portable-text";
+import type {
+  ArticlePageData,
+  ArticleTag,
+  BaseArticle,
+  Locale,
+} from "@/types/article";
+import { PortableText } from "@portabletext/react";
 import { ArrowLeft, ExternalLink, Languages, Tag } from "lucide-react";
 import Link from "next/link";
 
 export interface ArticleProps<T extends BaseArticle = BaseArticle> {
-  /** Article page data (metadata + MDX content) */
   article: ArticlePageData<T>;
-
-  /** Content type for back link */
   contentType?: "projects" | "notes";
-
-  /** Custom back link text (i18n) */
   backLinkText?: string;
-
-  /**
-   * 該文章的可用語言版本（必填）
-   * 至少包含當前語言
-   */
   availableLocales: Locale[];
 }
 
@@ -35,9 +31,6 @@ export function Article<T extends BaseArticle = BaseArticle>({
   backLinkText,
   availableLocales,
 }: ArticleProps<T>) {
-  const MDXContent = article.body;
-
-  // Generate back link URL and default text
   const backLinkUrl = `/${article.locale}/${contentType}`;
   const defaultBackLinkText =
     contentType === "projects" ? "返回專案列表" : "返回筆記列表";
@@ -47,39 +40,33 @@ export function Article<T extends BaseArticle = BaseArticle>({
       className="prose prose-neutral dark:prose-invert mx-4 w-full overflow-x-hidden lg:mx-12"
       data-testid="article-section"
     >
-      {/* Header Section */}
       <header className="mt-12">
-        {/* Title */}
         <h1 className="text-foreground mb-4 text-4xl font-bold md:text-5xl">
           {article.title}
         </h1>
-
-        {/* Description */}
         {article.description && (
           <p className="text-muted-foreground mb-6 text-xl">
             {article.description}
           </p>
         )}
       </header>
-      {/* Hero Image with View Transition */}
+
       <ArticleImage
         slug={article.slug}
         title={article.title}
-        imageType={article.imageType}
-        image={article.image}
-        ogImage={article.ogImage}
+        coverImage={article.coverImage}
         priority={true}
         className="mt-6 aspect-video"
       />
 
-      {/* Responsive layout: flex column on mobile, grid on desktop */}
       <article className="bg-background/50 my-4 flex flex-col-reverse lg:mt-8 lg:grid lg:grid-cols-[1fr_300px] lg:gap-8">
-        {/* MDX Content */}
         <div className="prose prose-gray dark:prose-invert mt-6 overflow-x-hidden">
-          <MDXContent components={getMDXComponents()} />
+          <PortableText
+            value={article.body}
+            components={portableTextComponents}
+          />
         </div>
 
-        {/* Article Info Sidebar (right on desktop, below on mobile) */}
         <ArticleInfo
           date={article.date}
           locale={article.locale}
@@ -99,7 +86,6 @@ export function Article<T extends BaseArticle = BaseArticle>({
         />
       </article>
 
-      {/* Back Link */}
       <footer className="border-border mt-12 border-t py-8">
         <Link
           href={backLinkUrl}
@@ -113,23 +99,16 @@ export function Article<T extends BaseArticle = BaseArticle>({
   );
 }
 
-/**
- * ArticleInfo - Internal component for displaying article metadata
- * Not exported, used only within Article component
- */
 interface ArticleInfoProps {
   date: string;
   locale: Locale;
-  tags: string[];
+  tags: ArticleTag[];
   githubUrl?: string;
   demoUrl?: string;
   contentType: "projects" | "notes";
   availableLocales: Locale[];
 }
 
-/**
- * ArticleInfo - Internal component displaying metadata sidebar
- */
 function ArticleInfo({
   date,
   locale,
@@ -144,7 +123,6 @@ function ArticleInfo({
       className="border-border mt-6 space-y-6 rounded-lg border p-4"
       data-testid="article-info"
     >
-      {/* Publication Date */}
       <div>
         <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold">
           發布日期
@@ -162,7 +140,6 @@ function ArticleInfo({
         </time>
       </div>
 
-      {/* Tags */}
       {tags.length > 0 && (
         <div data-testid="article-tags">
           <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold">
@@ -171,15 +148,14 @@ function ArticleInfo({
           </h3>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
+              <Badge key={tag.slug} variant="secondary">
+                {tag.title}
               </Badge>
             ))}
           </div>
         </div>
       )}
 
-      {/* Project Links (Projects only) */}
       {contentType === "projects" && (githubUrl || demoUrl) && (
         <div data-testid="project-links">
           <h3 className="mb-2 text-sm font-semibold">專案連結</h3>
@@ -202,7 +178,6 @@ function ArticleInfo({
         </div>
       )}
 
-      {/* Language Toggle */}
       <div data-testid="language-toggle">
         <h3 className="mb-2 text-sm font-semibold">語言</h3>
         <LanguageToggle availableLocales={availableLocales}>

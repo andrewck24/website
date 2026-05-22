@@ -46,13 +46,13 @@
 
 ## 6. Portable Text Rendering
 
-- [ ] 6.1 Create `src/components/mdx/portable-text.tsx` implementing Portable Text rendering (Portable Text over Markdown string field decision): exports a `portableTextComponents` object with `types.code` mapped to a syntax-highlighted code block (using Shiki or Prism), `types.card` mapped to a `CardBlock` component rendering title and href as a styled link card, and `marks.link` mapped to an `<a>` element with `target="_blank" rel="noopener noreferrer"`. Verified by: a note with code block, card block, and link mark renders all three correctly at `/[lang]/notes/[slug]`.
+- [x] 6.1 Create `src/components/mdx/portable-text.tsx` implementing Portable Text rendering (Portable Text over Markdown string field decision): exports a `portableTextComponents` object with `types.code` mapped to a syntax-highlighted code block (using Shiki or Prism), `types.card` mapped to a `CardBlock` component rendering title and href as a styled link card, and `marks.link` mapped to an `<a>` element with `target="_blank" rel="noopener noreferrer"`. Verified by: a note with code block, card block, and link mark renders all three correctly at `/[lang]/notes/[slug]`.
 
-- [ ] 6.2 Update the `Article` component in `src/components/article/` to accept `body: PortableTextBlock[]` instead of `body: ComponentType<MDXProps>`; replace `<article.body />` with `<PortableText value={article.body} components={portableTextComponents} />`. Verified by: note and project detail pages render Portable Text body without TypeScript errors; `pnpm type-check` passes.
+- [x] 6.2 Update the `Article` component in `src/components/article/` to accept `body: PortableTextBlock[]` instead of `body: ComponentType<MDXProps>`; replace `<article.body />` with `<PortableText value={article.body} components={portableTextComponents} />`. Verified by: note and project detail pages render Portable Text body without TypeScript errors; `pnpm type-check` passes.
 
-- [ ] 6.3 [P] Update `src/app/[lang]/notes/[slug]/opengraph-image.tsx` implementing Cover image via Sanity CDN and the Single coverImage for Card and OG Image decision: replace fumadocs `getNote` call with Sanity data layer; replace static/generated image path logic (`required-image-type` removal) with `urlFor(note.coverImage).width(1200).height(675).fit("crop").url()` passed to `ImageResponse`; render fallback gradient when `coverImage` is null. Verified by: OG image route returns a 1200×675 PNG for a note with a cover image, and a gradient PNG for a note without one.
+- [x] 6.3 [P] Update `src/app/[lang]/notes/[slug]/opengraph-image.tsx` implementing Cover image via Sanity CDN and the Single coverImage for Card and OG Image decision: replace fumadocs `getNote` call with Sanity data layer; replace static/generated image path logic (`required-image-type` removal) with `urlFor(note.coverImage).width(1200).height(675).fit("crop").url()` passed to `ImageResponse`; render fallback gradient when `coverImage` is null. Verified by: OG image route returns a 1200×675 PNG for a note with a cover image, and a gradient PNG for a note without one.
 
-- [ ] 6.4 [P] Update `src/app/[lang]/projects/[slug]/opengraph-image.tsx`: same changes as 6.3 for the project OG image route. Verified by: project OG image returns correct image from Sanity CDN.
+- [x] 6.4 [P] Update `src/app/[lang]/projects/[slug]/opengraph-image.tsx`: same changes as 6.3 for the project OG image route. Verified by: project OG image returns correct image from Sanity CDN.
 
 ## 7. ISR Webhook
 
