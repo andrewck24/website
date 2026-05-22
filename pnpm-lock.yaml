@@ -47,6 +47,9 @@ importers:
       '@sanity/image-url':
         specifier: ^2.1.1
         version: 2.1.1
+      '@sanity/webhook':
+        specifier: ^4.0.4
+        version: 4.0.4
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

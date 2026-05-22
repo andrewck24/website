@@ -56,9 +56,9 @@
 
 ## 7. ISR Webhook
 
-- [ ] 7.1 Create `src/app/api/revalidate/route.ts` fulfilling the Webhook endpoint for on-demand revalidation requirement, ISR Webhook Contract, and ISR with Sanity Webhook over SSG or SSR decision: the POST handler validates `sanity-webhook-signature` against `SANITY_WEBHOOK_SECRET`; returns HTTP 401 on invalid signature; parses `_type` and `slug.current` from body; calls `revalidatePath` for all three locale variants of the affected document type; returns `{ revalidated: true }` with HTTP 200. Returns HTTP 500 if `SANITY_WEBHOOK_SECRET` is unset. Verified by: manual POST with valid signature triggers revalidation; POST with invalid signature returns 401.
+- [x] 7.1 Create `src/app/api/revalidate/route.ts` fulfilling the Webhook endpoint for on-demand revalidation requirement, ISR Webhook Contract, and ISR with Sanity Webhook over SSG or SSR decision: the POST handler validates `sanity-webhook-signature` against `SANITY_WEBHOOK_SECRET`; returns HTTP 401 on invalid signature; parses `_type` and `slug.current` from body; calls `revalidatePath` for all three locale variants of the affected document type; returns `{ revalidated: true }` with HTTP 200. Returns HTTP 500 if `SANITY_WEBHOOK_SECRET` is unset. Verified by: manual POST with valid signature triggers revalidation; POST with invalid signature returns 401.
 
-- [ ] 7.2 Configure Sanity webhook configuration in Sanity project settings: add webhook pointing to `https://<domain>/api/revalidate`, triggered on publish and unpublish for `note`, `project`, and `about` document types, with `SANITY_WEBHOOK_SECRET` as the signing secret. Verified by: publishing a document in Studio triggers the webhook and the corresponding page updates within 30 seconds.
+- [x] 7.2 Configure Sanity webhook configuration in Sanity project settings: add webhook pointing to `https://<domain>/api/revalidate`, triggered on publish and unpublish for `note`, `project`, and `about` document types, with `SANITY_WEBHOOK_SECRET` as the signing secret. Verified by: publishing a document in Studio triggers the webhook and the corresponding page updates within 30 seconds.
 
 ## 8. fumadocs UI Component Replacement
 
