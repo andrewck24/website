@@ -21,9 +21,9 @@ const config: Config = {
   ],
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html"],
-  // Allow fumadocs modules to be transformed by Jest
+  // Allow ESM modules to be transformed by Jest
   transformIgnorePatterns: [
-    "/node_modules/(?!(fumadocs-core|fumadocs-mdx|fumadocs-ui)/)",
+    "/node_modules/(?!(fumadocs-core|fumadocs-mdx|fumadocs-ui|@sanity)/)",
   ],
   // Map fumadocs modules
   moduleNameMapper: {
