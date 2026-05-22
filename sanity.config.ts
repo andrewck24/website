@@ -50,7 +50,7 @@ export default defineConfig({
         { id: "en", title: "English" },
         { id: "ja", title: "日本語" },
       ],
-      schemaTypes: ["note", "project", "about"],
+      schemaTypes: ["note", "project"],
     }),
   ],
   schema: {

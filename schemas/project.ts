@@ -72,5 +72,11 @@ export const project = defineType({
       type: "number",
       validation: (Rule) => Rule.min(1).max(99).integer(),
     }),
+    defineField({
+      name: "language",
+      type: "string",
+      readOnly: true,
+      hidden: true,
+    }),
   ],
 });

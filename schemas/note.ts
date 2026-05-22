@@ -56,5 +56,11 @@ export const note = defineType({
       type: "array",
       of: [{ type: "block" }, { type: codeTypeName }, { type: card.name }],
     }),
+    defineField({
+      name: "language",
+      type: "string",
+      readOnly: true,
+      hidden: true,
+    }),
   ],
 });
