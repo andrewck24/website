@@ -2,26 +2,75 @@
 import { TocThumb } from "@/components/ui/toc-thumb";
 import { mergeRefs } from "@/lib/merge-refs";
 import { cn } from "@/lib/utils";
-import * as Primitive from "fumadocs-core/toc";
-import { useI18n } from "fumadocs-ui/contexts/i18n";
-import { type ComponentProps, createContext, useContext, useRef } from "react";
+import {
+  type ComponentProps,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-const TOCContext = createContext<Primitive.TOCItemType[]>([]);
+export interface TOCItemType {
+  title: string;
+  url: string;
+  depth: number;
+}
 
-export function useTOCItems(): Primitive.TOCItemType[] {
+const TOCContext = createContext<TOCItemType[]>([]);
+const ActiveAnchorsContext = createContext<string[]>([]);
+
+export function useTOCItems(): TOCItemType[] {
   return useContext(TOCContext);
+}
+
+export function useActiveAnchors(): string[] {
+  return useContext(ActiveAnchorsContext);
 }
 
 export function TOCProvider({
   toc,
   children,
-  ...props
-}: ComponentProps<typeof Primitive.AnchorProvider>) {
+}: {
+  toc: TOCItemType[];
+  children: React.ReactNode;
+}) {
+  const [activeAnchors, setActiveAnchors] = useState<string[]>([]);
+
+  useEffect(() => {
+    const ids = toc.map((item) => item.url.slice(1));
+    if (ids.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setActiveAnchors((prev) => {
+          const next = new Set(prev);
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              next.add(entry.target.id);
+            } else {
+              next.delete(entry.target.id);
+            }
+          }
+          return Array.from(next);
+        });
+      },
+      { rootMargin: "0px 0px -60% 0px", threshold: 0 }
+    );
+
+    for (const id of ids) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+
+    return () => observer.disconnect();
+  }, [toc]);
+
   return (
     <TOCContext value={toc}>
-      <Primitive.AnchorProvider toc={toc} {...props}>
+      <ActiveAnchorsContext value={activeAnchors}>
         {children}
-      </Primitive.AnchorProvider>
+      </ActiveAnchorsContext>
     </TOCContext>
   );
 }
@@ -41,23 +90,18 @@ export function TOCScrollArea({
         className
       )}
       {...props}
-    >
-      <Primitive.ScrollProvider containerRef={viewRef}>
-        {props.children}
-      </Primitive.ScrollProvider>
-    </div>
+    />
   );
 }
 
 export function TOCItems({ ref, className, ...props }: ComponentProps<"div">) {
   const containerRef = useRef<HTMLDivElement>(null);
   const items = useTOCItems();
-  const { text } = useI18n();
 
   if (items.length === 0)
     return (
-      <div className="bg-fd-card text-fd-muted-foreground rounded-lg border p-3 text-xs">
-        {text.tocNoHeadings}
+      <div className="bg-card text-muted-foreground rounded-lg border p-3 text-xs">
+        No headings
       </div>
     );
 
@@ -65,14 +109,11 @@ export function TOCItems({ ref, className, ...props }: ComponentProps<"div">) {
     <>
       <TocThumb
         containerRef={containerRef}
-        className="bg-fd-primary absolute top-(--fd-top) h-(--fd-height) w-px transition-all"
+        className="bg-primary absolute top-(--fd-top) h-(--fd-height) w-px transition-all"
       />
       <div
         ref={mergeRefs(ref, containerRef)}
-        className={cn(
-          "border-fd-foreground/10 flex flex-col border-s",
-          className
-        )}
+        className={cn("border-foreground/10 flex flex-col border-s", className)}
         {...props}
       >
         {items.map((item) => (
@@ -83,18 +124,21 @@ export function TOCItems({ ref, className, ...props }: ComponentProps<"div">) {
   );
 }
 
-function TOCItem({ item }: { item: Primitive.TOCItemType }) {
+function TOCItem({ item }: { item: TOCItemType }) {
+  const active = useActiveAnchors().includes(item.url.slice(1));
+
   return (
-    <Primitive.TOCItem
+    <a
       href={item.url}
+      data-active={active}
       className={cn(
-        "prose text-fd-muted-foreground data-[active=true]:text-fd-primary py-1.5 text-sm [overflow-wrap:anywhere] transition-colors first:pt-0 last:pb-0",
+        "text-muted-foreground data-[active=true]:text-primary py-1.5 text-sm [overflow-wrap:anywhere] transition-colors first:pt-0 last:pb-0",
         item.depth <= 2 && "ps-3",
         item.depth === 3 && "ps-6",
         item.depth >= 4 && "ps-8"
       )}
     >
       {item.title}
-    </Primitive.TOCItem>
+    </a>
   );
 }

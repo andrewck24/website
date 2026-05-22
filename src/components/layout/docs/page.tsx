@@ -1,25 +1,24 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Link, usePathname } from "fumadocs-core/framework";
-import type * as PageTree from "fumadocs-core/page-tree";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
-  AnchorProvider,
   type TOCItemType,
+  TOCProvider,
   useActiveAnchors,
-} from "fumadocs-core/toc";
-import { useTreeContext } from "fumadocs-ui/contexts/tree";
+} from "@/components/ui/toc";
+import { type PageTree, useTreeContext } from "@/components/sidebar";
 import { type ComponentProps, type ReactNode, useMemo } from "react";
 
 export interface DocsPageProps {
   toc?: TOCItemType[];
-
   children: ReactNode;
 }
 
 export function DocsPage({ toc = [], ...props }: DocsPageProps) {
   return (
-    <AnchorProvider toc={toc}>
+    <TOCProvider toc={toc}>
       <main className="flex w-full min-w-0 flex-col">
         <article className="flex w-full max-w-[860px] flex-1 flex-col gap-6 px-4 py-8 md:mx-auto md:px-6">
           {props.children}
@@ -28,7 +27,7 @@ export function DocsPage({ toc = [], ...props }: DocsPageProps) {
       </main>
       {toc.length > 0 && (
         <div className="sticky top-(--fd-nav-height) h-[calc(100dvh-var(--fd-nav-height))] w-[286px] shrink-0 overflow-auto p-4 max-xl:hidden">
-          <p className="text-fd-muted-foreground mb-2 text-sm">On this page</p>
+          <p className="text-muted-foreground mb-2 text-sm">On this page</p>
           <div className="flex flex-col">
             {toc.map((item) => (
               <TocItem key={item.url} item={item} />
@@ -36,7 +35,7 @@ export function DocsPage({ toc = [], ...props }: DocsPageProps) {
           </div>
         </div>
       )}
-    </AnchorProvider>
+    </TOCProvider>
   );
 }
 
@@ -49,13 +48,12 @@ export function DocsBody(props: ComponentProps<"div">) {
 }
 
 export function DocsDescription(props: ComponentProps<"p">) {
-  // don't render if no description provided
   if (props.children === undefined) return null;
 
   return (
     <p
       {...props}
-      className={cn("text-fd-muted-foreground mb-8 text-lg", props.className)}
+      className={cn("text-muted-foreground mb-8 text-lg", props.className)}
     >
       {props.children}
     </p>
@@ -77,12 +75,10 @@ function TocItem({ item }: { item: TOCItemType }) {
     <a
       href={item.url}
       className={cn(
-        "text-fd-foreground/80 py-1 text-sm",
-        isActive && "text-fd-primary"
+        "text-foreground/80 py-1 text-sm",
+        isActive && "text-primary"
       )}
-      style={{
-        paddingLeft: Math.max(0, item.depth - 2) * 16,
-      }}
+      style={{ paddingLeft: Math.max(0, item.depth - 2) * 16 }}
     >
       {item.title}
     </a>
@@ -92,6 +88,7 @@ function TocItem({ item }: { item: TOCItemType }) {
 function Footer() {
   const { root } = useTreeContext();
   const pathname = usePathname();
+
   const flatten = useMemo(() => {
     const result: PageTree.Item[] = [];
 
@@ -111,12 +108,8 @@ function Footer() {
 
   const { previous, next } = useMemo(() => {
     const idx = flatten.findIndex((item) => item.url === pathname);
-
     if (idx === -1) return {};
-    return {
-      previous: flatten[idx - 1],
-      next: flatten[idx + 1],
-    };
+    return { previous: flatten[idx - 1], next: flatten[idx + 1] };
   }, [flatten, pathname]);
 
   return (

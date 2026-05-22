@@ -1,14 +1,11 @@
-import * as Primitive from "fumadocs-core/toc";
-import { useEffectEvent } from "fumadocs-core/utils/use-effect-event";
-import { useOnChange } from "fumadocs-core/utils/use-on-change";
+"use client";
+import { useActiveAnchors } from "@/components/ui/toc";
 import { type HTMLAttributes, type RefObject, useEffect, useRef } from "react";
 
 export type TOCThumb = [top: number, height: number];
 
 function calc(container: HTMLElement, active: string[]): TOCThumb {
-  if (active.length === 0 || container.clientHeight === 0) {
-    return [0, 0];
-  }
+  if (active.length === 0 || container.clientHeight === 0) return [0, 0];
 
   let upper = Number.MAX_VALUE,
     lower = 0;
@@ -30,7 +27,7 @@ function calc(container: HTMLElement, active: string[]): TOCThumb {
   return [upper, lower - upper];
 }
 
-function update(element: HTMLElement, info: TOCThumb): void {
+function updateThumb(element: HTMLElement, info: TOCThumb): void {
   element.style.setProperty("--fd-top", `${info[0]}px`);
   element.style.setProperty("--fd-height", `${info[1]}px`);
 }
@@ -41,33 +38,25 @@ export function TocThumb({
 }: HTMLAttributes<HTMLDivElement> & {
   containerRef: RefObject<HTMLElement | null>;
 }) {
-  const active = Primitive.useActiveAnchors();
+  const active = useActiveAnchors();
   const thumbRef = useRef<HTMLDivElement>(null);
 
-  const onResize = useEffectEvent(() => {
+  useEffect(() => {
     if (!containerRef.current || !thumbRef.current) return;
-
-    update(thumbRef.current, calc(containerRef.current, active));
-  });
+    updateThumb(thumbRef.current, calc(containerRef.current, active));
+  }, [active, containerRef]);
 
   useEffect(() => {
     if (!containerRef.current) return;
     const container = containerRef.current;
 
-    onResize();
-    const observer = new ResizeObserver(onResize);
+    const observer = new ResizeObserver(() => {
+      if (thumbRef.current)
+        updateThumb(thumbRef.current, calc(container, active));
+    });
     observer.observe(container);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [containerRef]);
-
-  useOnChange(active, () => {
-    if (!containerRef.current || !thumbRef.current) return;
-
-    update(thumbRef.current, calc(containerRef.current, active));
-  });
+    return () => observer.disconnect();
+  }, [active, containerRef]);
 
   return <div ref={thumbRef} role="none" {...props} />;
 }

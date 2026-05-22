@@ -1,5 +1,6 @@
-import type { I18nConfig } from "fumadocs-core/i18n";
 import type { HTMLAttributes, ReactNode } from "react";
+
+type I18nConfig = boolean;
 
 export interface NavOptions {
   enabled: boolean;

@@ -17,7 +17,7 @@ import type {
   NavigationMenuTriggerProps,
 } from "@radix-ui/react-navigation-menu";
 import { cva, type VariantProps } from "class-variance-authority";
-import Link, { type LinkProps } from "fumadocs-core/link";
+import Link, { type LinkProps } from "next/link";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { type ComponentProps, Fragment, useState } from "react";
 

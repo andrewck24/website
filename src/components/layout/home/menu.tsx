@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
-import Link from "fumadocs-core/link";
+import Link from "next/link";
 import { ChevronDown, Languages } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 

@@ -1,19 +1,14 @@
-import { DocsLayout } from "@/components/layout/docs";
+import { HomeLayout } from "@/components/layout/home";
 import { baseOptions } from "@/lib/layout.shared";
-import { notesSource } from "@/lib/source";
 import type { ReactNode } from "react";
 
-interface DocsLayoutProps {
+interface NotesLayoutProps {
   children: ReactNode;
   params: Promise<{ lang: string }>;
 }
 
-export default async function Layout({ children, params }: DocsLayoutProps) {
+export default async function Layout({ children, params }: NotesLayoutProps) {
   const { lang } = await params;
 
-  return (
-    <DocsLayout tree={notesSource.pageTree[lang]} {...baseOptions(lang)}>
-      {children}
-    </DocsLayout>
-  );
+  return <HomeLayout {...baseOptions(lang)}>{children}</HomeLayout>;
 }

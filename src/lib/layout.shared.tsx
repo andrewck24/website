@@ -1,6 +1,5 @@
 import { DynamicIcon } from "@/app/icon";
-import { i18n } from "@/lib/i18n";
-import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import type { BaseLayoutProps } from "@/components/layout/shared";
 
 export function baseOptions(locale: string): BaseLayoutProps {
   const getAboutText = () => {
@@ -37,7 +36,7 @@ export function baseOptions(locale: string): BaseLayoutProps {
   };
 
   return {
-    i18n,
+    i18n: true,
     nav: {
       title: <DynamicIcon />,
       url: `/${locale}`,

@@ -1,10 +1,12 @@
 "use client";
-import { useTOCItems } from "@/components/ui/toc";
+import {
+  type TOCItemType,
+  useActiveAnchors,
+  useTOCItems,
+} from "@/components/ui/toc";
 import { TocThumb } from "@/components/ui/toc-thumb";
 import { mergeRefs } from "@/lib/merge-refs";
 import { cn } from "@/lib/utils";
-import * as Primitive from "fumadocs-core/toc";
-import { useI18n } from "fumadocs-ui/contexts/i18n";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
 
 export default function ClerkTOCItems({
@@ -14,7 +16,6 @@ export default function ClerkTOCItems({
 }: ComponentProps<"div">) {
   const containerRef = useRef<HTMLDivElement>(null);
   const items = useTOCItems();
-  const { text } = useI18n();
 
   const [svg, setSvg] = useState<{
     path: string;
@@ -32,7 +33,7 @@ export default function ClerkTOCItems({
         h = 0;
       const d: string[] = [];
       for (let i = 0; i < items.length; i++) {
-        const element: HTMLElement | null = container.querySelector(
+        const element = container.querySelector<HTMLElement>(
           `a[href="#${items[i].url.slice(1)}"]`
         );
         if (!element) continue;
@@ -52,26 +53,19 @@ export default function ClerkTOCItems({
         d.push(`L${offset} ${bottom}`);
       }
 
-      setSvg({
-        path: d.join(" "),
-        width: w + 1,
-        height: h,
-      });
+      setSvg({ path: d.join(" "), width: w + 1, height: h });
     }
 
     const observer = new ResizeObserver(onResize);
     onResize();
-
     observer.observe(container);
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [items]);
 
   if (items.length === 0)
     return (
-      <div className="bg-fd-card text-fd-muted-foreground rounded-lg border p-3 text-xs">
-        {text.tocNoHeadings}
+      <div className="bg-card text-muted-foreground rounded-lg border p-3 text-xs">
+        No headings
       </div>
     );
 
@@ -83,17 +77,14 @@ export default function ClerkTOCItems({
           style={{
             width: svg.width,
             height: svg.height,
-            maskImage: `url("data:image/svg+xml,${
-              // Inline SVG
-              encodeURIComponent(
-                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`
-              )
-            }")`,
+            maskImage: `url("data:image/svg+xml,${encodeURIComponent(
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svg.width} ${svg.height}"><path d="${svg.path}" stroke="black" stroke-width="1" fill="none" /></svg>`
+            )}")`,
           }}
         >
           <TocThumb
             containerRef={containerRef}
-            className="bg-fd-primary mt-(--fd-top) h-(--fd-height) transition-all"
+            className="bg-primary mt-(--fd-top) h-(--fd-height) transition-all"
           />
         </div>
       ) : null}
@@ -130,21 +121,21 @@ function TOCItem({
   upper = item.depth,
   lower = item.depth,
 }: {
-  item: Primitive.TOCItemType;
+  item: TOCItemType;
   upper?: number;
   lower?: number;
 }) {
+  const active = useActiveAnchors().includes(item.url.slice(1));
   const offset = getLineOffset(item.depth),
     upperOffset = getLineOffset(upper),
     lowerOffset = getLineOffset(lower);
 
   return (
-    <Primitive.TOCItem
+    <a
       href={item.url}
-      style={{
-        paddingInlineStart: getItemOffset(item.depth),
-      }}
-      className="prose text-fd-muted-foreground hover:text-fd-accent-foreground data-[active=true]:text-fd-primary relative py-1.5 text-sm [overflow-wrap:anywhere] transition-colors first:pt-0 last:pb-0"
+      data-active={active}
+      style={{ paddingInlineStart: getItemOffset(item.depth) }}
+      className="text-muted-foreground hover:text-accent-foreground data-[active=true]:text-primary relative py-1.5 text-sm [overflow-wrap:anywhere] transition-colors first:pt-0 last:pb-0"
     >
       {offset !== upperOffset ? (
         <svg
@@ -157,22 +148,20 @@ function TOCItem({
             y1="0"
             x2={offset}
             y2="12"
-            className="stroke-fd-foreground/10"
+            className="stroke-foreground/10"
             strokeWidth="1"
           />
         </svg>
       ) : null}
       <div
         className={cn(
-          "bg-fd-foreground/10 absolute inset-y-0 w-px",
+          "bg-foreground/10 absolute inset-y-0 w-px",
           offset !== upperOffset && "top-1.5",
           offset !== lowerOffset && "bottom-1.5"
         )}
-        style={{
-          insetInlineStart: offset,
-        }}
+        style={{ insetInlineStart: offset }}
       />
       {item.title}
-    </Primitive.TOCItem>
+    </a>
   );
 }

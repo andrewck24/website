@@ -1,12 +1,15 @@
 "use client";
-import { RootProvider } from "fumadocs-ui/provider/next";
+import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 
 interface ProviderProps {
   children: ReactNode;
-  i18n?: Parameters<typeof RootProvider>[0]["i18n"];
 }
 
-export function Provider({ children, i18n }: ProviderProps) {
-  return <RootProvider i18n={i18n}>{children}</RootProvider>;
+export function Provider({ children }: ProviderProps) {
+  return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      {children}
+    </ThemeProvider>
+  );
 }

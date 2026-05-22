@@ -14,77 +14,147 @@ import type {
 import { Presence } from "@radix-ui/react-presence";
 import { type ScrollAreaProps } from "@radix-ui/react-scroll-area";
 import { cva } from "class-variance-authority";
-import { usePathname } from "fumadocs-core/framework";
-import Link, { type LinkProps } from "fumadocs-core/link";
-import type * as PageTree from "fumadocs-core/page-tree";
-import { useMediaQuery } from "fumadocs-core/utils/use-media-query";
-import { useOnChange } from "fumadocs-core/utils/use-on-change";
-import { useSidebar } from "fumadocs-ui/components/sidebar/base";
-import { useTreeContext, useTreePath } from "fumadocs-ui/contexts/tree";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import type { LinkProps } from "next/link";
 import { ChevronDown, ExternalLink } from "lucide-react";
 import {
   type ComponentProps,
   type ComponentType,
   createContext,
+  type Dispatch,
   Fragment,
   type ReactNode,
+  type RefObject,
+  type SetStateAction,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 
-export interface SidebarProps {
-  /**
-   * Open folders by default if their level is lower or equal to a specific level
-   * (Starting from 1)
-   *
-   * @defaultValue 0
-   */
-  defaultOpenLevel?: number;
-
-  /**
-   * Prefetch links
-   *
-   * @defaultValue true
-   */
-  prefetch?: boolean;
-
-  /**
-   * Children to render
-   */
-  Content: ReactNode;
-
-  /**
-   * Alternative children for mobile
-   */
-  Mobile?: ReactNode;
+// ── Local page-tree types (mirror fumadocs-core/page-tree shape) ──────────
+// eslint-disable-next-line @typescript-eslint/no-namespace
+export namespace PageTree {
+  export interface Item {
+    type: "page";
+    url: string;
+    name: ReactNode;
+    external?: boolean;
+    icon?: ReactNode;
+  }
+  export interface Folder {
+    type: "folder";
+    name: ReactNode;
+    icon?: ReactNode;
+    children: Node[];
+    index?: Item;
+    defaultOpen?: boolean;
+  }
+  export interface Separator {
+    type: "separator";
+    name?: ReactNode;
+    icon?: ReactNode;
+  }
+  export type Node = Item | Folder | Separator;
+  export interface Root {
+    children: Node[];
+    $id?: string;
+  }
 }
 
+// ── Local sidebar context (replaces fumadocs-ui/components/sidebar/base) ──
+interface SidebarCtx {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  collapsed: boolean;
+  setCollapsed: Dispatch<SetStateAction<boolean>>;
+  closeOnRedirect: RefObject<boolean>;
+}
+
+const SidebarCtx = createContext<SidebarCtx | null>(null);
+
+export function SidebarProvider({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const closeOnRedirect = useRef(true);
+
+  return (
+    <SidebarCtx
+      value={useMemo(
+        () => ({ open, setOpen, collapsed, setCollapsed, closeOnRedirect }),
+        [open, collapsed]
+      )}
+    >
+      {children}
+    </SidebarCtx>
+  );
+}
+
+export function useSidebar(): SidebarCtx {
+  const ctx = useContext(SidebarCtx);
+  if (!ctx) throw new Error("Missing <SidebarProvider />");
+  return ctx;
+}
+
+// ── Local tree context (replaces fumadocs-ui/contexts/tree) ──────────────
+interface TreeCtx {
+  root: PageTree.Root;
+}
+
+const TreeCtx = createContext<TreeCtx | null>(null);
+
+export function TreeContextProvider({
+  tree,
+  children,
+}: {
+  tree: PageTree.Root;
+  children: ReactNode;
+}) {
+  return <TreeCtx value={{ root: tree }}>{children}</TreeCtx>;
+}
+
+export function useTreeContext(): TreeCtx {
+  const ctx = useContext(TreeCtx);
+  if (!ctx) throw new Error("Missing <TreeContextProvider />");
+  return ctx;
+}
+
+// ── Internal context ──────────────────────────────────────────────────────
 interface InternalContext {
   defaultOpenLevel: number;
   prefetch: boolean;
   level: number;
 }
 
+const Context = createContext<InternalContext | null>(null);
+const FolderContext = createContext<{
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+} | null>(null);
+
 const itemVariants = cva(
-  "text-fd-muted-foreground relative flex flex-row items-center gap-2 rounded-lg p-2 ps-(--sidebar-item-offset) text-start [overflow-wrap:anywhere] [&_svg]:size-4 [&_svg]:shrink-0",
+  "text-muted-foreground relative flex flex-row items-center gap-2 rounded-lg p-2 ps-(--sidebar-item-offset) text-start [overflow-wrap:anywhere] [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       active: {
-        true: "bg-fd-primary/10 text-fd-primary",
+        true: "bg-primary/10 text-primary",
         false:
-          "hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80 transition-colors hover:transition-none",
+          "hover:bg-accent/50 hover:text-accent-foreground/80 transition-colors hover:transition-none",
       },
     },
   }
 );
 
-const Context = createContext<InternalContext | null>(null);
-const FolderContext = createContext<{
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-} | null>(null);
+// ── Sidebar components ────────────────────────────────────────────────────
+
+export interface SidebarProps {
+  defaultOpenLevel?: number;
+  prefetch?: boolean;
+  Content: ReactNode;
+  Mobile?: ReactNode;
+}
 
 export function Sidebar({
   defaultOpenLevel = 0,
@@ -92,14 +162,21 @@ export function Sidebar({
   Mobile,
   Content,
 }: SidebarProps) {
-  const isMobile = useMediaQuery("(width < 768px)") ?? false;
-  const context = useMemo<InternalContext>(() => {
-    return {
-      defaultOpenLevel,
-      prefetch,
-      level: 1,
-    };
-  }, [defaultOpenLevel, prefetch]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(width < 768px)");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const context = useMemo<InternalContext>(
+    () => ({ defaultOpenLevel, prefetch, level: 1 }),
+    [defaultOpenLevel, prefetch]
+  );
 
   return (
     <Context.Provider value={context}>
@@ -114,10 +191,11 @@ export function SidebarContent(props: ComponentProps<"aside">) {
   const timerRef = useRef(0);
   const closeTimeRef = useRef(0);
 
-  useOnChange(collapsed, () => {
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHover(false);
     closeTimeRef.current = Date.now() + 150;
-  });
+  }, [collapsed]);
 
   return (
     <aside
@@ -125,9 +203,9 @@ export function SidebarContent(props: ComponentProps<"aside">) {
       {...props}
       data-collapsed={collapsed}
       className={cn(
-        "bg-fd-card fixed top-(--fd-sidebar-top) bottom-(--fd-sidebar-margin) left-0 z-20 flex flex-col items-end border-e text-sm transition-[top,opacity,translate,width] duration-200 *:w-(--fd-sidebar-width) max-md:hidden rtl:right-(--removed-body-scroll-bar-size,0) rtl:left-auto",
+        "bg-card fixed top-(--fd-sidebar-top) bottom-(--fd-sidebar-margin) left-0 z-20 flex flex-col items-end border-e text-sm transition-[top,opacity,translate,width] duration-200 *:w-(--fd-sidebar-width) max-md:hidden",
         collapsed && [
-          "translate-x-(--fd-sidebar-offset) rounded-xl border rtl:-translate-x-(--fd-sidebar-offset)",
+          "translate-x-(--fd-sidebar-offset) rounded-xl border",
           hover ? "z-50 shadow-lg" : "opacity-0",
         ],
         props.className
@@ -158,7 +236,6 @@ export function SidebarContent(props: ComponentProps<"aside">) {
       onPointerLeave={(e) => {
         if (!collapsed || e.pointerType === "touch") return;
         window.clearTimeout(timerRef.current);
-
         timerRef.current = window.setTimeout(
           () => {
             setHover(false);
@@ -199,7 +276,7 @@ export function SidebarContentMobile({
             {...props}
             data-state={state}
             className={cn(
-              "bg-fd-background data-[state=open]:animate-fd-sidebar-in data-[state=closed]:animate-fd-sidebar-out fixed inset-y-0 end-0 z-40 flex w-[85%] max-w-[380px] flex-col border-s text-[15px] shadow-lg",
+              "bg-background data-[state=open]:animate-fd-sidebar-in data-[state=closed]:animate-fd-sidebar-out fixed inset-y-0 end-0 z-40 flex w-[85%] max-w-[380px] flex-col border-s text-[15px] shadow-lg",
               !present && "invisible",
               className
             )}
@@ -269,13 +346,12 @@ export function SidebarSeparator(props: ComponentProps<"p">) {
 
 export function SidebarItem({
   icon,
+  external,
   ...props
-}: LinkProps & {
-  icon?: ReactNode;
-}) {
+}: LinkProps & { icon?: ReactNode; external?: boolean }) {
   const pathname = usePathname();
   const active =
-    props.href !== undefined && isActive(props.href, pathname, false);
+    props.href !== undefined && isActive(String(props.href), pathname, false);
   const { prefetch } = useInternalContext();
 
   return (
@@ -284,8 +360,10 @@ export function SidebarItem({
       data-active={active}
       className={cn(itemVariants({ active }), props.className)}
       prefetch={prefetch}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
     >
-      {icon ?? (props.external ? <ExternalLink /> : null)}
+      {icon ?? (external ? <ExternalLink /> : null)}
       {props.children}
     </Link>
   );
@@ -294,14 +372,13 @@ export function SidebarItem({
 export function SidebarFolder({
   defaultOpen = false,
   ...props
-}: ComponentProps<"div"> & {
-  defaultOpen?: boolean;
-}) {
+}: ComponentProps<"div"> & { defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
 
-  useOnChange(defaultOpen, (v) => {
-    if (v) setOpen(v);
-  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (defaultOpen) setOpen(defaultOpen);
+  }, [defaultOpen]);
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} {...props}>
@@ -334,13 +411,13 @@ export function SidebarFolderTrigger({
   );
 }
 
-export function SidebarFolderLink(props: LinkProps) {
+export function SidebarFolderLink(props: LinkProps & { external?: boolean }) {
   const { open, setOpen } = useFolderContext();
   const { prefetch } = useInternalContext();
 
   const pathname = usePathname();
   const active =
-    props.href !== undefined && isActive(props.href, pathname, false);
+    props.href !== undefined && isActive(String(props.href), pathname, false);
 
   return (
     <Link
@@ -378,8 +455,8 @@ export function SidebarFolderContent(props: CollapsibleContentProps) {
       className={cn(
         "relative",
         level === 1 && [
-          "before:bg-fd-border before:absolute before:inset-y-1 before:start-2.5 before:w-px before:content-['']",
-          "**:data-[active=true]:before:bg-fd-primary **:data-[active=true]:before:absolute **:data-[active=true]:before:inset-y-2.5 **:data-[active=true]:before:start-2.5 **:data-[active=true]:before:w-px **:data-[active=true]:before:content-['']",
+          "before:bg-border before:absolute before:inset-y-1 before:start-2.5 before:w-px before:content-['']",
+          "**:data-[active=true]:before:bg-primary **:data-[active=true]:before:absolute **:data-[active=true]:before:inset-y-2.5 **:data-[active=true]:before:start-2.5 **:data-[active=true]:before:w-px **:data-[active=true]:before:content-['']",
         ],
         props.className
       )}
@@ -391,13 +468,7 @@ export function SidebarFolderContent(props: CollapsibleContentProps) {
       }
     >
       <Context.Provider
-        value={useMemo(
-          () => ({
-            ...ctx,
-            level: level + 1,
-          }),
-          [ctx, level]
-        )}
+        value={useMemo(() => ({ ...ctx, level: level + 1 }), [ctx, level])}
       >
         {props.children}
       </Context.Provider>
@@ -431,9 +502,7 @@ export function SidebarCollapseTrigger(props: ComponentProps<"button">) {
       aria-label="Collapse Sidebar"
       data-collapsed={collapsed}
       {...props}
-      onClick={() => {
-        setCollapsed((prev) => !prev);
-      }}
+      onClick={() => setCollapsed((prev) => !prev)}
     >
       {props.children}
     </button>
@@ -443,14 +512,12 @@ export function SidebarCollapseTrigger(props: ComponentProps<"button">) {
 function useFolderContext() {
   const ctx = useContext(FolderContext);
   if (!ctx) throw new Error("Missing sidebar folder");
-
   return ctx;
 }
 
 function useInternalContext() {
   const ctx = useContext(Context);
   if (!ctx) throw new Error("<Sidebar /> component required.");
-
   return ctx;
 }
 
@@ -464,9 +531,6 @@ export interface SidebarComponents {
   Separator: ComponentType<{ item: PageTree.Separator }>;
 }
 
-/**
- * Render sidebar items from page tree
- */
 export function SidebarPageTree(props: {
   components?: Partial<SidebarComponents>;
 }) {
@@ -492,7 +556,6 @@ export function SidebarPageTree(props: {
 
         if (item.type === "folder") {
           const children = renderSidebarList(item.children, level + 1);
-
           if (Folder)
             return (
               <Folder key={i} item={item} level={level}>
@@ -534,25 +597,16 @@ function PageTreeFolder({
   children: ReactNode;
 }) {
   const { defaultOpenLevel, level } = useInternalContext();
-  const path = useTreePath();
 
   return (
-    <SidebarFolder
-      defaultOpen={
-        (item.defaultOpen ?? defaultOpenLevel >= level) || path.includes(item)
-      }
-    >
+    <SidebarFolder defaultOpen={item.defaultOpen ?? defaultOpenLevel >= level}>
       {item.index ? (
-        <SidebarFolderLink
-          href={item.index.url}
-          external={item.index.external}
-          {...props}
-        >
+        <SidebarFolderLink href={item.index.url} external={item.index.external}>
           {item.icon}
           {item.name}
         </SidebarFolderLink>
       ) : (
-        <SidebarFolderTrigger {...props}>
+        <SidebarFolderTrigger>
           {item.icon}
           {item.name}
         </SidebarFolderTrigger>

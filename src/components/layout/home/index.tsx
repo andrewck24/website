@@ -11,7 +11,7 @@ import {
 import { LargeSearchToggle } from "@/components/search-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
-import Link from "fumadocs-core/link";
+import Link from "next/link";
 import { Languages } from "lucide-react";
 import { type HTMLAttributes, useMemo } from "react";
 

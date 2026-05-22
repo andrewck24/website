@@ -1,13 +1,12 @@
 "use client";
 import type { Option } from "@/components/root-toggle";
 import { SearchToggle } from "@/components/search-toggle";
-import { SidebarCollapseTrigger } from "@/components/sidebar";
+import { SidebarCollapseTrigger, useSidebar } from "@/components/sidebar";
 import { buttonVariants } from "@/components/ui/button";
 import { isTabActive } from "@/lib/is-active";
 import { cn } from "@/lib/utils";
-import { usePathname } from "fumadocs-core/framework";
-import Link from "fumadocs-core/link";
-import { useSidebar } from "fumadocs-ui/components/sidebar/base";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { Sidebar as SidebarIcon } from "lucide-react";
 import { type ComponentProps, useMemo } from "react";
 
@@ -17,8 +16,7 @@ export function Navbar(props: ComponentProps<"header">) {
       id="nd-subnav"
       {...props}
       className={cn(
-        "fixed top-(--fd-banner-height) right-(--removed-body-scroll-bar-size,0) left-0 z-30 flex items-center border-b ps-4 pe-2.5 backdrop-blur-sm transition-colors",
-        !false && "bg-fd-background/80",
+        "bg-background/80 fixed top-(--fd-banner-height) right-(--removed-body-scroll-bar-size,0) left-0 z-30 flex items-center border-b ps-4 pe-2.5 backdrop-blur-sm transition-colors",
         props.className
       )}
     >
@@ -57,7 +55,7 @@ export function CollapsibleControl() {
   return (
     <div
       className={cn(
-        "bg-fd-muted text-fd-muted-foreground fixed z-10 flex rounded-xl border p-0.5 shadow-lg transition-opacity max-xl:end-4 max-md:hidden xl:start-4",
+        "bg-muted text-muted-foreground fixed z-10 flex rounded-xl border p-0.5 shadow-lg transition-opacity max-xl:end-4 max-md:hidden xl:start-4",
         !collapsed && "pointer-events-none opacity-0"
       )}
       style={{
@@ -83,9 +81,7 @@ export function CollapsibleControl() {
 export function LayoutTabs({
   options,
   ...props
-}: ComponentProps<"div"> & {
-  options: Option[];
-}) {
+}: ComponentProps<"div"> & { options: Option[] }) {
   const pathname = usePathname();
   const selected = useMemo(() => {
     return options.findLast((option) => isTabActive(option, pathname));
@@ -122,9 +118,9 @@ function LayoutTab({
       href={url}
       {...props}
       className={cn(
-        "text-fd-muted-foreground hover:text-fd-accent-foreground inline-flex items-center gap-2 border-b-2 border-transparent pb-1.5 text-sm font-medium text-nowrap transition-colors",
+        "text-muted-foreground hover:text-accent-foreground inline-flex items-center gap-2 border-b-2 border-transparent pb-1.5 text-sm font-medium text-nowrap transition-colors",
         unlisted && !selected && "hidden",
-        selected && "border-fd-primary text-fd-primary",
+        selected && "border-primary text-primary",
         props?.className
       )}
     >
