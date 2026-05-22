@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import { LangSetter } from "@/components/lang-setter";
 import { Provider } from "@/components/provider";
 import type { Metadata } from "next";
 import { Inter, Ubuntu_Mono } from "next/font/google";
@@ -104,22 +105,13 @@ export default async function Layout({ children, params }: LangLayoutProps) {
   const { lang } = await params;
 
   return (
-    <html
-      lang={lang}
-      className={`${inter.className} ${ubuntuMono.variable}`}
-      suppressHydrationWarning
-    >
-      <head>
-        <link
-          rel="icon"
-          href="/icon?<generated>"
-          type="image/png"
-          sizes="32x32"
-        />
-      </head>
-      <body className="flex min-h-screen flex-col items-center">
-        <Provider>{children}</Provider>
-      </body>
-    </html>
+    <div className={`${inter.className} ${ubuntuMono.variable}`}>
+      <LangSetter lang={lang} />
+      <Provider>
+        <div className="flex min-h-screen flex-col items-center">
+          {children}
+        </div>
+      </Provider>
+    </div>
   );
 }
