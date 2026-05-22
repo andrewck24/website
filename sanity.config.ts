@@ -1,5 +1,5 @@
-import { documentInternationalization } from "@sanity/document-internationalization";
 import { codeInput } from "@sanity/code-input";
+import { documentInternationalization } from "@sanity/document-internationalization";
 import { defineConfig } from "sanity";
 import { StructureBuilder, structureTool } from "sanity/structure";
 import { schemaTypes } from "./schemas";
@@ -39,6 +39,7 @@ function buildStructure(S: StructureBuilder) {
 export default defineConfig({
   projectId: process.env.SANITY_PROJECT_ID ?? "aw50l4wo",
   dataset: process.env.SANITY_DATASET ?? "production",
+  basePath: "/studio",
   title: "andrewck24",
   plugins: [
     structureTool({ structure: buildStructure }),
