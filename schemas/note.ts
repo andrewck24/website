@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity";
-import { codeInput } from "@sanity/code-input";
+import { codeTypeName } from "@sanity/code-input";
 import { card } from "./block/card";
 
 export const note = defineType({
@@ -54,7 +54,7 @@ export const note = defineType({
       name: "body",
       title: "Body",
       type: "array",
-      of: [{ type: "block" }, { type: codeInput.name }, { type: card.name }],
+      of: [{ type: "block" }, { type: codeTypeName }, { type: card.name }],
     }),
   ],
 });
