@@ -2,16 +2,7 @@ import "@/app/globals.css";
 import { LangSetter } from "@/components/lang-setter";
 import { Provider } from "@/components/provider";
 import type { Metadata } from "next";
-import { Inter, Ubuntu_Mono } from "next/font/google";
 import type { ReactNode } from "react";
-
-const inter = Inter({ subsets: ["latin"] });
-
-const ubuntuMono = Ubuntu_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-ubuntu-mono",
-});
 
 const SUPPORTED_LOCALES = ["zh-TW", "en", "ja"] as const;
 
@@ -105,7 +96,7 @@ export default async function Layout({ children, params }: LangLayoutProps) {
   const { lang } = await params;
 
   return (
-    <div className={`${inter.className} ${ubuntuMono.variable}`}>
+    <div>
       <LangSetter lang={lang} />
       <Provider>
         <div className="flex min-h-screen flex-col items-center">
