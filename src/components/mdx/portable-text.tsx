@@ -55,10 +55,13 @@ export const portableTextComponents: PortableTextComponents = {
     card: ({ value }: { value: CardBlockValue }) => <CardBlock value={value} />,
   },
   marks: {
-    link: ({ value, children }) => (
-      <a href={value?.href} target="_blank" rel="noopener noreferrer">
-        {children}
-      </a>
-    ),
+    link: ({ value, children }) =>
+      value?.href ? (
+        <a href={value.href} target="_blank" rel="noopener noreferrer">
+          {children}
+        </a>
+      ) : (
+        <>{children}</>
+      ),
   },
 };

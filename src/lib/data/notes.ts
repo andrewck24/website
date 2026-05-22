@@ -16,12 +16,14 @@ export async function getFeaturedNotes(
   locale: Locale
 ): Promise<FeaturedNoteCardData[]> {
   const notes = await client.fetch(getFeaturedNotesQuery, { locale });
-  return notes.map((note: Record<string, unknown>) => ({
-    ...note,
-    featured: true as const,
-    locale,
-    url: `/${locale}/notes/${note.slug}`,
-  }));
+  return (notes as Record<string, unknown>[])
+    .filter((note) => Boolean(note.slug))
+    .map((note) => ({
+      ...(note as unknown as FeaturedNoteCardData),
+      featured: true as const,
+      locale,
+      url: `/${locale}/notes/${note.slug as string}`,
+    }));
 }
 
 export async function getNote(
@@ -29,21 +31,23 @@ export async function getNote(
   slug: string
 ): Promise<NotePageData | null> {
   const note = await client.fetch(getNoteQuery, { locale, slug });
-  if (!note) return null;
+  if (!note || !note.slug) return null;
   return {
-    ...note,
+    ...(note as unknown as NotePageData),
     locale,
-    url: `/${locale}/notes/${note.slug}`,
+    url: `/${locale}/notes/${note.slug as string}`,
   };
 }
 
 export async function getAllNotes(locale: Locale): Promise<NoteCardData[]> {
   const notes = await client.fetch(getAllNotesQuery, { locale });
-  return notes.map((note: Record<string, unknown>) => ({
-    ...note,
-    locale,
-    url: `/${locale}/notes/${note.slug}`,
-  }));
+  return (notes as Record<string, unknown>[])
+    .filter((note) => Boolean(note.slug))
+    .map((note) => ({
+      ...(note as unknown as NoteCardData),
+      locale,
+      url: `/${locale}/notes/${note.slug as string}`,
+    }));
 }
 
 export async function generateNoteStaticParams(): Promise<

@@ -12,8 +12,11 @@ export function proxy(request: NextRequest) {
   );
 
   if (!hasLocale) {
+    // Strip any unsupported locale prefix before prepending the default,
+    // so /fr/about → /zh-TW/about rather than /zh-TW/fr/about.
+    const strippedPathname = pathname.replace(/^\/[^/]+/, "") || "/";
     return NextResponse.redirect(
-      new URL(`/${DEFAULT_LOCALE}${pathname}`, request.url)
+      new URL(`/${DEFAULT_LOCALE}${strippedPathname}`, request.url)
     );
   }
 }

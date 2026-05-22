@@ -16,12 +16,14 @@ export async function getFeaturedProjects(
   locale: Locale
 ): Promise<FeaturedProjectCardData[]> {
   const projects = await client.fetch(getFeaturedProjectsQuery, { locale });
-  return projects.map((project: Record<string, unknown>) => ({
-    ...project,
-    featured: true as const,
-    locale,
-    url: `/${locale}/projects/${project.slug}`,
-  }));
+  return (projects as Record<string, unknown>[])
+    .filter((project) => Boolean(project.slug))
+    .map((project) => ({
+      ...(project as unknown as FeaturedProjectCardData),
+      featured: true as const,
+      locale,
+      url: `/${locale}/projects/${project.slug as string}`,
+    }));
 }
 
 export async function getProject(
@@ -29,11 +31,11 @@ export async function getProject(
   slug: string
 ): Promise<ProjectPageData | null> {
   const project = await client.fetch(getProjectQuery, { locale, slug });
-  if (!project) return null;
+  if (!project || !project.slug) return null;
   return {
-    ...project,
+    ...(project as unknown as ProjectPageData),
     locale,
-    url: `/${locale}/projects/${project.slug}`,
+    url: `/${locale}/projects/${project.slug as string}`,
   };
 }
 
@@ -41,11 +43,13 @@ export async function getAllProjects(
   locale: Locale
 ): Promise<ProjectCardData[]> {
   const projects = await client.fetch(getAllProjectsQuery, { locale });
-  return projects.map((project: Record<string, unknown>) => ({
-    ...project,
-    locale,
-    url: `/${locale}/projects/${project.slug}`,
-  }));
+  return (projects as Record<string, unknown>[])
+    .filter((project) => Boolean(project.slug))
+    .map((project) => ({
+      ...(project as unknown as ProjectCardData),
+      locale,
+      url: `/${locale}/projects/${project.slug as string}`,
+    }));
 }
 
 export async function generateProjectStaticParams(): Promise<

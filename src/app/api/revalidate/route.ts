@@ -38,9 +38,13 @@ export async function POST(req: NextRequest) {
     }
   } else {
     const pathSegment = TYPE_TO_PATH[_type];
-    if (pathSegment && slug?.current) {
+    if (pathSegment) {
       for (const locale of LOCALES) {
-        revalidatePath(`/${locale}/${pathSegment}/${slug.current}`);
+        // Revalidate the list page so featured/all content stays fresh.
+        revalidatePath(`/${locale}/${pathSegment}`);
+        if (slug?.current) {
+          revalidatePath(`/${locale}/${pathSegment}/${slug.current}`);
+        }
       }
     }
   }
