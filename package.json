@@ -42,6 +42,7 @@
     "@sanity/document-internationalization": "^6.1.2",
     "@sanity/image-url": "^2.1.1",
     "@sanity/webhook": "^4.0.4",
+    "@tailwindcss/typography": "^0.5.19",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.562.0",
