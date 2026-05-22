@@ -1,5 +1,5 @@
 "use client";
-import type { HomeLayoutProps } from "@/components/layout/home";
+import type { NavLayoutProps } from "@/components/layout/home";
 import { BaseLinkItem, type LinkItemType } from "@/components/layout/shared";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -27,7 +27,7 @@ const navItemVariants = cva(
   "text-fd-muted-foreground hover:text-fd-accent-foreground data-[active=true]:text-fd-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
 );
 
-export function Navbar(props: HomeLayoutProps & ComponentProps<"div">) {
+export function Navbar(props: NavLayoutProps & ComponentProps<"div">) {
   const [value, setValue] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();

@@ -1,3 +1,4 @@
+import { BackgroundAnimation } from "@/components/home/background-animation";
 import { ProfileHero } from "@/components/home/hero";
 
 interface HomeProps {
@@ -5,5 +6,10 @@ interface HomeProps {
 }
 
 export function Home({ lang }: HomeProps) {
-  return <ProfileHero locale={lang} />;
+  return (
+    <>
+      <BackgroundAnimation />
+      <ProfileHero locale={lang} />
+    </>
+  );
 }

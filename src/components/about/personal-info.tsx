@@ -10,7 +10,7 @@ export function PersonalInfo() {
     >
       <div
         data-testid="about-name-section"
-        className="from-gradient-3 to-gradient-5 w-full rounded-2xl bg-gradient-to-br px-4 pt-12"
+        className="from-gradient-3 to-gradient-5 w-full rounded-2xl bg-linear-to-br px-4 pt-12"
       >
         <h1 className="mb-6 scroll-m-20 text-4xl font-bold tracking-tight">
           Andrew Tseng

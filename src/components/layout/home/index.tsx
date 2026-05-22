@@ -1,5 +1,4 @@
 import { LanguageToggle } from "@/components/language-toggle";
-import { BackgroundAnimation } from "@/components/layout/home/background-animation";
 import { Menu } from "@/components/layout/home/menu";
 import { Navbar, NavbarLinkItem } from "@/components/layout/home/navbar";
 import {
@@ -11,11 +10,11 @@ import {
 import { LargeSearchToggle } from "@/components/search-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { Languages } from "lucide-react";
+import Link from "next/link";
 import { type HTMLAttributes, useMemo } from "react";
 
-export interface HomeLayoutProps extends BaseLayoutProps {
+export interface NavLayoutProps extends BaseLayoutProps {
   nav?: Partial<
     NavOptions & {
       /**
@@ -24,12 +23,9 @@ export interface HomeLayoutProps extends BaseLayoutProps {
       enableHoverToOpen?: boolean;
     }
   >;
-  backgroundAnimation?: boolean;
 }
 
-export function HomeLayout(
-  props: HomeLayoutProps & HTMLAttributes<HTMLElement>
-) {
+export function NavLayout(props: NavLayoutProps & HTMLAttributes<HTMLElement>) {
   const {
     nav = {},
     links,
@@ -37,13 +33,11 @@ export function HomeLayout(
     i18n,
     themeSwitch = { enabled: true },
     searchToggle,
-    backgroundAnimation = false,
     ...rest
   } = props;
 
   return (
     <>
-      {backgroundAnimation && <BackgroundAnimation />}
       {nav.enabled !== false &&
         (nav.component ?? (
           <Header
@@ -76,7 +70,7 @@ function Header({
   githubUrl,
   themeSwitch = {},
   searchToggle = {},
-}: HomeLayoutProps) {
+}: NavLayoutProps) {
   const finalLinks = useMemo(
     () => getLinks(links, githubUrl),
     [links, githubUrl]
