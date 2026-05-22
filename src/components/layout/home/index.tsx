@@ -12,7 +12,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 import { Languages } from "lucide-react";
 import Link from "next/link";
-import { type HTMLAttributes, useMemo } from "react";
+import type { HTMLAttributes } from "react";
 
 export interface NavLayoutProps extends BaseLayoutProps {
   nav?: Partial<
@@ -50,7 +50,6 @@ export function NavLayout(props: NavLayoutProps & HTMLAttributes<HTMLElement>) {
           />
         ))}
       <main
-        id="nd-home-layout"
         {...rest}
         className={cn(
           "flex w-full max-w-7xl flex-1 flex-col items-center justify-start px-6 pt-22 lg:px-12",
@@ -71,10 +70,7 @@ function Header({
   themeSwitch = {},
   searchToggle = {},
 }: NavLayoutProps) {
-  const finalLinks = useMemo(
-    () => getLinks(links, githubUrl),
-    [links, githubUrl]
-  );
+  const finalLinks = getLinks(links, githubUrl);
 
   const navItems = finalLinks.filter((item) =>
     ["nav", "all"].includes(item.on ?? "all")
