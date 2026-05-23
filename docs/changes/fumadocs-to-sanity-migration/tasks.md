@@ -86,6 +86,12 @@
 
 - [x] 9.2 [P] Delete removed files completing mdx-content-management removal: `source.config.ts`, `src/lib/source.ts`, `src/lib/i18n.ts`, `src/app/api/search/route.ts`, `content/` directory. Verified by: `git status` shows these paths as deleted; no import in `src/` references them.
 
-- [x] 9.3 [P] Update `pnpm-workspace.yaml`: remove `esbuild: true` from `allowBuilds`; update `package.json` `postinstall` script to remove `fumadocs-mdx` call. Verified by: `pnpm install` completes without esbuild build step.
+- [x] 9.3 [P] Update `pnpm-workspace.yaml`: update `package.json` `postinstall` script to remove `fumadocs-mdx` call. Note: esbuild was not removed from `allowBuilds` — see 9.7. Verified by: `pnpm install` completes without fumadocs build step.
 
 - [x] 9.4 Final verification against acceptance criteria: run `grep -r "fumadocs" src/` and confirm zero matches; run `pnpm build` and confirm it completes without errors; manually visit `/zh-TW/notes`, `/zh-TW/notes/[slug]`, `/zh-TW/projects`, `/zh-TW/projects/[slug]`, `/zh-TW/about`, and `/studio` to confirm all pages return HTTP 200 with correct Sanity-sourced content in all three locales.
+
+- [x] 9.5 Fix Sanity Studio "Unknown field: language" error: add hidden `language` field (`readOnly: true, hidden: true`) to `schemas/note.ts`, `schemas/project.ts`, and `schemas/about.ts`; remove `about` from `documentInternationalization` `schemaTypes` since about uses singleton pattern with fixed document IDs (`about-zh-TW` etc.) and is not managed by the i18n plugin. Verified by: Studio loads without "Unknown field" warning for all document types.
+
+- [x] 9.6 Extract `NavLayout` to shared `[lang]` layout: rename `HomeLayout` → `NavLayout` in `src/components/layout/home/index.tsx`; delete per-route layout files (`[lang]/(home)/layout.tsx`, `[lang]/notes/layout.tsx`, `[lang]/projects/layout.tsx`, `[lang]/about/layout.tsx`); move `BackgroundAnimation` component and CSS to `src/components/home/`; apply `NavLayout` directly in `src/app/[lang]/layout.tsx`. Verified by: all routes render with navbar; home page shows background animation; no padding duplication on notes/projects pages.
+
+- [x] 9.7 Fix Vercel CI deploy failure caused by pnpm v9+ `ERR_PNPM_IGNORED_BUILDS`: add `esbuild: true` to `allowBuilds` in `pnpm-workspace.yaml`. pnpm v9+ blocks all install-time build scripts by default; esbuild remains a transitive dependency of Next.js and Tailwind v4 and requires native binary compilation during `postinstall`. Verified by: Vercel `pnpm install` completes without `ERR_PNPM_IGNORED_BUILDS` error.
