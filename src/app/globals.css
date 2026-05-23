@@ -150,7 +150,6 @@ body {
   }
 }
 
-/* Fumadocs search dialog border color override */
 [role="dialog"] {
   @apply border-border;
 }

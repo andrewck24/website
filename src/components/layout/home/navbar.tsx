@@ -40,7 +40,7 @@ export function Navbar(props: NavLayoutProps & ComponentProps<"div">) {
     <NavigationMenu
       value={value}
       onValueChange={setValue}
-      className="fixed top-(--fd-banner-height,0) right-(--removed-body-scroll-bar-size,0) left-0 z-40 flex justify-center"
+      className="fixed top-0 right-(--removed-body-scroll-bar-size,0) left-0 z-40 flex justify-center"
     >
       <div className="w-full max-w-7xl px-6 lg:px-12">
         <div
