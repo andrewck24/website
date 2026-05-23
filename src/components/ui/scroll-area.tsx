@@ -43,14 +43,14 @@ const ScrollBar = React.forwardRef<
     ref={ref}
     orientation={orientation}
     className={cn(
-      "data-[state=hidden]:animate-fd-fade-out flex select-none",
+      "data-[state=hidden]:animate-out data-[state=hidden]:fill-mode-forwards data-[state=hidden]:fade-out flex select-none",
       orientation === "vertical" && "h-full w-1.5",
       orientation === "horizontal" && "h-1.5 flex-col",
       className
     )}
     {...props}
   >
-    <ScrollAreaPrimitive.ScrollAreaThumb className="bg-fd-border relative flex-1 rounded-full" />
+    <ScrollAreaPrimitive.ScrollAreaThumb className="bg-border relative flex-1 rounded-full" />
   </ScrollAreaPrimitive.Scrollbar>
 ));
 ScrollBar.displayName = ScrollAreaPrimitive.Scrollbar.displayName;

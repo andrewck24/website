@@ -135,7 +135,7 @@ function TOCItem({
       href={item.url}
       data-active={active}
       style={{ paddingInlineStart: getItemOffset(item.depth) }}
-      className="text-muted-foreground hover:text-accent-foreground data-[active=true]:text-primary relative py-1.5 text-sm [overflow-wrap:anywhere] transition-colors first:pt-0 last:pb-0"
+      className="text-muted-foreground hover:text-accent-foreground data-[active=true]:text-primary relative py-1.5 text-sm wrap-anywhere transition-colors first:pt-0 last:pb-0"
     >
       {offset !== upperOffset ? (
         <svg

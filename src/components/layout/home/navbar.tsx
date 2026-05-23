@@ -24,7 +24,7 @@ import { useMotionValueEvent, useScroll } from "motion/react";
 import { type ComponentProps, Fragment, useState } from "react";
 
 const navItemVariants = cva(
-  "text-fd-muted-foreground hover:text-fd-accent-foreground data-[active=true]:text-fd-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
+  "text-muted-foreground hover:text-accent-foreground data-[active=true]:text-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
 );
 
 export function Navbar(props: NavLayoutProps & ComponentProps<"div">) {
@@ -79,7 +79,7 @@ export function NavbarLinkItem({
 
       const {
         banner = child.icon ? (
-          <div className="bg-fd-muted w-fit rounded-md border p-1 [&_svg]:size-4">
+          <div className="bg-muted w-fit rounded-md border p-1 [&_svg]:size-4">
             {child.icon}
           </div>
         ) : null,
@@ -97,7 +97,7 @@ export function NavbarLinkItem({
             <>
               {banner}
               <p className="text-[15px] font-medium">{child.text}</p>
-              <p className="text-fd-muted-foreground text-sm empty:hidden">
+              <p className="text-muted-foreground text-sm empty:hidden">
                 {child.description}
               </p>
             </>

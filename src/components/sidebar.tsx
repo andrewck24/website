@@ -136,7 +136,7 @@ const FolderContext = createContext<{
 } | null>(null);
 
 const itemVariants = cva(
-  "text-muted-foreground relative flex flex-row items-center gap-2 rounded-lg p-2 ps-(--sidebar-item-offset) text-start [overflow-wrap:anywhere] [&_svg]:size-4 [&_svg]:shrink-0",
+  "text-muted-foreground relative flex flex-row items-center gap-2 rounded-lg p-2 ps-(--sidebar-item-offset) text-start wrap-anywhere [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       active: {
@@ -266,7 +266,7 @@ export function SidebarContentMobile({
       <Presence present={open}>
         <div
           data-state={state}
-          className="data-[state=open]:animate-fd-fade-in data-[state=closed]:animate-fd-fade-out fixed inset-0 z-40 backdrop-blur-xs"
+          className="data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:animate-in data-[state=open]:fade-in fixed inset-0 z-40 backdrop-blur-xs"
           onClick={() => setOpen(false)}
         />
       </Presence>
@@ -277,7 +277,7 @@ export function SidebarContentMobile({
             {...props}
             data-state={state}
             className={cn(
-              "bg-background data-[state=open]:animate-fd-sidebar-in data-[state=closed]:animate-fd-sidebar-out fixed inset-y-0 end-0 z-40 flex w-[85%] max-w-[380px] flex-col border-s text-[15px] shadow-lg",
+              "bg-background data-[state=closed]:animate-out data-[state=closed]:slide-out-to-end data-[state=open]:animate-in data-[state=open]:slide-in-from-end fixed inset-y-0 end-0 z-40 flex w-[85%] max-w-[380px] flex-col border-s text-[15px] shadow-lg",
               !present && "invisible",
               className
             )}

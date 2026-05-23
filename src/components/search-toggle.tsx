@@ -43,7 +43,7 @@ export function LargeSearchToggle({
       data-search-full=""
       {...props}
       className={cn(
-        "bg-secondary/50 text-muted-foreground border-border inline-flex items-center gap-2 rounded-lg border p-1.5 ps-2 text-sm",
+        "border-border bg-secondary/50 text-muted-foreground inline-flex items-center gap-2 rounded-lg border p-1.5 ps-2 text-sm",
         props.className
       )}
       disabled

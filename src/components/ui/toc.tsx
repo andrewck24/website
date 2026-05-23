@@ -86,7 +86,7 @@ export function TOCScrollArea({
     <div
       ref={mergeRefs(viewRef, ref)}
       className={cn(
-        "relative ms-px min-h-0 overflow-auto [mask-image:linear-gradient(to_bottom,transparent,white_16px,white_calc(100%-16px),transparent)] py-3 text-sm [scrollbar-width:none]",
+        "relative ms-px min-h-0 overflow-auto mask-[linear-gradient(to_bottom,transparent,white_16px,white_calc(100%-16px),transparent)] py-3 text-sm [scrollbar-width:none]",
         className
       )}
       {...props}
@@ -132,7 +132,7 @@ function TOCItem({ item }: { item: TOCItemType }) {
       href={item.url}
       data-active={active}
       className={cn(
-        "text-muted-foreground data-[active=true]:text-primary py-1.5 text-sm [overflow-wrap:anywhere] transition-colors first:pt-0 last:pb-0",
+        "text-muted-foreground data-[active=true]:text-primary py-1.5 text-sm wrap-anywhere transition-colors first:pt-0 last:pb-0",
         item.depth <= 2 && "ps-3",
         item.depth === 3 && "ps-6",
         item.depth >= 4 && "ps-8"

@@ -24,7 +24,7 @@ export default async function AboutPage({ params }: PageProps) {
       )}
     >
       <PersonalInfo />
-      <article className="prose prose-neutral dark:prose-invert bg-background/50 border-border my-4 flex-2 rounded-2xl border px-4 py-12 lg:px-8">
+      <article className="prose border-border bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl border px-4 py-12 lg:px-8">
         {about?.body && (
           <PortableText
             value={about.body}
