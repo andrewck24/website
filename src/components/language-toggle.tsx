@@ -11,7 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { type ButtonHTMLAttributes, type HTMLAttributes } from "react";
 
 const LOCALE_NAMES: Record<Locale, string> = {
-  "zh-TW": "中文（台灣華語）",
+  "zh-TW": "中文",
   en: "English",
   ja: "日本語",
 };

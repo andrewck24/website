@@ -332,7 +332,7 @@ export const LanguageSwitch = ({ currentLocale }: LanguageSwitchProps) => {
       <DropdownMenuContent align="end" className="glass-effect">
         <DropdownMenuItem onClick={() => switchLanguage('zh-TW')}>
           <span className="mr-2">🇹🇼</span>
-          中文（台灣華語）
+          中文
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => switchLanguage('en')}>
           <span className="mr-2">🇺🇸</span>

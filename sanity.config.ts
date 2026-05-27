@@ -46,7 +46,7 @@ export default defineConfig({
     codeInput(),
     documentInternationalization({
       supportedLanguages: [
-        { id: "zh-TW", title: "繁體中文" },
+        { id: "zh-TW", title: "中文" },
         { id: "en", title: "English" },
         { id: "ja", title: "日本語" },
       ],

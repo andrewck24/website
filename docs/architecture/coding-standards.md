@@ -240,7 +240,7 @@ import { defineI18n } from "fumadocs-core/i18n";
 
 export const { i18n, locales } = defineI18n({
   languages: [
-    { code: "zh-TW", name: "中文（台灣華語）" },
+    { code: "zh-TW", name: "中文" },
     { code: "en", name: "English" },
     { code: "ja", name: "日本語" },
   ],
