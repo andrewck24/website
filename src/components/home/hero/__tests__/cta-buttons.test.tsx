@@ -1,5 +1,5 @@
+import { CtaButtons } from "@/components/home/hero/cta-buttons";
 import { render, screen } from "@testing-library/react";
-import { CtaButtons } from "../cta-buttons";
 
 const mockSocialLinks = {
   github: "https://github.com/andrewck24",

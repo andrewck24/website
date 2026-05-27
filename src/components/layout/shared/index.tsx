@@ -172,4 +172,4 @@ export function getLinks(
   return result;
 }
 
-export { BaseLinkItem } from "./client";
+export { BaseLinkItem } from "@/components/layout/shared/client";
