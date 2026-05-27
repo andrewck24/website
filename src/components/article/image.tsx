@@ -1,6 +1,6 @@
 import { urlFor } from "@/lib/sanity/image";
-import type { SanityImage } from "@/types/article";
 import { cn } from "@/lib/utils";
+import type { SanityImage } from "@/types/article";
 import Image from "next/image";
 import { ViewTransition } from "react";
 
@@ -28,7 +28,7 @@ export function ArticleImage({
     <ViewTransition name={viewTransitionName}>
       <div
         className={cn(
-          "relative h-full w-full overflow-hidden rounded-lg",
+          "not-prose relative size-full overflow-hidden rounded-lg",
           className
         )}
         data-testid="article-image-container"

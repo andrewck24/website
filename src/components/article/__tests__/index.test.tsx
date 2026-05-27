@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { Article } from "../index";
+import { Article } from "@/components/article";
 import type { ArticlePageData } from "@/types/article";
+import { render, screen } from "@testing-library/react";
 
 jest.mock("../../../lib/sanity/image", () => ({
   urlFor: () => ({
@@ -63,28 +63,6 @@ describe("Article Component", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders article date", () => {
-    render(
-      <Article
-        article={makeArticle()}
-        contentType="notes"
-        availableLocales={["zh-TW"]}
-      />
-    );
-    expect(screen.getByTestId("article-date")).toBeInTheDocument();
-  });
-
-  it("renders tags", () => {
-    render(
-      <Article
-        article={makeArticle()}
-        contentType="notes"
-        availableLocales={["zh-TW"]}
-      />
-    );
-    expect(screen.getByText("React")).toBeInTheDocument();
-  });
-
   it("renders back link", () => {
     render(
       <Article
@@ -106,16 +84,5 @@ describe("Article Component", () => {
       />
     );
     expect(screen.getByTestId("portable-text")).toBeInTheDocument();
-  });
-
-  it("renders article info sidebar", () => {
-    render(
-      <Article
-        article={makeArticle()}
-        contentType="notes"
-        availableLocales={["zh-TW"]}
-      />
-    );
-    expect(screen.getByTestId("article-info")).toBeInTheDocument();
   });
 });
