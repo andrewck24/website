@@ -12,10 +12,12 @@ export function PersonalInfo() {
         data-testid="about-name-section"
         className="from-gradient-3 to-gradient-5 w-full rounded-2xl bg-linear-to-br px-4 pt-12"
       >
-        <h1 className="mb-6 scroll-m-20 text-4xl font-bold tracking-tight">
+        <h1 className="mb-6 scroll-m-20 text-4xl font-bold tracking-tight text-[oklch(0.984_0.003_247.858)]">
           Andrew Tseng
         </h1>
-        <p className="text-muted-foreground mb-10">Software Engineer</p>
+        <p className="mb-10 text-[oklch(0.704_0.04_256.788)]">
+          Software Engineer
+        </p>
       </div>
       <div
         data-testid="about-social-links"
@@ -27,23 +29,24 @@ export function PersonalInfo() {
           </Link>
         </Button>
         <Button variant="ghost" size="icon" asChild>
-          <Link href="https://www.linkedin.com/in/li-wei-tseng-andrew/">
+          <Link href="https://www.linkedin.com/in/andrewck24/">
             <Linkedin />
           </Link>
         </Button>
         <Button variant="ghost" size="icon" asChild>
-          <Link href="https://www.cake.me/me/andrewHB614">
+          <Link href="https://www.cake.me/me/andrewck24">
             <svg
               width="28"
               height="28"
               viewBox="0 0 28 28"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              className="text-foreground"
             >
               <g transform="translate(-2, 4) scale(1.2, 1.2)">
                 <path
                   d="M22.5217 7.07507V17.0435C16.8406 16.4368 11.1594 15.8281 5.47827 15.2194V5.25913C5.47827 5.25913 5.47827 5.2571 5.4803 5.25507C6.45016 3.07594 9.12436 1.20725 12.7846 0L22.5217 7.07507Z"
-                  fill="#FFFFFF"
+                  fill="currentColor"
                 />
               </g>
             </svg>
