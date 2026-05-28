@@ -55,3 +55,5 @@ Notes and Projects layout pages SHALL be able to disable the Navbar language tog
 | Visitor views a Project detail page at ≥ 1024px width | Page loaded             | Right sidebar shows date, language toggle, tags, GitHub link, Demo link |
 | Visitor views a Note detail page at ≥ 1024px width    | Page loaded             | Right sidebar shows date, language toggle, tags (no project links)      |
 | Notes layout is rendered                              | Navbar loaded           | Language toggle button in Navbar is hidden                              |
+
+## Requirements
