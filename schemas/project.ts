@@ -21,6 +21,7 @@ export const project = defineType({
         source: "title",
         isUnique: (value, context) => {
           const { document, getClient } = context;
+          if (!document) return true;
           const client = getClient({ apiVersion: "2025-05-22" });
           const id = document._id.replace("drafts.", "");
           return client.fetch(
