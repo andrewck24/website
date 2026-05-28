@@ -104,3 +104,7 @@ export const getAboutQuery = /* groq */ `
     body
   }
 `;
+
+export const getAvailableAboutLocalesQuery = /* groq */ `
+  *[_type == "about" && defined(language)].language
+`;

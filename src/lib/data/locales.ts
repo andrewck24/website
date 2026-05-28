@@ -1,6 +1,9 @@
 import { cache } from "react";
 import { client } from "@/lib/sanity/client";
-import { getAvailableLocalesQuery } from "@/lib/sanity/queries";
+import {
+  getAvailableAboutLocalesQuery,
+  getAvailableLocalesQuery,
+} from "@/lib/sanity/queries";
 import type { Locale } from "@/types/article";
 
 const SANITY_TYPE_MAP: Record<string, string> = {
@@ -17,6 +20,10 @@ export const getAvailableLocales = cache(
     return client.fetch(getAvailableLocalesQuery, { type, slug });
   }
 );
+
+export const getAvailableAboutLocales = cache(async (): Promise<Locale[]> => {
+  return client.fetch(getAvailableAboutLocalesQuery);
+});
 
 export async function hasLocale(
   slug: string,
