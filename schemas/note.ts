@@ -17,7 +17,23 @@ export const note = defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
-      options: { source: "title" },
+      options: {
+        source: "title",
+        isUnique: (value, context) => {
+          const { document, getClient } = context;
+          const client = getClient({ apiVersion: "2025-05-22" });
+          const id = document._id.replace("drafts.", "");
+          return client.fetch(
+            `!defined(*[_type == $type && slug.current == $slug && language == $language && !(_id in [$id, "drafts." + $id])][0]._id)`,
+            {
+              type: document._type,
+              slug: value,
+              language: document.language,
+              id,
+            }
+          );
+        },
+      },
       validation: (Rule) => Rule.required(),
     }),
     defineField({

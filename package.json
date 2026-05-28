@@ -7,7 +7,6 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "postinstall": "",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

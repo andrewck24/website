@@ -37,11 +37,7 @@ export default async function AboutPage({ params }: PageProps) {
 }
 
 export function generateStaticParams() {
-  return [
-    { lang: "zh-TW", slug: undefined },
-    { lang: "en", slug: undefined },
-    { lang: "ja", slug: undefined },
-  ];
+  return [{ lang: "zh-TW" }, { lang: "en" }, { lang: "ja" }];
 }
 
 export async function generateMetadata({
