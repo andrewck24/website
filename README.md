@@ -1,116 +1,155 @@
-# LI-WEI TSENG
+<a name="readme-top"></a>
 
-## FRONT-END TO FULL-STACK DEVELOPER
+<div align="center">
 
-- Website: [andrewck24.vercel.app](https://andrewck24.vercel.app/)
-- Email: [andrewck24@gmail.com](mailto:andrewck24@gmail.com)
-- GitHub: [github.com/andrewck24](https://github.com/andrewck24)
-- LinkedIn: [linkedin.com/in/li-wei-tseng-andrew](https://www.linkedin.com/in/li-wei-tseng-andrew/)
+# andrewck24 / website
 
----
+[![Live Site][live-badge]][live-url]
+[![LinkedIn][linkedin-badge]][linkedin-url]
 
-## About Me
+A personal portfolio and technical blog — built with Next.js 15, Sanity CMS headless content management, and native View Transition API for app-like page transitions.
 
-With a background in accounting and economics, I have expertise at quickly understanding business logic and conducting process analysis. Thriving in dynamic environments and enjoying solving complex problems. Also dedicated to building user-intuitive and high-performance websites with modern technologies and product thinking. Seeking an opportunity to work in an innovative team!
+[live-url]: https://andrewck24.vercel.app/
+[live-url-en]: https://andrewck24.vercel.app/en
+[linkedin-url]: https://linkedin.com/in/andrewck24/
+[live-badge]: https://img.shields.io/badge/Live%20Site-andrewck24.vercel.app-black?style=for-the-badge&logo=vercel
+[linkedin-badge]: https://img.shields.io/badge/LinkedIn-ANDREW%20LI--WEI%20TSENG-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
 
----
-
-## PROJECTS
-
-### VolleyBro
-
-A volleyball match recording PWA with real-time data presentation and analysis.
-
-**Tech Stack:** React, TypeScript, Next.js (App Router), Redux, SWR, Auth.js, PWA, Tailwind
-
-**Key Features:**
-
-- Built a custom UI for match recording, enabling users to record a rally within 4 taps
-- Implemented REST APIs using Next.js Route Handlers, applying SWR for fetching and caching
-- Integrated SWR to update UI optimistically for the fast-changing dynamics of the match
-- Built a PWA using Serwist for offline functionality and mobile-native-app-like UX
-
-**Links:**
-
-- GitHub: [github.com/AndrewCK24/volleybro](https://github.com/AndrewCK24/volleybro)
-- Live Demo: [volleybro.vercel.app](https://volleybro.vercel.app/)
+</div>
 
 ---
 
-## SKILLS
+<details>
+<summary>Table of Contents</summary>
 
-### Languages
+- [About the Project](#about-the-project)
+- [Highlights](#highlights)
+- [Built With](#built-with)
+- [Source Tree](#source-tree)
+- [Getting Started](#getting-started)
+- [License](#license)
 
-- JavaScript / TypeScript
-- Python
-- HTML / CSS
-
-### Front-end
-
-- React (Hooks)
-- Next.js (App Router)
-- Redux / Redux Toolkit
-- Tailwind CSS
-- styled-components
-- Framer Motion
-- Web APIs (IntersectionObserver, ViewTransition, etc.)
-- Storybook
-
-### Back-end & Cloud
-
-- Node.js
-- MongoDB / Mongoose
-- Google Cloud Platform
-- Vercel
-- PWA / Serwist
-
-### Tools & Others
-
-- Git / GitHub
-- Fumadocs
-- MDX
-- ESLint / Prettier
+</details>
 
 ---
 
-## EDUCATION
+## About the Project
 
-### National Taiwan University (2017-2023)
+[![Preview][preview-img]][live-url]
 
-**Bachelor of Arts** in Japanese Language and Literature
-**Minor** in Economics
+[preview-img]: ./public/images/preview.png
 
-**Relevant Coursework:**
+A full-stack personal portfolio website and a multilingual technical blog, designed for performance, content flexibility, and native-feeling navigation.
 
-- Web Application Programming (A+)
-- Programming for Business Computing (A+)
-- Data Analysis and Machine Learning with Python (A+)
+<div align="right"><a href="#readme-top">↑ back to top</a></div>
 
 ---
 
-## CERTIFICATES
+## Highlights
 
-### Google Cloud Platform (2025)
+### Sanity CMS — Decoupled Content Management
 
-Google 數位人才探索計畫 - Certificate of Completion
+Articles, project descriptions, and profile data are managed through [Sanity Studio][live-url-en] embedded at `/studio`. Content is fetched via `@sanity/client` using GROQ queries, and pages are revalidated on-demand via a Sanity webhook — eliminating the need for full rebuilds when content changes. This decoupling lets the site stay fully static by default while remaining editable in real time.
 
-- Google Cloud Computing Foundations
-- Cloud Computing Fundamentals
-- Infrastructure in Google Cloud
-- Networking & Security in Google Cloud
-- Data, ML, and AI in Google Cloud
-- Google Cloud Capstone Course
-- Generative AI for Developers
-- Introduction to Generative AI
-- Introduction to Large Language Models
-- Introduction to Responsible AI
-- Introduction to Vertex AI Studio
-- Introduction to Image Generation
-- Prompt Design in Vertex AI
-- Integrating Applications with Gemini 1.0 Pro on Google Cloud
+### View Transition API — Native-Like Page Navigation
 
-### Other Certifications
+Page transitions use the browser-native [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API) rather than a JavaScript animation library. This produces hardware-accelerated, OS-level transitions (cross-fade and shared element) that match the feel of a native app, with zero animation runtime overhead. The implementation targets `next/link` navigation and degrades gracefully in unsupported browsers.
 
-- **TOEIC Listening and Reading Test** - 965 / 990 (May 2024)
-- **US Certified Public Accountant (USCPA)** (May 2023)
-- **Japanese-Language Proficiency Test (JLPT)** - N1 (July 2019)
+<div align="right"><a href="#readme-top">↑ back to top</a></div>
+
+---
+
+## Built With
+
+[![Next.js][nextjs-badge]][nextjs-url]
+[![TypeScript][ts-badge]][ts-url]
+[![Tailwind CSS][tailwind-badge]][tailwind-url]
+[![Sanity][sanity-badge]][sanity-url]
+
+[nextjs-badge]: https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js
+[nextjs-url]: https://nextjs.org/
+[ts-badge]: https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white
+[ts-url]: https://www.typescriptlang.org/
+[tailwind-badge]: https://img.shields.io/badge/Tailwind%20CSS-4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white
+[tailwind-url]: https://tailwindcss.com/
+[sanity-badge]: https://img.shields.io/badge/Sanity-CMS-F03E2F?style=for-the-badge&logo=sanity&logoColor=white
+[sanity-url]: https://www.sanity.io/
+
+<div align="right"><a href="#readme-top">↑ back to top</a></div>
+
+---
+
+## Source Tree
+
+```
+src/
+├── app/                   # Next.js App Router — routes, layouts, global styles
+│   ├── [lang]/            # i18n route segment (zh-TW / en)
+│   ├── api/               # Route Handlers (Sanity webhook revalidation, etc.)
+│   └── studio/            # Embedded Sanity Studio
+├── assets/
+│   └── fonts/             # Local font files loaded via next/font
+├── components/            # React Server / Client components, grouped by domain
+│   ├── about/
+│   ├── article/
+│   ├── home/
+│   ├── icons/
+│   ├── layout/
+│   ├── mdx/
+│   ├── projects/
+│   ├── toc/
+│   └── ui/                # Shared primitives (Shadcn/ui)
+├── hooks/                 # Custom React hooks
+├── lib/                   # Pure utilities and data-fetching helpers
+│   ├── data/              # Static data (resume, nav links)
+│   └── sanity/            # Sanity client, GROQ queries, schema helpers
+└── types/                 # TypeScript type definitions and ambient declarations
+docs/                      # Architecture docs, Spectra change artifacts
+```
+
+<div align="right"><a href="#readme-top">↑ back to top</a></div>
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v20+
+- [pnpm](https://pnpm.io/) v11+
+
+### Installation
+
+```bash
+git clone https://github.com/andrewck24/website.git
+cd website
+pnpm install
+```
+
+### Environment Variables
+
+Create a `.env.local` file at the project root and set the following variables:
+
+```
+NEXT_PUBLIC_APP_URL=
+SANITY_PROJECT_ID=
+SANITY_DATASET=
+SANITY_API_TOKEN=
+SANITY_WEBHOOK_SECRET=
+```
+
+Then start the dev server:
+
+```bash
+pnpm dev
+```
+
+<div align="right"><a href="#readme-top">↑ back to top</a></div>
+
+---
+
+## License
+
+Distributed under the MIT License. See [`LICENSE`](./LICENSE) for details.
+
+<div align="right"><a href="#readme-top">↑ back to top</a></div>
