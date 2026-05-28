@@ -16,6 +16,10 @@ export function proxy(request: NextRequest) {
       new URL(`/${DEFAULT_LOCALE}${pathname}`, request.url)
     );
   }
+
+  const response = NextResponse.next();
+  response.headers.set("x-pathname", pathname);
+  return response;
 }
 
 export const config = {

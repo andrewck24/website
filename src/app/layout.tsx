@@ -1,4 +1,5 @@
 import { Inter, Ubuntu_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import type { ReactNode } from "react";
 
 const ubuntuMono = Ubuntu_Mono({
@@ -9,9 +10,18 @@ const ubuntuMono = Ubuntu_Mono({
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? "/";
+  const lang = pathname.split("/")[1] || "zh-TW";
+
   return (
     <html
+      lang={lang}
       suppressHydrationWarning
       className={`${ubuntuMono.variable} ${inter.variable}`}
     >
