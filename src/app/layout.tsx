@@ -1,5 +1,5 @@
 import { Inter, Ubuntu_Mono } from "next/font/google";
-import { headers } from "next/headers";
+import { getLocaleFromHeaders } from "@/lib/locale-from-headers";
 import type { ReactNode } from "react";
 
 const ubuntuMono = Ubuntu_Mono({
@@ -15,9 +15,7 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") ?? "/";
-  const lang = pathname.split("/")[1] || "zh-TW";
+  const lang = await getLocaleFromHeaders();
 
   return (
     <html
