@@ -20,13 +20,13 @@
 
 ## 2. Tier 2: Ecosystem-coupled upgrades
 
-- [ ] 2.1 [P] Upgrade `next` to ^16.2.6 and `eslint-config-next` to 16.2.6 together in `package.json`, keeping both versions in sync (satisfies spec: ecosystem-coupled packages are upgraded together). Verified by reading `package.json` and confirming both entries show 16.2.6.
+- [x] 2.1 [P] Upgrade `next` to ^16.2.6 and `eslint-config-next` to 16.2.6 together in `package.json`, keeping both versions in sync (satisfies spec: ecosystem-coupled packages are upgraded together). Verified by reading `package.json` and confirming both entries show 16.2.6.
 
-- [ ] 2.2 [P] Upgrade the Tailwind ecosystem together in `package.json`: `tailwindcss` ^4.3.0, `@tailwindcss/postcss` ^4.3.0, `prettier-plugin-tailwindcss` ^0.8.0 (update strategy: tailwind ecosystem: upgrade as a unit — satisfies spec: ecosystem-coupled packages are upgraded together). Verified by reading `package.json` and confirming all three entries show the new version ranges.
+- [x] 2.2 [P] Upgrade the Tailwind ecosystem together in `package.json`: `tailwindcss` ^4.3.0, `@tailwindcss/postcss` ^4.3.0, `prettier-plugin-tailwindcss` ^0.8.0 (update strategy: tailwind ecosystem: upgrade as a unit — satisfies spec: ecosystem-coupled packages are upgraded together). Verified by reading `package.json` and confirming all three entries show the new version ranges.
 
-- [ ] 2.3 Run `pnpm install` after Tier 2 bumps. Verified when install exits 0 with no PostCSS version mismatch warnings.
+- [x] 2.3 Run `pnpm install` after Tier 2 bumps. Verified when install exits 0 with no PostCSS version mismatch warnings.
 
-- [ ] 2.4 Run the full verification suite after Tier 2: `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`. Verified when all four commands exit 0.
+- [x] 2.4 Run the full verification suite after Tier 2: `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`. Verified when all four commands exit 0.
 
 ## 3. Tier 3: Breaking-change upgrades
 
