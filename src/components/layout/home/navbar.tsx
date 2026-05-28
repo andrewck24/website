@@ -1,5 +1,5 @@
 "use client";
-import type { HomeLayoutProps } from "@/components/layout/home";
+import type { NavLayoutProps } from "@/components/layout/home";
 import { BaseLinkItem, type LinkItemType } from "@/components/layout/shared";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -17,15 +17,17 @@ import type {
   NavigationMenuTriggerProps,
 } from "@radix-ui/react-navigation-menu";
 import { cva, type VariantProps } from "class-variance-authority";
-import Link, { type LinkProps } from "fumadocs-core/link";
+import Link from "next/link";
+import type { ComponentPropsWithoutRef } from "react";
+type LinkProps = ComponentPropsWithoutRef<typeof Link>;
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { type ComponentProps, Fragment, useState } from "react";
 
 const navItemVariants = cva(
-  "text-fd-muted-foreground hover:text-fd-accent-foreground data-[active=true]:text-fd-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
+  "text-muted-foreground hover:text-accent-foreground data-[active=true]:text-primary inline-flex items-center gap-1 p-2 transition-colors [&_svg]:size-4"
 );
 
-export function Navbar(props: HomeLayoutProps & ComponentProps<"div">) {
+export function Navbar(props: NavLayoutProps & ComponentProps<"div">) {
   const [value, setValue] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
@@ -38,7 +40,7 @@ export function Navbar(props: HomeLayoutProps & ComponentProps<"div">) {
     <NavigationMenu
       value={value}
       onValueChange={setValue}
-      className="fixed top-(--fd-banner-height,0) right-(--removed-body-scroll-bar-size,0) left-0 z-40 flex justify-center"
+      className="fixed top-0 right-(--removed-body-scroll-bar-size,0) left-0 z-40 flex justify-center"
     >
       <div className="w-full max-w-7xl px-6 lg:px-12">
         <div
@@ -77,7 +79,7 @@ export function NavbarLinkItem({
 
       const {
         banner = child.icon ? (
-          <div className="bg-fd-muted w-fit rounded-md border p-1 [&_svg]:size-4">
+          <div className="bg-muted w-fit rounded-md border p-1 [&_svg]:size-4">
             {child.icon}
           </div>
         ) : null,
@@ -95,7 +97,7 @@ export function NavbarLinkItem({
             <>
               {banner}
               <p className="text-[15px] font-medium">{child.text}</p>
-              <p className="text-fd-muted-foreground text-sm empty:hidden">
+              <p className="text-muted-foreground text-sm empty:hidden">
                 {child.description}
               </p>
             </>
@@ -108,7 +110,11 @@ export function NavbarLinkItem({
       <NavigationMenuItem>
         <NavbarMenuTrigger {...props}>
           {item.url ? (
-            <Link href={item.url} external={item.external}>
+            <Link
+              href={item.url}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+            >
               {item.text}
             </Link>
           ) : (
@@ -157,13 +163,16 @@ export function NavbarMenuTrigger(props: NavigationMenuTriggerProps) {
   );
 }
 
-export function NavbarMenuLink(props: LinkProps) {
+export function NavbarMenuLink(props: LinkProps & { external?: boolean }) {
+  const { external, ...linkProps } = props;
   return (
     <NavigationMenuLink asChild>
       <Link
-        {...props}
+        {...linkProps}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
         className={cn(
-          "bg-fd-card hover:bg-fd-accent/80 hover:text-fd-accent-foreground flex flex-col gap-2 rounded-lg border p-3 transition-colors",
+          "bg-card hover:bg-accent/80 hover:text-accent-foreground flex flex-col gap-2 rounded-lg border p-3 transition-colors",
           props.className
         )}
       >

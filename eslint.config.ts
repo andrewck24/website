@@ -1,5 +1,6 @@
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import tailwind from "eslint-plugin-better-tailwindcss";
 import { defineConfig } from "eslint/config";
 
 const eslintConfig = defineConfig([
@@ -7,8 +8,8 @@ const eslintConfig = defineConfig([
   {
     ignores: [
       ".next/**",
+      "docs/**",
       "node_modules/**",
-      ".source/**", // Fumadocs generated files
       "next-env.d.ts", // Next.js TypeScript environment file
       "jest.setup.ts", // Jest setup file
     ],
@@ -17,6 +18,35 @@ const eslintConfig = defineConfig([
   // Extend Next.js configs
   ...nextVitals,
   ...nextTs,
+
+  // Tailwind CSS class validation (v4 support)
+  tailwind.configs.recommended,
+  {
+    settings: {
+      "better-tailwindcss": {
+        entryPoint: "src/app/globals.css",
+        ignore: [
+          "gradients-container",
+          "animate-first",
+          "animate-second",
+          "animate-third",
+          "animate-fourth",
+          "animate-fifth",
+          "not-prose",
+        ],
+      },
+    },
+    rules: {
+      "better-tailwindcss/enforce-consistent-class-order": "off",
+      "better-tailwindcss/enforce-consistent-line-wrapping": "off",
+    },
+  },
+  {
+    files: ["**/__tests__/**", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    rules: {
+      "better-tailwindcss/no-unknown-classes": "off",
+    },
+  },
 
   {
     rules: {

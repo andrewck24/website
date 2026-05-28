@@ -1,8 +1,8 @@
 "use client";
 import type { BaseLinkType } from "@/components/layout/shared";
 import { isActive } from "@/lib/is-active";
-import { usePathname } from "fumadocs-core/framework";
-import Link from "fumadocs-core/link";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import type { ComponentProps } from "react";
 
 export function BaseLinkItem({
@@ -20,7 +20,8 @@ export function BaseLinkItem({
     <Link
       ref={ref}
       href={item.url}
-      external={item.external}
+      target={item.external ? "_blank" : undefined}
+      rel={item.external ? "noopener noreferrer" : undefined}
       {...props}
       data-active={active}
     >

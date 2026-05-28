@@ -1,5 +1,6 @@
-import type { I18nConfig } from "fumadocs-core/i18n";
 import type { HTMLAttributes, ReactNode } from "react";
+
+type I18nConfig = boolean;
 
 export interface NavOptions {
   enabled: boolean;
@@ -171,4 +172,4 @@ export function getLinks(
   return result;
 }
 
-export { BaseLinkItem } from "./client";
+export { BaseLinkItem } from "@/components/layout/shared/client";

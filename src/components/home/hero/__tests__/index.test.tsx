@@ -37,8 +37,8 @@ jest.mock("../terminal-animation", () => ({
   ),
 }));
 
+import { ProfileHero } from "@/components/home/hero";
 import { render, screen } from "@testing-library/react";
-import { ProfileHero } from "../index";
 
 describe("ProfileHero", () => {
   describe("zh-TW locale", () => {

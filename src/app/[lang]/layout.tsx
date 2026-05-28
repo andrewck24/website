@@ -1,35 +1,12 @@
 import "@/app/globals.css";
+import { LangSetter } from "@/components/lang-setter";
+import { NavLayout } from "@/components/layout/home";
 import { Provider } from "@/components/provider";
-import { i18n } from "@/lib/i18n";
-import { defineI18nUI } from "fumadocs-ui/i18n";
+import { baseOptions } from "@/lib/layout.shared";
 import type { Metadata } from "next";
-import { Inter, Ubuntu_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
-
-const ubuntuMono = Ubuntu_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-ubuntu-mono",
-});
-
-const { provider } = defineI18nUI(i18n, {
-  translations: {
-    "zh-TW": {
-      displayName: "中文（台灣華語）",
-      search: "搜尋",
-    },
-    en: {
-      displayName: "English",
-      search: "Search",
-    },
-    ja: {
-      displayName: "日本語",
-      search: "検索",
-    },
-  },
-});
+const SUPPORTED_LOCALES = ["zh-TW", "en", "ja"] as const;
 
 export async function generateMetadata({
   params,
@@ -38,29 +15,25 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
 
-  const titles = {
+  const titles: Record<string, string> = {
     "zh-TW": "Andrew Tseng - Software Engineer",
     en: "Andrew Tseng - Software Engineer",
     ja: "Andrew Tseng - Software Engineer",
   };
 
-  const descriptions = {
+  const descriptions: Record<string, string> = {
     "zh-TW":
       "專精於 React、Node.js 和現代網頁技術的軟體工程師。個人作品集與技術部落格。",
     en: "Software developer specializing in React, Node.js, and modern web technologies. Portfolio and technical blog.",
     ja: "React、Node.js、モダンウェブ技術を専門とするソフトウェア開発者。ポートフォリオと技術ブログ。",
   };
 
-  const title = titles[lang as keyof typeof titles] || titles["zh-TW"];
-  const description =
-    descriptions[lang as keyof typeof descriptions] || descriptions["zh-TW"];
+  const title = titles[lang] || titles["zh-TW"];
+  const description = descriptions[lang] || descriptions["zh-TW"];
 
   return {
     metadataBase: new URL("https://andrewck24.vercel.app"),
-    title: {
-      template: `%s | ${title}`,
-      default: title,
-    },
+    title: { template: `%s | ${title}`, default: title },
     description,
     keywords: [
       "Full-stack Developer",
@@ -108,16 +81,12 @@ export async function generateMetadata({
         "max-snippet": -1,
       },
     },
-    verification: {
-      google: process.env.GOOGLE_SITE_VERIFICATION,
-    },
+    verification: { google: process.env.GOOGLE_SITE_VERIFICATION },
   };
 }
 
 export function generateStaticParams() {
-  return i18n.languages.map((language) => ({
-    lang: language,
-  }));
+  return SUPPORTED_LOCALES.map((language) => ({ lang: language }));
 }
 
 interface LangLayoutProps {
@@ -129,22 +98,13 @@ export default async function Layout({ children, params }: LangLayoutProps) {
   const { lang } = await params;
 
   return (
-    <html
-      lang={lang}
-      className={`${inter.className} ${ubuntuMono.className}`}
-      suppressHydrationWarning
-    >
-      <head>
-        <link
-          rel="icon"
-          href="/icon?<generated>"
-          type="image/png"
-          sizes="32x32"
-        />
-      </head>
-      <body className="flex min-h-screen flex-col items-center">
-        <Provider i18n={provider(lang)}>{children}</Provider>
-      </body>
-    </html>
+    <div>
+      <LangSetter lang={lang} />
+      <Provider>
+        <div className="flex min-h-screen flex-col items-center">
+          <NavLayout {...baseOptions(lang)}>{children}</NavLayout>
+        </div>
+      </Provider>
+    </div>
   );
 }

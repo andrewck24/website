@@ -7,58 +7,59 @@ import {
 } from "@/components/ui/popover";
 import type { Locale } from "@/types/article";
 import { cn } from "@/lib/utils";
-import { useI18n } from "fumadocs-ui/contexts/i18n";
+import { usePathname, useRouter } from "next/navigation";
 import { type ButtonHTMLAttributes, type HTMLAttributes } from "react";
 
-// 改名：LanguageSelectProps → LanguageToggleProps
-export interface LanguageToggleProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
-  /**
-   * 可用的語言版本（必填）
-   * 至少包含當前頁面的語言
-   */
-  availableLocales: Locale[]; // 改為 required
+const LOCALE_NAMES: Record<Locale, string> = {
+  "zh-TW": "中文",
+  en: "English",
+  ja: "日本語",
+};
+
+const LOCALE_LABELS: Record<Locale, string> = {
+  "zh-TW": "選擇語言",
+  en: "Choose Language",
+  ja: "言語を選択",
+};
+
+export interface LanguageToggleProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  availableLocales: Locale[];
 }
 
 export function LanguageToggle({
   availableLocales,
   ...props
 }: LanguageToggleProps): React.ReactElement {
-  const context = useI18n();
+  const pathname = usePathname();
+  const router = useRouter();
 
-  if (!context.locales) {
-    throw new Error("Missing `<I18nProvider />`");
-  }
+  const currentLocale = (pathname.split("/")[1] ?? "zh-TW") as Locale;
 
-  // availableLocales 是 required，直接過濾
-  const displayLocales = context.locales.filter((item) =>
-    availableLocales.includes(item.locale as Locale)
+  const displayLocales = availableLocales.filter(
+    (locale) => locale in LOCALE_NAMES
   );
 
-  // 防禦性檢查：理論上不應該發生
-  if (displayLocales.length === 0) {
-    console.warn(
-      `No matching locales found. availableLocales: ${availableLocales.join(", ")}`
-    );
-    return <div className="text-muted-foreground text-xs">無可用語言</div>;
-  }
-
-  // 只有一個語言時，顯示靜態文字（不需要切換器）
-  if (displayLocales.length === 1) {
+  if (displayLocales.length <= 1) {
     return (
       <div
         className="text-muted-foreground text-sm"
         data-testid="language-toggle-single"
       >
-        {displayLocales[0].name}
+        {LOCALE_NAMES[currentLocale] ?? currentLocale}
       </div>
     );
   }
 
+  const handleLocaleChange = (locale: Locale) => {
+    const segments = pathname.split("/");
+    segments[1] = locale;
+    router.push(segments.join("/"));
+  };
+
   return (
     <Popover>
       <PopoverTrigger
-        aria-label={context.text.chooseLanguage}
+        aria-label={LOCALE_LABELS[currentLocale]}
         className={cn(
           buttonVariants({ variant: "ghost", className: "size-9" }),
           props.className
@@ -68,24 +69,22 @@ export function LanguageToggle({
         {props.children}
       </PopoverTrigger>
       <PopoverContent className="border-border flex flex-col overflow-hidden p-0">
-        <p className="text-fd-muted-foreground mb-1 p-2 text-xs font-medium">
-          {context.text.chooseLanguage}
+        <p className="text-muted-foreground mb-1 p-2 text-xs font-medium">
+          {LOCALE_LABELS[currentLocale]}
         </p>
-        {displayLocales.map((item) => (
+        {displayLocales.map((locale) => (
           <button
-            key={item.locale}
+            key={locale}
             type="button"
             className={cn(
               "p-2 text-start text-sm transition-colors",
-              item.locale === context.locale
-                ? "bg-fd-primary/10 text-fd-primary font-medium"
-                : "hover:bg-fd-accent hover:text-fd-accent-foreground"
+              locale === currentLocale
+                ? "bg-primary/10 text-primary font-medium"
+                : "hover:bg-accent hover:text-accent-foreground"
             )}
-            onClick={() => {
-              context.onChange?.(item.locale);
-            }}
+            onClick={() => handleLocaleChange(locale)}
           >
-            {item.name}
+            {LOCALE_NAMES[locale]}
           </button>
         ))}
       </PopoverContent>
@@ -96,10 +95,8 @@ export function LanguageToggle({
 export function LanguageToggleText(
   props: HTMLAttributes<HTMLSpanElement>
 ): React.ReactElement {
-  const context = useI18n();
-  const text = context.locales?.find(
-    (item) => item.locale === context.locale
-  )?.name;
+  const pathname = usePathname();
+  const currentLocale = (pathname.split("/")[1] ?? "zh-TW") as Locale;
 
-  return <span {...props}>{text}</span>;
+  return <span {...props}>{LOCALE_NAMES[currentLocale] ?? currentLocale}</span>;
 }

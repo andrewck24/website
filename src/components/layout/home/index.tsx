@@ -1,5 +1,4 @@
 import { LanguageToggle } from "@/components/language-toggle";
-import { BackgroundAnimation } from "@/components/layout/home/background-animation";
 import { Menu } from "@/components/layout/home/menu";
 import { Navbar, NavbarLinkItem } from "@/components/layout/home/navbar";
 import {
@@ -11,11 +10,11 @@ import {
 import { LargeSearchToggle } from "@/components/search-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
-import Link from "fumadocs-core/link";
 import { Languages } from "lucide-react";
-import { type HTMLAttributes, useMemo } from "react";
+import Link from "next/link";
+import type { HTMLAttributes } from "react";
 
-export interface HomeLayoutProps extends BaseLayoutProps {
+export interface NavLayoutProps extends BaseLayoutProps {
   nav?: Partial<
     NavOptions & {
       /**
@@ -24,12 +23,9 @@ export interface HomeLayoutProps extends BaseLayoutProps {
       enableHoverToOpen?: boolean;
     }
   >;
-  backgroundAnimation?: boolean;
 }
 
-export function HomeLayout(
-  props: HomeLayoutProps & HTMLAttributes<HTMLElement>
-) {
+export function NavLayout(props: NavLayoutProps & HTMLAttributes<HTMLElement>) {
   const {
     nav = {},
     links,
@@ -37,13 +33,11 @@ export function HomeLayout(
     i18n,
     themeSwitch = { enabled: true },
     searchToggle,
-    backgroundAnimation = false,
     ...rest
   } = props;
 
   return (
     <>
-      {backgroundAnimation && <BackgroundAnimation />}
       {nav.enabled !== false &&
         (nav.component ?? (
           <Header
@@ -56,7 +50,6 @@ export function HomeLayout(
           />
         ))}
       <main
-        id="nd-home-layout"
         {...rest}
         className={cn(
           "flex w-full max-w-7xl flex-1 flex-col items-center justify-start px-6 pt-22 lg:px-12",
@@ -76,11 +69,8 @@ function Header({
   githubUrl,
   themeSwitch = {},
   searchToggle = {},
-}: HomeLayoutProps) {
-  const finalLinks = useMemo(
-    () => getLinks(links, githubUrl),
-    [links, githubUrl]
-  );
+}: NavLayoutProps) {
+  const finalLinks = getLinks(links, githubUrl);
 
   const navItems = finalLinks.filter((item) =>
     ["nav", "all"].includes(item.on ?? "all")

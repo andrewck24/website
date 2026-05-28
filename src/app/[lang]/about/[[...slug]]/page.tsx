@@ -1,29 +1,19 @@
 import { PersonalInfo } from "@/components/about/personal-info";
-import { getMDXComponents } from "@/lib/mdx-components";
-import { aboutSource } from "@/lib/source";
+import { portableTextComponents } from "@/components/mdx/portable-text";
+import { client } from "@/lib/sanity/client";
+import { getAboutQuery } from "@/lib/sanity/queries";
 import { cn } from "@/lib/utils";
-import type { MDXProps } from "mdx/types";
+import type { Locale } from "@/types/article";
+import { PortableText } from "@portabletext/react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import type { ComponentType } from "react";
 
 interface PageProps {
   params: Promise<{ lang: string; slug?: string[] }>;
 }
 
-export interface MDXPageData {
-  title?: string;
-  description?: string;
-  body: ComponentType<MDXProps>;
-}
-
 export default async function AboutPage({ params }: PageProps) {
-  const { lang, slug } = await params;
-  const page = aboutSource.getPage(slug, lang);
-  if (!page) notFound();
-
-  const pageData = page.data as MDXPageData;
-  const MDXContent = pageData.body;
+  const { lang } = await params;
+  const about = await client.fetch(getAboutQuery, { locale: lang as Locale });
 
   return (
     <div
@@ -33,29 +23,31 @@ export default async function AboutPage({ params }: PageProps) {
         "flex flex-col items-center justify-start gap-4 lg:flex-row lg:items-start lg:justify-center"
       )}
     >
-      <PersonalInfo data={pageData} />
-      <article className="prose prose-neutral dark:prose-invert bg-background/50 border-border my-4 flex-2 rounded-2xl border px-4 py-12 lg:px-8">
-        <MDXContent components={getMDXComponents()} />
+      <PersonalInfo />
+      <article className="prose border-border bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl border px-4 py-12 lg:px-8">
+        {about?.body && (
+          <PortableText
+            value={about.body}
+            components={portableTextComponents}
+          />
+        )}
       </article>
     </div>
   );
 }
 
-export async function generateStaticParams() {
-  return aboutSource.generateParams();
+export function generateStaticParams() {
+  return [{ lang: "zh-TW" }, { lang: "en" }, { lang: "ja" }];
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { lang, slug } = await params;
-  const page = aboutSource.getPage(slug, lang);
-  if (!page) notFound();
-
-  const pageData = page.data as MDXPageData;
-
-  return {
-    title: pageData.title,
-    description: pageData.description,
+  const { lang } = await params;
+  const titles: Record<string, string> = {
+    "zh-TW": "關於我",
+    en: "About",
+    ja: "私について",
   };
+  return { title: titles[lang] ?? "About" };
 }

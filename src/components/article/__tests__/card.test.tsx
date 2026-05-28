@@ -43,11 +43,9 @@ describe("ArticleCard Component", () => {
     locale: "zh-TW",
     url: "/zh-TW/projects/test-article",
     date: "2025-10-19",
-    imageType: "static",
-    image: "/test.jpg",
     tags: [],
     featured: false,
-    body: () => null,
+    body: [],
   };
 
   // T015: Hero variant layout tests
@@ -255,15 +253,10 @@ describe("ArticleCard Component", () => {
       expect(description).toBeInTheDocument();
     });
 
-    it("should handle articles with generated image type", () => {
+    it("should handle articles without cover image", () => {
       const generatedImageArticle: ArticlePageData<BaseArticle> = {
         ...mockArticle,
-        imageType: "generated",
-        image: undefined,
-        ogImage: {
-          icon: "/images/generated.svg",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        },
+        coverImage: undefined,
       };
 
       render(<ArticleCard article={generatedImageArticle} variant="compact" />);

@@ -34,7 +34,7 @@ export function ProfileHero({ locale }: ProfileHeroProps) {
           </div>
           <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
             <p
-              className="text-foreground/80 text-lg leading-relaxed md:text-xl"
+              className="text-foreground/80 text-lg/relaxed md:text-xl"
               data-testid="profile-bio"
             >
               {profile.bio}

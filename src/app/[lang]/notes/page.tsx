@@ -40,7 +40,7 @@ export default async function NotesPage({ params }: PageProps) {
   const featuredNotes = await getFeaturedNotes(locale);
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="w-full py-12">
       {/* Page Header */}
       <header className="mb-12">
         <h1 className="text-foreground mb-4 text-4xl font-bold md:text-5xl">

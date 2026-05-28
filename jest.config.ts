@@ -21,15 +21,8 @@ const config: Config = {
   ],
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html"],
-  // Allow fumadocs modules to be transformed by Jest
-  transformIgnorePatterns: [
-    "/node_modules/(?!(fumadocs-core|fumadocs-mdx|fumadocs-ui)/)",
-  ],
-  // Map fumadocs modules
-  moduleNameMapper: {
-    "^fumadocs-mdx/config$": "<rootDir>/tests/__mocks__/fumadocs-mdx-config.ts",
-    "^fumadocs-mdx:collections/(.*)$": "<rootDir>/.source/$1",
-  },
+  // Allow ESM modules to be transformed by Jest
+  transformIgnorePatterns: ["/node_modules/(?!(@sanity)/)"],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

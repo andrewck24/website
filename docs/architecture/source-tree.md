@@ -39,7 +39,7 @@ andrewck24/
 │   │   ├── en/                   # 英文內容
 │   │   │   ├── index.mdx
 │   │   │   └── getting-started.mdx
-│   │   ├── zh-TW/                # 中文（台灣華語）內容
+│   │   ├── zh-TW/                # 中文內容
 │   │   │   ├── index.mdx
 │   │   │   └── getting-started.mdx
 │   │   └── ja/                   # 日文內容
@@ -123,7 +123,7 @@ const { provider } = defineI18nUI(i18n, {
       displayName: "English",
     },
     "zh-TW": {
-      displayName: "中文（台灣華語）",
+      displayName: "中文",
       search: "搜尋文檔",
       searchNoResult: "沒有找到結果",
       toc: "目錄",
@@ -178,7 +178,7 @@ app/
 ```txt
 content/
 └── docs/
-    ├── zh-TW/                # 中文（台灣華語）內容
+    ├── zh-TW/                # 中文內容
     │   ├── index.mdx         # 首頁內容
     │   ├── getting-started.mdx
     │   └── portfolio.mdx

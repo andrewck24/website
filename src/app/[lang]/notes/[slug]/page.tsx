@@ -1,10 +1,3 @@
-/**
- * Notes Detail Page
- *
- * 使用 Article 元件顯示筆記詳細頁面
- * T048: Implementation
- */
-
 import { Article } from "@/components/article";
 import { getAvailableLocales } from "@/lib/data/locales";
 import { getNote, generateNoteStaticParams } from "@/lib/data/notes";
@@ -16,7 +9,6 @@ interface PageProps {
   params: Promise<{ lang: string; slug: string }>;
 }
 
-// i18n 返回連結文字
 const backLinkTexts: Record<Locale, string> = {
   "zh-TW": "返回筆記列表",
   en: "Back to Notes",
@@ -28,21 +20,10 @@ export default async function Page({ params }: PageProps) {
   const locale = lang as Locale;
 
   const note = await getNote(locale, slug);
+  if (!note) notFound();
 
-  if (!note) {
-    notFound();
-  }
-
-  // 獲取可用語言版本
   const availableLocales = await getAvailableLocales(slug, "notes");
-
-  // 防禦性檢查
-  if (availableLocales.length === 0) {
-    console.warn(
-      `No available locales found for slug: ${slug}, falling back to current locale`
-    );
-    availableLocales.push(locale);
-  }
+  if (availableLocales.length === 0) availableLocales.push(locale);
 
   return (
     <Article
@@ -56,38 +37,18 @@ export default async function Page({ params }: PageProps) {
 
 export async function generateStaticParams() {
   const params = await generateNoteStaticParams();
-
-  // 轉換為 Next.js 期望的格式：{ lang, slug }
-  return params.map((param) => ({
-    lang: param.locale,
-    slug: param.slug,
-  }));
+  return params.map((param) => ({ lang: param.locale, slug: param.slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { lang, slug } = await params;
-  const locale = lang as Locale;
+  const note = await getNote(lang as Locale, slug);
+  if (!note) return {};
 
-  const note = await getNote(locale, slug);
-
-  if (!note) {
-    return {};
-  }
-
-  // 基本 metadata
-  const metadata: Metadata = {
+  return {
     title: note.title,
     description: note.description,
   };
-
-  // 如果有 OG image 配置，加入 openGraph
-  if (note.imageType === "static" && note.image) {
-    metadata.openGraph = {
-      images: [note.image],
-    };
-  }
-
-  return metadata;
 }

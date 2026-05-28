@@ -1,7 +1,6 @@
 @import "tailwindcss";
-@import "fumadocs-ui/css/shadcn.css";
-@import "fumadocs-ui/css/preset.css";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -121,7 +120,31 @@
   --color-gradient-4: oklch(var(--gradient-4));
   --color-gradient-5: oklch(var(--gradient-5));
 
+  --animate-nav-menu-in: nav-menu-in 200ms ease;
+  --animate-nav-menu-out: nav-menu-out 200ms ease;
   --animate-blink: blink 1.2s infinite;
+
+  @keyframes nav-menu-in {
+    from {
+      opacity: 0;
+      height: 0px;
+    }
+    to {
+      opacity: 1;
+      height: var(--radix-navigation-menu-viewport-height);
+    }
+  }
+
+  @keyframes nav-menu-out {
+    from {
+      opacity: 1;
+      height: var(--radix-navigation-menu-viewport-height);
+    }
+    to {
+      opacity: 0;
+      height: 0px;
+    }
+  }
 
   @keyframes blink {
     0%,
@@ -136,6 +159,7 @@
 }
 
 body {
+  font-family: var(--font-ubuntu-mono), var(--font-inter), sans-serif;
   font-feature-settings:
     "rlig" 1,
     "calt" 1;
@@ -150,7 +174,6 @@ body {
   }
 }
 
-/* Fumadocs search dialog border color override */
 [role="dialog"] {
   @apply border-border;
 }

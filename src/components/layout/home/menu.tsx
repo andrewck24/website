@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { cva } from "class-variance-authority";
-import Link from "fumadocs-core/link";
+import Link from "next/link";
 import { ChevronDown, Languages } from "lucide-react";
 import type { ComponentPropsWithoutRef } from "react";
 
@@ -91,7 +91,7 @@ export function Menu({
 const menuItemVariants = cva("", {
   variants: {
     variant: {
-      main: "hover:text-fd-popover-foreground/50 data-[active=true]:text-fd-primary inline-flex items-center gap-2 py-1.5 transition-colors data-[active=true]:font-medium [&_svg]:size-4",
+      main: "hover:text-popover-foreground/50 data-[active=true]:text-primary inline-flex items-center gap-2 py-1.5 transition-colors data-[active=true]:font-medium [&_svg]:size-4",
       icon: buttonVariants({
         size: "icon",
         variant: "ghost",
@@ -127,10 +127,14 @@ function MenuLinkItem({
 
     return (
       <div className={cn("mb-4 flex flex-col", props.className)}>
-        <p className="text-fd-muted-foreground mb-1 text-sm">
+        <p className="text-muted-foreground mb-1 text-sm">
           {item.url ? (
             <NavigationMenuLink asChild>
-              <Link href={item.url} external={item.external}>
+              <Link
+                href={item.url}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
+              >
                 {header}
               </Link>
             </NavigationMenuLink>
