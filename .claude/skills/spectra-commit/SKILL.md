@@ -65,8 +65,8 @@ This is a **utility skill** (not a workflow step). It reads source file tracking
    ## Commit Plan: <change-name>
 
    ### Change Artifacts
-   - M  openspec/changes/<name>/proposal.md
-   - M  openspec/changes/<name>/tasks.md
+   - M  docs/changes/<name>/proposal.md
+   - M  docs/changes/<name>/tasks.md
 
    ### Source Files
    **Task 1: <task description>**

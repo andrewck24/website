@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { Locale } from "@/types/article";
 import { PortableText } from "@portabletext/react";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ lang: string; slug?: string[] }>;
@@ -14,6 +15,8 @@ interface PageProps {
 export default async function AboutPage({ params }: PageProps) {
   const { lang } = await params;
   const about = await client.fetch(getAboutQuery, { locale: lang as Locale });
+
+  if (!about) notFound();
 
   return (
     <div

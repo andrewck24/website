@@ -44,3 +44,15 @@ The page SHALL achieve a Lighthouse performance score > 90 and fully load within
 | Visitor navigates to `/zh-TW/about` | Page loads                   | Sections Introduction, Skills, Education, Certifications are visible |
 | Viewer switches language to `ja`    | Language toggle is activated | URL becomes `/ja/about` and all content is in Japanese               |
 | Page is viewed on a 375 px viewport | Page loads                   | No horizontal scroll; font size ≥ 14 px                              |
+
+## Requirements
+
+### Requirement: about-page not-found guard
+
+When the Sanity client returns no about document for the requested locale, the system SHALL call `notFound()` to return HTTP 404 instead of rendering a blank page.
+
+#### Scenario: no about document for locale
+
+- **WHEN** the about page is requested for a locale and `client.fetch(getAboutQuery)` returns `null`
+- **THEN** `notFound()` is called and the request results in HTTP 404
+- **THEN** the `about/[[...slug]]/not-found.tsx` page is rendered

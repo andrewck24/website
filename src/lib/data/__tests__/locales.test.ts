@@ -1,4 +1,7 @@
-import { getAvailableLocales } from "@/lib/data/locales";
+import {
+  getAvailableAboutLocales,
+  getAvailableLocales,
+} from "@/lib/data/locales";
 import { client } from "@/lib/sanity/client";
 
 jest.mock("../../sanity/client", () => ({
@@ -56,5 +59,39 @@ describe("getAvailableLocales()", () => {
       expect.any(String),
       expect.objectContaining({ type: "project", slug: "some-project" })
     );
+  });
+});
+
+describe("getAvailableAboutLocales()", () => {
+  it("returns locales when about documents exist in multiple languages", async () => {
+    mockFetch.mockResolvedValue(["zh-TW", "en"]);
+
+    const result = await getAvailableAboutLocales();
+
+    expect(result).toEqual(["zh-TW", "en"]);
+  });
+
+  it("returns all three locales when about exists in all languages", async () => {
+    mockFetch.mockResolvedValue(["zh-TW", "en", "ja"]);
+
+    const result = await getAvailableAboutLocales();
+
+    expect(result).toEqual(["zh-TW", "en", "ja"]);
+  });
+
+  it("returns empty array when no about documents exist", async () => {
+    mockFetch.mockResolvedValue([]);
+
+    const result = await getAvailableAboutLocales();
+
+    expect(result).toHaveLength(0);
+  });
+
+  it("calls fetch with no extra params (no slug needed)", async () => {
+    mockFetch.mockResolvedValue(["zh-TW"]);
+
+    await getAvailableAboutLocales();
+
+    expect(mockFetch).toHaveBeenCalledWith(expect.any(String));
   });
 });
