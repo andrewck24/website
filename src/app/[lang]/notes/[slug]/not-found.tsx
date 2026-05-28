@@ -9,10 +9,31 @@ import {
 import { getLocaleFromHeaders } from "@/lib/locale-from-headers";
 import { getAvailableLocales } from "@/lib/data/locales";
 
-const labels: Record<string, { title: string; back: string }> = {
-  "zh-TW": { title: "找不到這篇筆記", back: "返回筆記列表" },
-  en: { title: "Note not found", back: "Back to Notes" },
-  ja: { title: "このノートは見つかりません", back: "ノート一覧に戻る" },
+const LOCALE_NAMES: Record<string, string> = {
+  "zh-TW": "繁體中文",
+  en: "English",
+  ja: "日本語",
+};
+
+const labels: Record<
+  string,
+  { title: string; back: string; switcherLabel: string }
+> = {
+  "zh-TW": {
+    title: "找不到這篇筆記",
+    back: "返回筆記列表",
+    switcherLabel: "此內容也提供以下語言版本：",
+  },
+  en: {
+    title: "Note not found",
+    back: "Back to Notes",
+    switcherLabel: "This content is also available in:",
+  },
+  ja: {
+    title: "このノートは見つかりません",
+    back: "ノート一覧に戻る",
+    switcherLabel: "のコンテンツは以下の言語でもご覧いただけます：",
+  },
 };
 
 async function getSlugFromHeaders(): Promise<string> {
@@ -33,7 +54,7 @@ export default async function NotFound() {
   }
 
   const otherLocales = availableLocales.filter((l) => l !== locale);
-  const { title, back } = labels[locale] ?? labels["zh-TW"];
+  const { title, back, switcherLabel } = labels[locale] ?? labels["zh-TW"];
 
   return (
     <Empty>
@@ -43,9 +64,10 @@ export default async function NotFound() {
       <EmptyContent>
         {otherLocales.length > 0 && (
           <div>
+            <p>{switcherLabel}</p>
             {otherLocales.map((l) => (
               <Link key={l} href={`/${l}/notes/${slug}`}>
-                {l}
+                {LOCALE_NAMES[l] ?? l}
               </Link>
             ))}
           </div>

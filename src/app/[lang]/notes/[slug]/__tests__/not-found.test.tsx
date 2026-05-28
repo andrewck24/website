@@ -92,8 +92,8 @@ describe("NotFound (notes/[slug])", () => {
     mockGetAvailableLocales.mockResolvedValue(["zh-TW", "en", "ja"]);
     await renderNotFound();
 
-    expect(screen.getByRole("link", { name: /^en$/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^ja$/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "English" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "日本語" })).toBeInTheDocument();
   });
 
   it("does NOT show a locale switcher button for the current locale", async () => {
@@ -116,6 +116,49 @@ describe("NotFound (notes/[slug])", () => {
     const backLink = screen.getByRole("link", { name: /返回筆記列表/i });
     expect(backLink).toBeInTheDocument();
     expect(backLink).toHaveAttribute("href", "/zh-TW/notes");
+  });
+
+  it("shows human-readable locale names in switcher buttons, not raw codes", async () => {
+    mockGetLocaleFromHeaders.mockResolvedValue("zh-TW");
+    mockHeaders.mockResolvedValue(makeHeadersObj("/zh-TW/notes/my-note"));
+    mockGetAvailableLocales.mockResolvedValue(["zh-TW", "en", "ja"]);
+    await renderNotFound();
+
+    expect(screen.getByRole("link", { name: "English" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "日本語" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "en" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "ja" })).not.toBeInTheDocument();
+  });
+
+  it("shows zh-TW display name '繁體中文' when zh-TW is an alternate locale", async () => {
+    mockGetLocaleFromHeaders.mockResolvedValue("en");
+    mockHeaders.mockResolvedValue(makeHeadersObj("/en/notes/my-note"));
+    mockGetAvailableLocales.mockResolvedValue(["zh-TW", "en"]);
+    await renderNotFound();
+
+    expect(screen.getByRole("link", { name: "繁體中文" })).toBeInTheDocument();
+  });
+
+  it("shows switcherLabel when other locales are available", async () => {
+    mockGetLocaleFromHeaders.mockResolvedValue("en");
+    mockHeaders.mockResolvedValue(makeHeadersObj("/en/notes/my-note"));
+    mockGetAvailableLocales.mockResolvedValue(["en", "zh-TW"]);
+    await renderNotFound();
+
+    expect(
+      screen.getByText("This content is also available in:")
+    ).toBeInTheDocument();
+  });
+
+  it("does NOT show switcherLabel when no other locales are available", async () => {
+    mockGetLocaleFromHeaders.mockResolvedValue("zh-TW");
+    mockHeaders.mockResolvedValue(makeHeadersObj("/zh-TW/notes/my-note"));
+    mockGetAvailableLocales.mockResolvedValue(["zh-TW"]);
+    await renderNotFound();
+
+    expect(
+      screen.queryByText("此內容也提供以下語言版本：")
+    ).not.toBeInTheDocument();
   });
 
   it("renders without crashing when getAvailableLocales throws", async () => {

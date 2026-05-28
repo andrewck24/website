@@ -114,9 +114,9 @@ describe("projects/[slug]/not-found", () => {
     );
     expect(localeSwitcherLinks).toHaveLength(0);
 
-    // zh-TW and ja should appear
-    expect(screen.getByRole("link", { name: /zh-TW/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /ja/i })).toBeInTheDocument();
+    // zh-TW and ja should appear (as human-readable names)
+    expect(screen.getByRole("link", { name: "繁體中文" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "日本語" })).toBeInTheDocument();
   });
 
   it("does NOT show a button for the current locale", async () => {
@@ -137,6 +137,51 @@ describe("projects/[slug]/not-found", () => {
 
     const backLink = screen.getByRole("link", { name: /back to projects/i });
     expect(backLink).toHaveAttribute("href", "/en/projects");
+  });
+
+  it("shows human-readable locale names, not raw locale codes", async () => {
+    mockGetLocaleFromHeaders.mockResolvedValue("en");
+    mockHeaders.mockResolvedValue({
+      get: jest.fn().mockReturnValue("/en/projects/my-slug"),
+    });
+    mockGetAvailableLocales.mockResolvedValue(["en", "zh-TW", "ja"]);
+
+    render(await NotFound());
+
+    expect(screen.getByRole("link", { name: "繁體中文" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "日本語" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "zh-TW" })
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "ja" })).not.toBeInTheDocument();
+  });
+
+  it("shows switcherLabel when other locales are available", async () => {
+    mockGetLocaleFromHeaders.mockResolvedValue("en");
+    mockHeaders.mockResolvedValue({
+      get: jest.fn().mockReturnValue("/en/projects/my-slug"),
+    });
+    mockGetAvailableLocales.mockResolvedValue(["en", "zh-TW"]);
+
+    render(await NotFound());
+
+    expect(
+      screen.getByText("This content is also available in:")
+    ).toBeInTheDocument();
+  });
+
+  it("does NOT show switcherLabel when no other locales are available", async () => {
+    mockGetLocaleFromHeaders.mockResolvedValue("en");
+    mockHeaders.mockResolvedValue({
+      get: jest.fn().mockReturnValue("/en/projects/my-slug"),
+    });
+    mockGetAvailableLocales.mockResolvedValue(["en"]);
+
+    render(await NotFound());
+
+    expect(
+      screen.queryByText("This content is also available in:")
+    ).not.toBeInTheDocument();
   });
 
   it("still renders without crashing when getAvailableLocales throws", async () => {

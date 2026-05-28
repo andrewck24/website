@@ -8,10 +8,31 @@ import {
   EmptyContent,
 } from "@/components/ui/empty";
 
-const labels: Record<string, { title: string; back: string }> = {
-  "zh-TW": { title: "找不到關於頁面", back: "返回首頁" },
-  en: { title: "About page not found", back: "Back to Home" },
-  ja: { title: "Aboutページが見つかりません", back: "ホームに戻る" },
+const LOCALE_NAMES: Record<string, string> = {
+  "zh-TW": "繁體中文",
+  en: "English",
+  ja: "日本語",
+};
+
+const labels: Record<
+  string,
+  { title: string; back: string; switcherLabel: string }
+> = {
+  "zh-TW": {
+    title: "找不到關於頁面",
+    back: "返回首頁",
+    switcherLabel: "此內容也提供以下語言版本：",
+  },
+  en: {
+    title: "About page not found",
+    back: "Back to Home",
+    switcherLabel: "This content is also available in:",
+  },
+  ja: {
+    title: "Aboutページが見つかりません",
+    back: "ホームに戻る",
+    switcherLabel: "このコンテンツは以下の言語でもご覧いただけます：",
+  },
 };
 
 export default async function NotFound() {
@@ -25,7 +46,7 @@ export default async function NotFound() {
   }
 
   const otherLocales = availableLocales.filter((l) => l !== locale);
-  const { title, back } = labels[locale] ?? labels["zh-TW"];
+  const { title, back, switcherLabel } = labels[locale] ?? labels["zh-TW"];
 
   return (
     <Empty>
@@ -35,9 +56,10 @@ export default async function NotFound() {
       <EmptyContent>
         {otherLocales.length > 0 && (
           <div>
+            <p>{switcherLabel}</p>
             {otherLocales.map((l) => (
               <Link key={l} href={`/${l}/about`}>
-                {l}
+                {LOCALE_NAMES[l] ?? l}
               </Link>
             ))}
           </div>

@@ -84,6 +84,30 @@ Route-specific not-found files are placed at the deepest matching segment (`[slu
 - In scope: the three route segments listed above, the two data functions, the shared locale helper
 - Out of scope: global `app/not-found.tsx`, notes/projects list pages, homepage
 
+### Locale switcher UX: section label and human-readable locale names
+
+The initial implementation renders locale buttons with raw locale codes (`zh-TW`, `en`, `ja`) and no contextual label, which is not meaningful to users who may not recognize IETF language tags.
+
+Two improvements are required:
+
+1. **Section label**: when `otherLocales.length > 0`, display a locale-aware introductory sentence above the buttons so the user understands what the buttons do.
+   - zh-TW: `"此內容也提供以下語言版本："`
+   - en: `"This content is also available in:"`
+   - ja: `"このコンテンツは以下の言語でもご覧いただけます："`
+
+2. **Human-readable locale names**: replace the raw locale code in each button with the display name of that locale:
+   - `"zh-TW"` → `"繁體中文"`
+   - `"en"` → `"English"`
+   - `"ja"` → `"日本語"`
+
+These labels are static — no data fetch needed. A shared `LOCALE_NAMES` constant (e.g., `Record<string, string>`) MAY be defined in each not-found file inline, or extracted to a shared module if reuse warrants it.
+
+The section label is **only shown when `otherLocales.length > 0`** (same condition as the buttons wrapper). The failure mode for an unrecognised locale code is to fall back to the raw code string.
+
+Updated Implementation Contract behavior example:
+
+- `GET /en/projects/my-project` where `my-project` only has `zh-TW` → HTTP 404, renders Projects not-found page with "Back to Projects" button, the label "This content is also available in:", and a "繁體中文" button linking to `/zh-TW/projects/my-project`
+
 ## Risks / Trade-offs
 
 - [Risk] `not-found.tsx` with `headers()` makes the route dynamic (no static export for 404 pages). → Acceptable: these are error paths, not hot paths. ISR still applies to the happy-path pages.

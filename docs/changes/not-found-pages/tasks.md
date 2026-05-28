@@ -27,3 +27,13 @@ Per design decision, use `not-found.tsx` as async Server Components placed at th
 ## 5. Root Layout Refactor
 
 - [x] 5.1 Replace the inline locale-extraction logic in `src/app/layout.tsx` with a call to `getLocaleFromHeaders()` from `src/lib/locale-from-headers.ts` (shared locale extraction utility). This removes duplication introduced in the previous PR. Verify: `pnpm type-check` passes; `lang` attribute on `<html>` is still correctly set per locale in SSR output.
+
+## 6. Locale Switcher UX Improvements
+
+Per design decision (locale switcher UX: section label and human-readable locale names), each not-found page must show a section label above locale buttons and use human-readable locale names instead of raw locale codes. The `LOCALE_NAMES` map is `{ "zh-TW": "繁體中文", "en": "English", "ja": "日本語" }`. The section label is locale-aware and displayed only when `otherLocales.length > 0`.
+
+- [x] [P] 6.1 Update `src/app/[lang]/notes/[slug]/not-found.tsx`: add `LOCALE_NAMES` constant mapping locale codes to display names (`zh-TW` → `繁體中文`, `en` → `English`, `ja` → `日本語`); add a locale-aware section label rendered only when `otherLocales.length > 0` (zh-TW: `"此內容也提供以下語言版本："`, en: `"This content is also available in:"`, ja: `"このコンテンツは以下の言語でもご覧いただけます："`); replace the raw locale code in each `<Link>` child with `LOCALE_NAMES[l] ?? l`. Also update the `labels` map to include a `switcherLabel` field. Verify: `pnpm jest "notes/\[slug\]/__tests__/not-found" --no-coverage` passes; "繁體中文" appears as button text when zh-TW is an alternate locale; section label renders in the correct language.
+
+- [x] [P] 6.2 Update `src/app/[lang]/projects/[slug]/not-found.tsx`: apply the same locale switcher UX improvements as 6.1. Add `LOCALE_NAMES` constant, add locale-aware `switcherLabel` to the `labels` map (same strings as 6.1), render the label only when `otherLocales.length > 0`, replace raw locale codes with display names in each `<Link>` child. Verify: `pnpm jest "projects/\[slug\]/__tests__/not-found" --no-coverage` passes; human-readable locale names appear as button text.
+
+- [x] [P] 6.3 Update `src/app/[lang]/about/[[...slug]]/not-found.tsx`: apply the same locale switcher UX improvements as 6.1. Add `LOCALE_NAMES` constant, add locale-aware `switcherLabel` to the `labels` map (same strings as 6.1), render the label only when `otherLocales.length > 0`, replace raw locale codes with display names in each `<Link>` child. Verify: `pnpm jest "about/\[\[\.\.\.slug\]\]/__tests__/not-found" --no-coverage` passes; human-readable locale names appear as button text.

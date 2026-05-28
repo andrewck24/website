@@ -71,8 +71,8 @@ describe("About NotFound", () => {
 
     render(await NotFound());
 
-    expect(screen.getByText("zh-TW")).toBeInTheDocument();
-    expect(screen.queryByText("en")).not.toBeInTheDocument();
+    expect(screen.getByText("繁體中文")).toBeInTheDocument();
+    expect(screen.queryByText("English")).not.toBeInTheDocument();
   });
 
   it("renders return-to-home link with correct href", async () => {
@@ -83,6 +83,40 @@ describe("About NotFound", () => {
 
     const link = screen.getByText("Back to Home");
     expect(link.closest("a")).toHaveAttribute("href", "/en");
+  });
+
+  it("shows human-readable locale names, not raw locale codes", async () => {
+    mockGetLocale.mockResolvedValue("en");
+    mockGetLocales.mockResolvedValue(["zh-TW", "en", "ja"]);
+
+    render(await NotFound());
+
+    expect(screen.getByText("繁體中文")).toBeInTheDocument();
+    expect(screen.getByText("日本語")).toBeInTheDocument();
+    expect(screen.queryByText("zh-TW")).not.toBeInTheDocument();
+    expect(screen.queryByText("ja")).not.toBeInTheDocument();
+  });
+
+  it("shows switcherLabel when other locales are available", async () => {
+    mockGetLocale.mockResolvedValue("en");
+    mockGetLocales.mockResolvedValue(["zh-TW", "en"]);
+
+    render(await NotFound());
+
+    expect(
+      screen.getByText("This content is also available in:")
+    ).toBeInTheDocument();
+  });
+
+  it("does NOT show switcherLabel when no other locales are available", async () => {
+    mockGetLocale.mockResolvedValue("en");
+    mockGetLocales.mockResolvedValue(["en"]);
+
+    render(await NotFound());
+
+    expect(
+      screen.queryByText("This content is also available in:")
+    ).not.toBeInTheDocument();
   });
 
   it("still renders without crashing when getAvailableAboutLocales throws", async () => {
