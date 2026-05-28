@@ -11,9 +11,9 @@ A personal portfolio and technical blog — built with Next.js 15, Sanity CMS he
 
 [live-url]: https://andrewck24.vercel.app/
 [live-url-en]: https://andrewck24.vercel.app/en
-[linkedin-url]: https://linkedin.com/in/li-wei-tseng-andrew
+[linkedin-url]: https://linkedin.com/in/andrewck24/
 [live-badge]: https://img.shields.io/badge/Live%20Site-andrewck24.vercel.app-black?style=for-the-badge&logo=vercel
-[linkedin-badge]: https://img.shields.io/badge/LinkedIn-li--wei--tseng--andrew-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
+[linkedin-badge]: https://img.shields.io/badge/LinkedIn-ANDREW%20LI--WEI%20TSENG-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
 
 </div>
 
