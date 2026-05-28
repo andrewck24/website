@@ -12,11 +12,11 @@
 
 ## 1. Tier 1: Safe minor/patch updates
 
-- [ ] 1.1 [P] Upgrade the 12 safe minor/patch packages in `package.json` to their latest versions: `@playwright/test` ^1.60.0, `@testing-library/react` ^16.3.2, `@types/node` 25.9.0, `@types/react` ^19.2.14, `jest` ^30.4.2, `jest-environment-jsdom` ^30.4.1, `motion` ^12.39.0, `postcss` ^8.5.14, `prettier` ^3.8.3, `react` ^19.2.6, `react-dom` ^19.2.6, `tailwind-merge` ^3.6.0. Note: `@vercel/analytics` 2.0.1 and `package.json` name `website` are already applied. Verified by reading `package.json` and confirming all 12 entries show the new version ranges (satisfies spec: active dependencies are kept within one minor version of latest).
+- [x] 1.1 [P] Upgrade the 12 safe minor/patch packages in `package.json` to their latest versions: `@playwright/test` ^1.60.0, `@testing-library/react` ^16.3.2, `@types/node` 25.9.0, `@types/react` ^19.2.14, `jest` ^30.4.2, `jest-environment-jsdom` ^30.4.1, `motion` ^12.39.0, `postcss` ^8.5.14, `prettier` ^3.8.3, `react` ^19.2.6, `react-dom` ^19.2.6, `tailwind-merge` ^3.6.0. Note: `@vercel/analytics` 2.0.1 and `package.json` name `website` are already applied. Verified by reading `package.json` and confirming all 12 entries show the new version ranges (satisfies spec: active dependencies are kept within one minor version of latest).
 
-- [ ] 1.2 Run `pnpm install` after Tier 1 bumps to update the lockfile. Verified when install exits 0.
+- [x] 1.2 Run `pnpm install` after Tier 1 bumps to update the lockfile. Verified when install exits 0.
 
-- [ ] 1.3 Run the full verification suite after Tier 1: `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`. Verified when all four commands exit 0 with no new errors or warnings (baseline gate before breaking-change tiers).
+- [x] 1.3 Run the full verification suite after Tier 1: `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`. Verified when all four commands exit 0 with no new errors or warnings (baseline gate before breaking-change tiers).
 
 ## 2. Tier 2: Ecosystem-coupled upgrades
 
