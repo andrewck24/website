@@ -1,6 +1,7 @@
+import { GithubIcon } from "@/components/icons/github-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Github, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import Link from "next/link";
 import { type AnchorHTMLAttributes } from "react";
 
@@ -61,7 +62,7 @@ export async function GithubInfo({
           rel="noopener noreferrer"
           aria-label="View on GitHub"
         >
-          <Github className="mr-2 size-4" />
+          <GithubIcon className="mr-2 size-4" />
           GitHub
         </Link>
       </Button>
@@ -90,7 +91,7 @@ export async function GithubInfo({
           rel="noopener noreferrer"
           aria-label="View on GitHub"
         >
-          <Github className="mr-2 size-4" />
+          <GithubIcon className="mr-2 size-4" />
           {owner}/{repo}
         </Link>
       </Button>

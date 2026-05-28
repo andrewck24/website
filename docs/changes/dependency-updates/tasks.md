@@ -33,7 +33,7 @@
 <!-- lucide-react 0→1: replace removed brand icons, then upgrade -->
 <!-- lint-staged 16→17: upgrade, re-run pre-commit -->
 
-- [ ] 3.1 Replace removed brand icons before upgrading:
+- [x] 3.1 Replace removed brand icons before upgrading:
       a. In `src/components/icons/github-icon.tsx`: rename existing animated component from `GithubIcon`/`GithubIconHandle`/`GithubIconProps` to `GithubAnimatedIcon`/`GithubAnimatedIconHandle`/`GithubAnimatedIconProps`; add static `GithubIcon` export accepting `SVGProps<SVGSVGElement>` using the lucide SVG paths (sourced from shadcn.io/icons/lucide).
       b. In `src/components/icons/linkedin-icon.tsx`: rename existing animated component from `LinkedInIcon`/`LinkedInIconHandle`/`LinkedInIconProps` to `LinkedInAnimatedIcon`/`LinkedInAnimatedIconHandle`/`LinkedInAnimatedIconProps`; add static `LinkedinIcon` export accepting `SVGProps<SVGSVGElement>` using the lucide SVG paths.
       c. Create `src/components/icons/cake-icon.tsx` exporting `CakeIcon` with the SVG extracted from `personal-info.tsx` (same paths, accepts `SVGProps<SVGSVGElement>`).
@@ -42,19 +42,19 @@
       f. Update `src/components/github-info.tsx`: replace `Github` from lucide-react with `GithubIcon` from `@/components/icons/github-icon` (2 usages).
       Verified by running `pnpm type-check` and confirming no import errors across all 4 modified files.
 
-- [ ] 3.2 Upgrade `lucide-react` to ^1.16.0 in `package.json`. Verified by reading `package.json` and confirming the entry shows ^1.16.0.
+- [x] 3.2 Upgrade `lucide-react` to ^1.16.0 in `package.json`. Verified by reading `package.json` and confirming the entry shows ^1.16.0.
 
-- [ ] 3.3 Run `pnpm install` after lucide-react upgrade. Verified when install exits 0.
+- [x] 3.3 Run `pnpm install` after lucide-react upgrade. Verified when install exits 0.
 
-- [ ] 3.4 Run `pnpm build` and confirm it exits 0 with no `Cannot find module` or named-export errors for the 9 remaining lucide icons (`Airplay`, `Moon`, `Sun`, `ArrowLeft`, `ChevronDown`, `Languages`, `ExternalLink`, `Star`, `Search`). Verified by build exit code and absence of icon-related errors in build output (satisfies spec: breaking-change upgrades are verified before merging).
+- [x] 3.4 Run `pnpm build` and confirm it exits 0 with no `Cannot find module` or named-export errors for the 9 remaining lucide icons (`Airplay`, `Moon`, `Sun`, `ArrowLeft`, `ChevronDown`, `Languages`, `ExternalLink`, `Star`, `Search`). Verified by build exit code and absence of icon-related errors in build output (satisfies spec: breaking-change upgrades are verified before merging).
 
-- [ ] 3.5 Visually spot-check at least one page per icon-bearing component (theme toggle, search toggle, sidebar, article header, about section) in a running dev server to confirm icons render correctly.
+- [x] 3.5 Visually spot-check at least one page per icon-bearing component (theme toggle, search toggle, sidebar, article header, about section) in a running dev server to confirm icons render correctly.
 
-- [ ] 3.6 Upgrade `lint-staged` to ^17.0.5 in `package.json`. Verified by reading `package.json` and confirming the entry shows ^17.0.5.
+- [x] 3.6 Upgrade `lint-staged` to ^17.0.5 in `package.json`. Verified by reading `package.json` and confirming the entry shows ^17.0.5.
 
-- [ ] 3.7 Run `pnpm install` after lint-staged upgrade. Verified when install exits 0.
+- [x] 3.7 Run `pnpm install` after lint-staged upgrade. Verified when install exits 0.
 
-- [ ] 3.8 Stage a file change and run `git commit --dry-run` to confirm lint-staged 17 parses the existing `package.json` config correctly and invokes eslint and prettier without errors. Pre-conditions verified: Node 24.15.0 ≥ 22.22.1 ✓, Git 2.54.0 ≥ 2.32.0 ✓, config is in `package.json` (not YAML) ✓. Verified when dry-run exits without config parse errors or lint-staged lifecycle errors.
+- [x] 3.8 Stage a file change and run `git commit --dry-run` to confirm lint-staged 17 parses the existing `package.json` config correctly and invokes eslint and prettier without errors. Pre-conditions verified: Node 24.15.0 ≥ 22.22.1 ✓, Git 2.54.0 ≥ 2.32.0 ✓, config is in `package.json` (not YAML) ✓. Verified when dry-run exits without config parse errors or lint-staged lifecycle errors.
 
 ## 4. Tier 4: eslint upgrade
 

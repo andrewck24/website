@@ -1,5 +1,5 @@
-import { GithubIcon } from "@/components/icons/github-icon";
-import { LinkedInIcon } from "@/components/icons/linkedin-icon";
+import { GithubAnimatedIcon } from "@/components/icons/github-icon";
+import { LinkedInAnimatedIcon } from "@/components/icons/linkedin-icon";
 import { Button } from "@/components/ui/button";
 import type { SocialLinks as SocialLinksType } from "@/types/profile";
 import Link from "next/link";
@@ -14,13 +14,13 @@ export function CtaButtons({ locale, social }: CtaButtonsProps) {
     {
       name: "GitHub",
       url: social.github,
-      icon: GithubIcon,
+      icon: GithubAnimatedIcon,
       testId: "github-link",
     },
     {
       name: "LinkedIn",
       url: social.linkedin,
-      icon: LinkedInIcon,
+      icon: LinkedInAnimatedIcon,
       testId: "linkedin-link",
     },
   ];
