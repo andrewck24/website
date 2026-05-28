@@ -1,5 +1,5 @@
 import type { PortableTextComponents } from "@portabletext/react";
-import { codeToHtml } from "shiki";
+import { bundledLanguages, codeToHtml } from "shiki";
 import Link from "next/link";
 
 interface CodeBlockValue {
@@ -16,7 +16,10 @@ interface CardBlockValue {
 }
 
 async function CodeBlock({ value }: { value: CodeBlockValue }) {
-  const lang = value.language || "plaintext";
+  const lang =
+    value.language && value.language in bundledLanguages
+      ? value.language
+      : "plaintext";
   const html = await codeToHtml(value.code ?? "", {
     lang,
     themes: { light: "github-light", dark: "github-dark" },

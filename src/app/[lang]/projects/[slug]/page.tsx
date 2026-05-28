@@ -5,24 +5,31 @@ import type { Locale } from "@/types/project";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+const backLinkTexts: Record<Locale, string> = {
+  "zh-TW": "返回專案列表",
+  en: "Back to Projects",
+  ja: "プロジェクト一覧に戻る",
+};
+
 interface ProjectPageProps {
   params: Promise<{ lang: string; slug: string }>;
 }
 
 export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   const { lang, slug } = await params;
+  const locale = lang as Locale;
 
-  const project = await getProject(lang as Locale, slug);
+  const project = await getProject(locale, slug);
   if (!project) notFound();
 
   const availableLocales = await getAvailableLocales(slug, "projects");
-  if (availableLocales.length === 0) availableLocales.push(lang as Locale);
+  if (availableLocales.length === 0) availableLocales.push(locale);
 
   return (
     <Article
       article={project}
       contentType="projects"
-      backLinkText="返回專案列表"
+      backLinkText={backLinkTexts[locale]}
       availableLocales={availableLocales}
     />
   );
