@@ -39,6 +39,7 @@
     "@sanity/image-url": "^2.1.1",
     "@sanity/webhook": "^4.0.4",
     "@tailwindcss/typography": "^0.5.19",
+    "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.562.0",
@@ -50,12 +51,10 @@
     "react-dom": "^19.2.3",
     "sanity": "^5.26.0",
     "shiki": "^4.1.0",
-    "tailwind-merge": "^3.4.0",
-    "zod": "^4.2.1"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@swc/jest": "^0.2.39",
     "@tailwindcss/postcss": "^4.1.18",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",

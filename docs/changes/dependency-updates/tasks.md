@@ -2,13 +2,13 @@
 
 ## 0. Pre-flight: Remove unused dependencies
 
-- [ ] 0.1 Remove `zod` from `dependencies` in `package.json` (confirmed zero imports in `src/` via grep — no file under `src/` imports from `"zod"`). Verified by reading `package.json` and confirming `zod` is absent from the dependencies section.
+- [x] 0.1 Remove `zod` from `dependencies` in `package.json` (confirmed zero imports in `src/` via grep — no file under `src/` imports from `"zod"`). Verified by reading `package.json` and confirming `zod` is absent from the dependencies section.
 
-- [ ] 0.2 Remove `@swc/jest` from `devDependencies` in `package.json` (Next.js uses its own bundled SWC transformer at `node_modules/next/dist/build/jest/../swc/jest-transformer`; `@swc/jest` is not referenced in `jest.config.ts` or any test file). Verified by reading `package.json` and confirming `@swc/jest` is absent.
+- [x] 0.2 Remove `@swc/jest` from `devDependencies` in `package.json` (Next.js uses its own bundled SWC transformer at `node_modules/next/dist/build/jest/../swc/jest-transformer`; `@swc/jest` is not referenced in `jest.config.ts` or any test file). Verified by reading `package.json` and confirming `@swc/jest` is absent.
 
-- [ ] 0.3 Run `pnpm install` after the two removals. Verified when install exits 0.
+- [x] 0.3 Run `pnpm install` after the two removals. Verified when install exits 0.
 
-- [ ] 0.4 Run `pnpm test` to confirm the test suite still passes without the external `@swc/jest` package. Verified when all tests exit 0 with no transformer errors.
+- [x] 0.4 Run `pnpm test` to confirm the test suite still passes without the external `@swc/jest` package. Verified when all tests exit 0 with no transformer errors.
 
 ## 1. Tier 1: Safe minor/patch updates
 
