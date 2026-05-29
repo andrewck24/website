@@ -7,7 +7,7 @@
 [![Live Site][live-badge]][live-url]
 [![LinkedIn][linkedin-badge]][linkedin-url]
 
-A personal portfolio and technical blog — built with Next.js 15, Sanity CMS headless content management, and native View Transition API for app-like page transitions.
+A personal portfolio and technical blog — built with Next.js 16, Sanity CMS headless content management, and native View Transition API for app-like page transitions.
 
 [live-url]: https://andrewck24.vercel.app/
 [live-url-en]: https://andrewck24.vercel.app/en
@@ -66,9 +66,9 @@ Page transitions use the browser-native [View Transition API](https://developer.
 [![Tailwind CSS][tailwind-badge]][tailwind-url]
 [![Sanity][sanity-badge]][sanity-url]
 
-[nextjs-badge]: https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js
+[nextjs-badge]: https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js
 [nextjs-url]: https://nextjs.org/
-[ts-badge]: https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white
+[ts-badge]: https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white
 [ts-url]: https://www.typescriptlang.org/
 [tailwind-badge]: https://img.shields.io/badge/Tailwind%20CSS-4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white
 [tailwind-url]: https://tailwindcss.com/
@@ -84,7 +84,7 @@ Page transitions use the browser-native [View Transition API](https://developer.
 ```
 src/
 ├── app/                   # Next.js App Router — routes, layouts, global styles
-│   ├── [lang]/            # i18n route segment (zh-TW / en)
+│   ├── (site)/[lang]/     # i18n route segment (zh-TW / en / ja)
 │   ├── api/               # Route Handlers (Sanity webhook revalidation, etc.)
 │   └── studio/            # Embedded Sanity Studio
 ├── assets/
@@ -97,14 +97,12 @@ src/
 │   ├── layout/
 │   ├── mdx/
 │   ├── projects/
-│   ├── toc/
 │   └── ui/                # Shared primitives (Shadcn/ui)
-├── hooks/                 # Custom React hooks
 ├── lib/                   # Pure utilities and data-fetching helpers
 │   ├── data/              # Static data (resume, nav links)
 │   └── sanity/            # Sanity client, GROQ queries, schema helpers
 └── types/                 # TypeScript type definitions and ambient declarations
-docs/                      # Architecture docs, Spectra change artifacts
+docs/                      # Specs, Change artifacts
 ```
 
 <div align="right"><a href="#readme-top">↑ back to top</a></div>
