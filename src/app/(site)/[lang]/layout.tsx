@@ -1,4 +1,3 @@
-import "@/app/globals.css";
 import { LangSetter } from "@/components/lang-setter";
 import { NavLayout } from "@/components/layout";
 import type { Metadata } from "next";

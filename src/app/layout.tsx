@@ -1,5 +1,4 @@
 import { Analytics } from "@vercel/analytics/next";
-import { Provider } from "@/components/provider";
 import { Inter, Ubuntu_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 
@@ -18,7 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       className={`${ubuntuMono.variable} ${inter.variable}`}
     >
       <body suppressHydrationWarning>
-        <Provider>{children}</Provider>
+        {children}
         <Analytics />
       </body>
     </html>
