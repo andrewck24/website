@@ -42,9 +42,19 @@ export function Navbar({
 }) {
   const pathname = usePathname();
   const links = NAV_LINKS[lang as keyof typeof NAV_LINKS] ?? NAV_LINKS.en;
+  const activeIndex = links.findIndex((link) =>
+    isActive(pathname, `/${lang}/${link.path}`)
+  );
 
   return (
     <nav
+      style={
+        activeIndex >= 0
+          ? ({
+              "--active-anchor": `--nav-link-${activeIndex}`,
+            } as React.CSSProperties)
+          : undefined
+      }
       className={cn(
         "fixed inset-x-0 top-0 z-40 flex justify-center transition-all duration-300",
         isScrolled && "bg-background/60 shadow-xl backdrop-blur-sm"
@@ -74,6 +84,22 @@ export function Navbar({
                 </Link>
               );
             })}
+            {/* CSS anchor positioning indicator — silently absent in unsupported browsers */}
+            <span
+              data-indicator
+              className="bg-muted/60 pointer-events-none absolute hidden rounded-md backdrop-blur-sm supports-[anchor-name:--x]:block"
+              style={
+                {
+                  positionAnchor: `var(--active-anchor)`,
+                  top: "anchor(top)",
+                  left: "anchor(left)",
+                  width: "anchor-size(width)",
+                  height: "anchor-size(height)",
+                  transition:
+                    "top 150ms, left 150ms, width 150ms, height 150ms",
+                } as React.CSSProperties
+              }
+            />
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-1.5">

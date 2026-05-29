@@ -28,7 +28,7 @@ verification.
 
 ## 4. Add CSS anchor positioning active indicator
 
-- [ ] 4.1 Implement the desktop active indicator per the spec "Desktop active indicator uses CSS anchor positioning" and the design decision "CSS anchor positioning for desktop active-link indicator": assign `anchor-name: --nav-link-<index>` to each desktop link; render a `<span>` positioned via `position-anchor`, `anchor()`, `anchor-size()` with `bg-muted/60 backdrop-blur-sm rounded-md` and CSS `transition` on position/size; wrap in `@supports (anchor-name: --x)`; verify the pill slides to the active link on route change and is absent on unsupported browsers (test with devtools override)
+- [x] 4.1 Implement the desktop active indicator per the spec "Desktop active indicator uses CSS anchor positioning" and the design decision "CSS anchor positioning for desktop active-link indicator": assign `anchor-name: --nav-link-<index>` to each desktop link; render a `<span>` positioned via `position-anchor`, `anchor()`, `anchor-size()` with `bg-muted/60 backdrop-blur-sm rounded-md` and CSS `transition` on position/size; wrap in `@supports (anchor-name: --x)`; verify the pill slides to the active link on route change and is absent on unsupported browsers (test with devtools override)
 
 ## 5. Implement mobile menu with native details and CSS animation
 

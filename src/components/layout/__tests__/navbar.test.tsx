@@ -109,3 +109,19 @@ describe("Navbar — active link detection", () => {
     expect(about.dataset.active).not.toBe("true");
   });
 });
+
+describe("Navbar — CSS anchor positioning indicator", () => {
+  it("each desktop link has an anchor-name style", () => {
+    mockUsePathname.mockReturnValue("/en");
+    const { container } = render(<Navbar lang="en" isScrolled={false} />);
+    const desktopLinks = container.querySelectorAll("[style*='--nav-link-']");
+    expect(desktopLinks.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("renders the indicator span inside the desktop link row", () => {
+    mockUsePathname.mockReturnValue("/en/projects");
+    const { container } = render(<Navbar lang="en" isScrolled={false} />);
+    const indicator = container.querySelector("[data-indicator]");
+    expect(indicator).toBeInTheDocument();
+  });
+});
