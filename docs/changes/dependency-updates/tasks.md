@@ -96,6 +96,6 @@
 
 ## 7. Final verification
 
-- [ ] 7.1 Run the complete verification suite one final time: `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`. All four commands must exit 0. Application source file changes (if any) must be limited to brand icon replacements (lucide-react) and any fixes forced by TypeScript 6 breaking changes. Verified when all four exit 0 (satisfies spec: active dependencies are kept within one minor version of latest).
+- [x] 7.1 Run the complete verification suite one final time: `pnpm build`, `pnpm type-check`, `pnpm lint`, `pnpm test`. All four commands must exit 0. Application source file changes (if any) must be limited to brand icon replacements (lucide-react) and any fixes forced by TypeScript 6 breaking changes. Verified when all four exit 0 (satisfies spec: active dependencies are kept within one minor version of latest).
 
-- [ ] 7.2 Confirm deferred packages are explicitly documented (satisfies spec: deferred packages are explicitly documented): verify `design.md` states "Deferred packages: none — all remaining packages either have no pending updates or are removed from the project." Verified by reading `design.md` Context section.
+- [x] 7.2 Confirm deferred packages are explicitly documented (satisfies spec: deferred packages are explicitly documented): verify `design.md` states "Deferred packages: none — all remaining packages either have no pending updates or are removed from the project." Verified by reading `design.md` Context section.
