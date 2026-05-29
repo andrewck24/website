@@ -1,5 +1,6 @@
-import { Inter, Ubuntu_Mono } from "next/font/google";
 import { getLocaleFromHeaders } from "@/lib/locale-from-headers";
+import { Analytics } from "@vercel/analytics/next";
+import { Inter, Ubuntu_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 
 const ubuntuMono = Ubuntu_Mono({
@@ -23,7 +24,10 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={`${ubuntuMono.variable} ${inter.variable}`}
     >
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
