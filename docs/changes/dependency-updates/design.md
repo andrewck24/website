@@ -11,6 +11,7 @@ During a discovery session (2026-05-29), additional scope was identified beyond 
 - `@swc/jest`: confirmed unused; Next.js uses its own bundled SWC transformer — remove.
 - `@vercel/analytics` 2.0.1: already installed.
 - `package.json` `name` changed from `andrewck24` → `website`: already applied to fix Turbopack absolute-path resolution.
+- `postcss.config.mjs` → `postcss.config.ts` and `next.config.mjs` → `next.config.ts`: renamed as part of this change. Previously blocked by fumadocs ESM-only constraint; fumadocs has since been migrated to Sanity, removing the constraint. `next.config.ts` gains static typing via `import type { NextConfig } from "next"`.
 
 Deferred packages (not in this change): `eslint` 9→10 — blocked by `eslint-config-next@16.2.6`'s transitive dependency `typescript-eslint@8.46.2`, which declares peer dep `eslint: "^8.57.0 || ^9.0.0"` and fails at runtime with ESLint 10 (`Class extends value undefined`). `typescript-eslint@8.60.0` adds ESLint 10 support, but `eslint-config-next` must ship it as its own dependency before the upgrade is viable without pnpm overrides. Tracked in vercel/next.js#89764. Upgrade once `eslint-config-next` ships with `typescript-eslint ≥ 8.60.0`.
 
