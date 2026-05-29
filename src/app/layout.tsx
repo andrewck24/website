@@ -1,4 +1,3 @@
-import { getLocaleFromHeaders } from "@/lib/locale-from-headers";
 import { Analytics } from "@vercel/analytics/next";
 import { Inter, Ubuntu_Mono } from "next/font/google";
 import type { ReactNode } from "react";
@@ -11,16 +10,9 @@ const ubuntuMono = Ubuntu_Mono({
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-export default async function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  const lang = await getLocaleFromHeaders();
-
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
-      lang={lang}
       suppressHydrationWarning
       className={`${ubuntuMono.variable} ${inter.variable}`}
     >
