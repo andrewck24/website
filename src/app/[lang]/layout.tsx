@@ -1,7 +1,6 @@
 import "@/app/globals.css";
 import { LangSetter } from "@/components/lang-setter";
 import { NavLayout } from "@/components/layout";
-import { Provider } from "@/components/provider";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
@@ -99,11 +98,9 @@ export default async function Layout({ children, params }: LangLayoutProps) {
   return (
     <div>
       <LangSetter lang={lang} />
-      <Provider>
-        <div className="flex min-h-screen flex-col items-center">
-          <NavLayout lang={lang}>{children}</NavLayout>
-        </div>
-      </Provider>
+      <div className="flex min-h-screen flex-col items-center">
+        <NavLayout lang={lang}>{children}</NavLayout>
+      </div>
     </div>
   );
 }
