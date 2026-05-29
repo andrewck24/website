@@ -7,11 +7,11 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
-jest.mock("../../../../../lib/sanity/client", () => ({
+jest.mock("../../../../../../lib/sanity/client", () => ({
   client: { fetch: jest.fn() },
 }));
 
-jest.mock("../../../../../components/about/personal-info", () => ({
+jest.mock("../../../../../../components/about/personal-info", () => ({
   PersonalInfo: () => null,
 }));
 
@@ -19,11 +19,11 @@ jest.mock("@portabletext/react", () => ({
   PortableText: () => null,
 }));
 
-jest.mock("../../../../../components/mdx/portable-text", () => ({
+jest.mock("../../../../../../components/mdx/portable-text", () => ({
   portableTextComponents: {},
 }));
 
-import { client } from "../../../../../lib/sanity/client";
+import { client } from "../../../../../../lib/sanity/client";
 import { notFound } from "next/navigation";
 
 const mockFetch = client.fetch as jest.Mock;

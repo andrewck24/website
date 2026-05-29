@@ -3,7 +3,7 @@ jest.mock("next/navigation", () => ({
   useParams: jest.fn(),
 }));
 
-jest.mock("../../../../../components/ui/empty", () => ({
+jest.mock("../../../../../../components/ui/empty", () => ({
   Empty: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   EmptyHeader: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>
