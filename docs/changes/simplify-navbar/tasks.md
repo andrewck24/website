@@ -22,9 +22,9 @@ verification.
 
 ## 3. Implement Navbar with hard-coded locale links
 
-- [ ] 3.1 Implement `Navbar({ lang, isScrolled })` in `src/components/layout/navbar.tsx` per the spec "Desktop nav shows hard-coded links per locale" and the design decision "Hard-code nav links; remove BaseLayoutProps": derive link text and URLs from `lang` (Projects/專案/プロジェクト, About/關於/私について, GitHub icon) with no `links` prop or `LinkItemType` variant; render as a desktop link row hidden below `lg`; verify correct text renders for `zh-TW`, `en`, and `ja` with no TypeScript errors
-- [ ] 3.2 Apply scroll-aware backdrop blur per the spec "Navbar shows scroll-aware backdrop blur": when `isScrolled` is `true` apply `bg-background/60 backdrop-blur-sm shadow-xl` to the nav container; when `false` the container is transparent; verify visually at both scroll positions
-- [ ] 3.3 Implement active link detection per the spec "Active link highlights current route and sub-routes": use `usePathname()` with normalized trailing-slash comparison; a link is active when `pathname === url` or `pathname.startsWith(url + '/')`; inline the `isActive` helper (replaces `src/lib/is-active.ts`) directly in `navbar.tsx`; verify with the boundary-case table in the spec (exact match, sub-route match, no cross-route activation)
+- [x] 3.1 Implement `Navbar({ lang, isScrolled })` in `src/components/layout/navbar.tsx` per the spec "Desktop nav shows hard-coded links per locale" and the design decision "Hard-code nav links; remove BaseLayoutProps": derive link text and URLs from `lang` (Projects/專案/プロジェクト, About/關於/私について, GitHub icon) with no `links` prop or `LinkItemType` variant; render as a desktop link row hidden below `lg`; verify correct text renders for `zh-TW`, `en`, and `ja` with no TypeScript errors
+- [x] 3.2 Apply scroll-aware backdrop blur per the spec "Navbar shows scroll-aware backdrop blur": when `isScrolled` is `true` apply `bg-background/60 backdrop-blur-sm shadow-xl` to the nav container; when `false` the container is transparent; verify visually at both scroll positions
+- [x] 3.3 Implement active link detection per the spec "Active link highlights current route and sub-routes": use `usePathname()` with normalized trailing-slash comparison; a link is active when `pathname === url` or `pathname.startsWith(url + '/')`; inline the `isActive` helper (replaces `src/lib/is-active.ts`) directly in `navbar.tsx`; verify with the boundary-case table in the spec (exact match, sub-route match, no cross-route activation)
 
 ## 4. Add CSS anchor positioning active indicator
 
