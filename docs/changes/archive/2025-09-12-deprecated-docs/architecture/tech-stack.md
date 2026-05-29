@@ -19,11 +19,11 @@
 
 ### State Management
 
-| Technology           | Version | Purpose        | Notes                                      |
-| -------------------- | ------- | -------------- | ------------------------------------------ |
-| **React State**      | 18+     | 基礎狀態管理   | Phase 1 使用，滿足靜態網站需求             |
-| **Redux Toolkit**    | 2.0+    | 企業級狀態管理 | Phase 2 加入，用於互動功能（排球 App 等）  |
-| **Fumadocs i18n**    | 15.0+   | 多語言管理     | 內建 i18n 支援，取代 next-intl            |
+| Technology        | Version | Purpose        | Notes                                     |
+| ----------------- | ------- | -------------- | ----------------------------------------- |
+| **React State**   | 18+     | 基礎狀態管理   | Phase 1 使用，滿足靜態網站需求            |
+| **Redux Toolkit** | 2.0+    | 企業級狀態管理 | Phase 2 加入，用於互動功能（排球 App 等） |
+| **Fumadocs i18n** | 15.0+   | 多語言管理     | 內建 i18n 支援，取代 next-intl            |
 
 ### Backend & Database
 
