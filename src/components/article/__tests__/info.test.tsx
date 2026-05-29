@@ -15,7 +15,7 @@ jest.mock("../../github-info", () => ({
   ),
 }));
 
-jest.mock("../../language-toggle", () => ({
+jest.mock("../../layout/language-toggle", () => ({
   LanguageToggle: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="language-toggle-component">{children}</div>
   ),

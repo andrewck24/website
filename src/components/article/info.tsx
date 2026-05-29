@@ -1,5 +1,5 @@
 import { GithubInfo } from "@/components/github-info";
-import { LanguageToggle } from "@/components/language-toggle";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { ArticleTag, Locale } from "@/types/article";
