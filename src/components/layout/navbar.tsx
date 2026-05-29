@@ -15,6 +15,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const SUPPORTED_LOCALES = ["zh-TW", "en", "ja"] as const;
+const MOBILE_NAV_PANEL_ID = "mobile-nav-panel";
 const NAV_ITEMS = [
   {
     path: "projects",
@@ -86,13 +87,6 @@ export function Navbar({
     <nav className="fixed inset-x-0 top-0 z-40 flex justify-center">
       <div className="w-full max-w-7xl px-6 lg:px-12">
         <div
-          style={
-            activeIndex >= 0
-              ? ({
-                  "--active-anchor": `--nav-link-${activeIndex}`,
-                } as React.CSSProperties)
-              : undefined
-          }
           onMouseLeave={() => setIsOpen(false)}
           className={cn(
             "mt-(--navbar-top-gap) w-full rounded-xl bg-transparent transition-all duration-300",
@@ -150,6 +144,11 @@ function DesktopLinks({
 }) {
   return (
     <div className="relative hidden items-center gap-1 lg:flex">
+      <span
+        aria-hidden
+        className="absolute top-0 left-0 h-full w-0"
+        style={{ anchorName: "--nav-link-parking" } as React.CSSProperties}
+      />
       {links.map((link, i) => {
         const { href: url, active } = getNavLinkState(
           pathname,
@@ -171,22 +170,26 @@ function DesktopLinks({
         );
       })}
       {/* CSS anchor-positioning pill — absent in unsupported browsers */}
-      {activeIndex >= 0 && (
-        <span
-          data-indicator
-          className="bg-muted/60 pointer-events-none absolute hidden rounded-md backdrop-blur-sm supports-[anchor-name:--x]:block"
-          style={
-            {
-              positionAnchor: "var(--active-anchor)",
-              top: "anchor(top)",
-              left: "anchor(left)",
-              width: "anchor-size(width)",
-              height: "anchor-size(height)",
-              transition: "top 150ms, left 150ms, width 150ms, height 150ms",
-            } as React.CSSProperties
-          }
-        />
-      )}
+      <span
+        aria-hidden
+        data-indicator
+        className="bg-muted/60 pointer-events-none absolute hidden rounded-md backdrop-blur-sm supports-[anchor-name:--x]:block"
+        style={
+          {
+            positionAnchor:
+              activeIndex >= 0
+                ? `--nav-link-${activeIndex}`
+                : "--nav-link-parking",
+            top: "anchor(top)",
+            left: "anchor(left)",
+            width: "anchor-size(width)",
+            height: "anchor-size(height)",
+            opacity: activeIndex >= 0 ? 1 : 0,
+            transition:
+              "top 150ms, left 150ms, width 150ms, height 150ms, opacity 150ms",
+          } as React.CSSProperties
+        }
+      />
     </div>
   );
 }
@@ -217,6 +220,7 @@ function RightControls({
       <button
         type="button"
         aria-label="Toggle menu"
+        aria-controls={MOBILE_NAV_PANEL_ID}
         aria-expanded={isOpen}
         onClick={onToggle}
         className={cn(
@@ -248,6 +252,9 @@ function MobilePanel({
 }) {
   return (
     <div
+      id={MOBILE_NAV_PANEL_ID}
+      aria-hidden={!isOpen}
+      inert={!isOpen ? true : undefined}
       className={cn(
         "grid transition-[grid-template-rows] duration-300 lg:hidden",
         isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
