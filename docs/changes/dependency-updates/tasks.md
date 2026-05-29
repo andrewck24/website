@@ -74,15 +74,15 @@
 
 <!-- next-sanity 12→13: zero-impact upgrade -->
 
-- [ ] 5.1 Audit all `next-sanity` import sites: run `grep -r "next-sanity" src/` and list every file path and named export used. Verified by producing an explicit list of import sites before upgrading (required to detect any exports that moved in v13).
+- [x] 5.1 Audit all `next-sanity` import sites: run `grep -r "next-sanity" src/` and list every file path and named export used. Verified by producing an explicit list of import sites before upgrading (required to detect any exports that moved in v13).
 
-- [ ] 5.2 Confirm no import path changes are needed: v13 breaking changes affect `SanityLive`, `sanityFetch`, `defineLive`, and hooks on `next-sanity/live` — none of which this project uses. All imports are from `next-sanity/studio` (`NextStudio`, `metadata`, `viewport`), which has no breaking changes in v13. Verified by cross-referencing the import site list from task 5.1 against the v13 migration guide (already confirmed: zero overlap).
+- [x] 5.2 Confirm no import path changes are needed: v13 breaking changes affect `SanityLive`, `sanityFetch`, `defineLive`, and hooks on `next-sanity/live` — none of which this project uses. All imports are from `next-sanity/studio` (`NextStudio`, `metadata`, `viewport`), which has no breaking changes in v13. Verified by cross-referencing the import site list from task 5.1 against the v13 migration guide (already confirmed: zero overlap).
 
-- [ ] 5.3 Upgrade `next-sanity` to ^13.0.0 in `package.json`. Verified by reading `package.json` and confirming the entry shows ^13.0.0.
+- [x] 5.3 Upgrade `next-sanity` to ^13.0.0 in `package.json`. Verified by reading `package.json` and confirming the entry shows ^13.0.0.
 
-- [ ] 5.4 Run `pnpm install` after next-sanity upgrade. Verified when install exits 0.
+- [x] 5.4 Run `pnpm install` after next-sanity upgrade. Verified when install exits 0.
 
-- [ ] 5.5 Run `pnpm type-check` (`tsc --noEmit`) and `pnpm build` after upgrade. If type errors or missing export errors appear, update import paths per the v13 migration guide (task 5.2). Verified by type-check and build both exiting 0.
+- [x] 5.5 Run `pnpm type-check` (`tsc --noEmit`) and `pnpm build` after upgrade. If type errors or missing export errors appear, update import paths per the v13 migration guide (task 5.2). Verified by type-check and build both exiting 0.
 
 ## 6. Tier 6: typescript v6 upgrade
 
