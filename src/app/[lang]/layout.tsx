@@ -1,8 +1,7 @@
 import "@/app/globals.css";
 import { LangSetter } from "@/components/lang-setter";
-import { NavLayout } from "@/components/layout/home";
+import { NavLayout } from "@/components/layout";
 import { Provider } from "@/components/provider";
-import { baseOptions } from "@/lib/layout.shared";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
@@ -102,7 +101,7 @@ export default async function Layout({ children, params }: LangLayoutProps) {
       <LangSetter lang={lang} />
       <Provider>
         <div className="flex min-h-screen flex-col items-center">
-          <NavLayout {...baseOptions(lang)}>{children}</NavLayout>
+          <NavLayout lang={lang}>{children}</NavLayout>
         </div>
       </Provider>
     </div>

@@ -37,5 +37,5 @@ verification.
 
 ## 6. Wire up app layout and verify build
 
-- [ ] 6.1 Update `src/app/[lang]/layout.tsx` to import `NavLayout` from `@/components/layout` instead of `@/components/layout/home`; pass only `lang` and `children` props (removing `baseOptions` spread); verify `pnpm build` passes with zero TypeScript errors
-- [ ] 6.2 Delete the seven removed files per the proposal Impact section: `src/components/layout/home/index.tsx`, `src/components/layout/home/navbar.tsx`, `src/components/layout/home/menu.tsx`, `src/components/layout/shared/index.tsx`, `src/components/layout/shared/client.tsx`, `src/lib/layout.shared.tsx`, `src/lib/is-active.ts`, `src/components/search-toggle.tsx`; verify `pnpm build` succeeds and no remaining source file imports from the deleted paths (grep check)
+- [x] 6.1 Update `src/app/[lang]/layout.tsx` to import `NavLayout` from `@/components/layout` instead of `@/components/layout/home`; pass only `lang` and `children` props (removing `baseOptions` spread); verify `pnpm build` passes with zero TypeScript errors
+- [x] 6.2 Delete the seven removed files per the proposal Impact section: `src/components/layout/home/index.tsx`, `src/components/layout/home/navbar.tsx`, `src/components/layout/home/menu.tsx`, `src/components/layout/shared/index.tsx`, `src/components/layout/shared/client.tsx`, `src/lib/layout.shared.tsx`, `src/lib/is-active.ts`, `src/components/search-toggle.tsx`; verify `pnpm build` succeeds and no remaining source file imports from the deleted paths (grep check)
