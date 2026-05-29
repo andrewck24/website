@@ -1,14 +1,6 @@
 jest.mock("next/navigation", () => ({
   ...jest.requireActual("next/navigation"),
-  notFound: jest.fn(),
-}));
-
-jest.mock("../../../../../lib/locale-from-headers", () => ({
-  getLocaleFromHeaders: jest.fn(),
-}));
-
-jest.mock("../../../../../lib/data/locales", () => ({
-  getAvailableAboutLocales: jest.fn(),
+  useParams: jest.fn(),
 }));
 
 jest.mock("../../../../../components/ui/empty", () => ({
@@ -26,106 +18,52 @@ jest.mock("../../../../../components/ui/empty", () => ({
 
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import { useParams } from "next/navigation";
 import NotFound from "../not-found";
-import { getLocaleFromHeaders } from "../../../../../lib/locale-from-headers";
-import { getAvailableAboutLocales } from "../../../../../lib/data/locales";
 
-const mockGetLocale = getLocaleFromHeaders as jest.Mock;
-const mockGetLocales = getAvailableAboutLocales as jest.Mock;
+const mockUseParams = useParams as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockUseParams.mockReturnValue({ lang: "zh-TW" });
 });
 
 describe("About NotFound", () => {
-  it("renders zh-TW title when locale is zh-TW", async () => {
-    mockGetLocale.mockResolvedValue("zh-TW");
-    mockGetLocales.mockResolvedValue(["zh-TW", "en"]);
-
-    render(await NotFound());
-
+  it("renders zh-TW title when locale is zh-TW", () => {
+    mockUseParams.mockReturnValue({ lang: "zh-TW" });
+    render(<NotFound />);
     expect(screen.getByText("找不到關於頁面")).toBeInTheDocument();
   });
 
-  it("renders en title when locale is en", async () => {
-    mockGetLocale.mockResolvedValue("en");
-    mockGetLocales.mockResolvedValue(["en", "zh-TW"]);
-
-    render(await NotFound());
-
+  it("renders en title when locale is en", () => {
+    mockUseParams.mockReturnValue({ lang: "en" });
+    render(<NotFound />);
     expect(screen.getByText("About page not found")).toBeInTheDocument();
   });
 
-  it("renders ja title when locale is ja", async () => {
-    mockGetLocale.mockResolvedValue("ja");
-    mockGetLocales.mockResolvedValue(["ja"]);
-
-    render(await NotFound());
-
+  it("renders ja title when locale is ja", () => {
+    mockUseParams.mockReturnValue({ lang: "ja" });
+    render(<NotFound />);
     expect(screen.getByText("Aboutページが見つかりません")).toBeInTheDocument();
   });
 
-  it("shows locale buttons only for other available locales", async () => {
-    mockGetLocale.mockResolvedValue("en");
-    mockGetLocales.mockResolvedValue(["zh-TW", "en"]);
-
-    render(await NotFound());
-
-    expect(screen.getByText("繁體中文")).toBeInTheDocument();
-    expect(screen.queryByText("English")).not.toBeInTheDocument();
-  });
-
-  it("renders return-to-home link with correct href", async () => {
-    mockGetLocale.mockResolvedValue("en");
-    mockGetLocales.mockResolvedValue([]);
-
-    render(await NotFound());
-
+  it("renders return-to-home link with correct href for en", () => {
+    mockUseParams.mockReturnValue({ lang: "en" });
+    render(<NotFound />);
     const link = screen.getByText("Back to Home");
     expect(link.closest("a")).toHaveAttribute("href", "/en");
   });
 
-  it("shows human-readable locale names, not raw locale codes", async () => {
-    mockGetLocale.mockResolvedValue("en");
-    mockGetLocales.mockResolvedValue(["zh-TW", "en", "ja"]);
-
-    render(await NotFound());
-
-    expect(screen.getByText("繁體中文")).toBeInTheDocument();
-    expect(screen.getByText("日本語")).toBeInTheDocument();
-    expect(screen.queryByText("zh-TW")).not.toBeInTheDocument();
-    expect(screen.queryByText("ja")).not.toBeInTheDocument();
+  it("renders return-to-home link with correct href for zh-TW", () => {
+    mockUseParams.mockReturnValue({ lang: "zh-TW" });
+    render(<NotFound />);
+    const link = screen.getByText("返回首頁");
+    expect(link.closest("a")).toHaveAttribute("href", "/zh-TW");
   });
 
-  it("shows switcherLabel when other locales are available", async () => {
-    mockGetLocale.mockResolvedValue("en");
-    mockGetLocales.mockResolvedValue(["zh-TW", "en"]);
-
-    render(await NotFound());
-
-    expect(
-      screen.getByText("This content is also available in:")
-    ).toBeInTheDocument();
-  });
-
-  it("does NOT show switcherLabel when no other locales are available", async () => {
-    mockGetLocale.mockResolvedValue("en");
-    mockGetLocales.mockResolvedValue(["en"]);
-
-    render(await NotFound());
-
-    expect(
-      screen.queryByText("This content is also available in:")
-    ).not.toBeInTheDocument();
-  });
-
-  it("still renders without crashing when getAvailableAboutLocales throws", async () => {
-    mockGetLocale.mockResolvedValue("zh-TW");
-    mockGetLocales.mockRejectedValue(new Error("Sanity error"));
-
-    expect(async () => render(await NotFound())).not.toThrow();
-
-    render(await NotFound());
-    expect(screen.getAllByText("找不到關於頁面")[0]).toBeInTheDocument();
+  it("falls back to zh-TW when lang param is missing", () => {
+    mockUseParams.mockReturnValue({});
+    render(<NotFound />);
+    expect(screen.getByText("找不到關於頁面")).toBeInTheDocument();
   });
 });

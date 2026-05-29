@@ -1,7 +1,3 @@
-jest.mock("../../lib/locale-from-headers", () => ({
-  getLocaleFromHeaders: jest.fn(),
-}));
-
 jest.mock("next/font/google", () => ({
   Inter: () => ({ variable: "--font-inter", subsets: ["latin"] }),
   Ubuntu_Mono: () => ({
@@ -11,31 +7,23 @@ jest.mock("next/font/google", () => ({
   }),
 }));
 
+jest.mock("@vercel/analytics/next", () => ({
+  Analytics: () => null,
+}));
+
 import React from "react";
 import { render } from "@testing-library/react";
 import RootLayout from "../layout";
-import { getLocaleFromHeaders } from "../../lib/locale-from-headers";
-
-const mockGetLocale = getLocaleFromHeaders as jest.Mock;
-
-beforeEach(() => {
-  jest.clearAllMocks();
-});
 
 describe("RootLayout", () => {
-  it("calls getLocaleFromHeaders() to determine lang", async () => {
-    mockGetLocale.mockResolvedValue("en");
-
-    render(await RootLayout({ children: <div>content</div> }));
-
-    expect(mockGetLocale).toHaveBeenCalled();
+  it("renders children", () => {
+    const { getByText } = render(RootLayout({ children: <div>content</div> }));
+    expect(getByText("content")).toBeInTheDocument();
   });
 
-  it("uses locale returned by getLocaleFromHeaders() for html lang attribute", async () => {
-    mockGetLocale.mockResolvedValue("ja");
-
-    const element = await RootLayout({ children: <div>content</div> });
-
-    expect(element.props.lang).toBe("ja");
+  it("applies font class variables to html element", () => {
+    const element = RootLayout({ children: <div /> });
+    expect(element.props.className).toContain("--font-ubuntu-mono");
+    expect(element.props.className).toContain("--font-inter");
   });
 });
