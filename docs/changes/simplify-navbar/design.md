@@ -56,6 +56,38 @@ The indicator is a backdrop-blur pill (`bg-muted/60 backdrop-blur-sm rounded-md`
 
 Wrapped in `@supports (anchor-name: --x)` — browsers without support see no indicator, but links remain fully functional.
 
+### Brand icon in navbar (DynamicIcon)
+
+The `DynamicIcon` component (`src/app/icon.tsx`) renders the "at\_" brand mark with a blinking cursor animation. It was previously passed via `nav.title` from `baseOptions`. In the simplified navbar it must be rendered directly as a `<Link href={`/${lang}`}>` on the left side of the nav bar — visible on both desktop and mobile.
+
+Rejected alternative — remove brand icon: breaks visual identity and makes the navbar feel empty on desktop.
+
+### Mobile layout: brand + lang toggle in bar; GitHub + ThemeToggle in expanded menu
+
+The mobile nav bar (below `lg`) shows only: brand icon (left) and language toggle + chevron trigger (right). `ThemeToggle` and the GitHub link are **hidden on mobile** outside the expanded menu; they appear inside the `<details>` panel.
+
+On desktop (`lg` and up): the full link row, ThemeToggle, LanguageToggle, and GitHub link are all visible in the bar. The `<details>` trigger is `lg:hidden`.
+
+This matches the original fumadocs layout structure and prevents the nav bar from being too cluttered on small screens.
+
+### Mobile trigger: ChevronDown rotating 180° (not Menu/X toggle)
+
+The `<summary>` trigger uses a single `<ChevronDown>` icon that rotates 180° when `details[open]`, using the Tailwind `[details[open]_&]:rotate-180` variant. This preserves the original visual behaviour from the Radix `NavigationMenuTrigger` which used `group-data-[state=open]:rotate-180`.
+
+Do NOT replace with a `<Menu>/<X>` icon swap — that changes the established UX pattern.
+
+### grid-template-rows animation: use Tailwind class, not inline style
+
+The panel `<div>` MUST use Tailwind classes for `grid-template-rows`, not an inline `style` prop. Inline styles have higher CSS specificity and cannot be overridden by the `[details[open]_&]` variant.
+
+Correct implementation:
+
+```tsx
+<div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 [details[open]_&]:grid-rows-[1fr]">
+  <div className="overflow-hidden">{/* panel content */}</div>
+</div>
+```
+
 ### Hard-code nav links; remove BaseLayoutProps
 
 `NavLayout` accepts `{ lang: string; children: ReactNode }`. Link text and URLs are derived from `lang` inside `navbar.tsx` via a local lookup. `baseOptions`, `layout.shared.tsx`, and the entire `LinkItemType` type tree are deleted.
@@ -92,11 +124,14 @@ function Navbar({
 }): JSX.Element;
 ```
 
-- Desktop: horizontal link row, `ThemeToggle`, `LanguageToggle`, hidden on `lg:hidden`
-- Mobile: `<details>` trigger + full-width panel, hidden on `lg:flex` equivalent
+- Left: `<Link href="/{lang}"><DynamicIcon /></Link>` brand icon (all viewports)
+- Desktop (`lg+`): horizontal link row, `ThemeToggle`, `LanguageToggle`, GitHub link
+- Mobile (`< lg`): only brand + `LanguageToggle` + `<ChevronDown>` trigger visible in bar; `ThemeToggle` and GitHub link appear **inside the expanded menu only**
 - `isScrolled` toggles `bg-background/60 backdrop-blur-sm shadow-xl` on the nav container
 - Active link: `usePathname()` with nested-url matching (`/projects/foo` activates the `/projects` link)
 - CSS anchor positioning indicator present on desktop; silently absent if unsupported
+- Mobile trigger: `<ChevronDown>` rotating 180° via `[details[open]_&]:rotate-180` (not Menu/X swap)
+- Mobile panel expand: `grid-rows-[0fr]` → `[details[open]_&]:grid-rows-[1fr]` via Tailwind class (no inline style)
 
 **Nav links (hard-coded per locale):**
 
@@ -116,6 +151,9 @@ function Navbar({
 3. Mobile menu opens and closes with visible animation on viewport < `lg` breakpoint
 4. Scrolling past the sentinel adds backdrop blur to the navbar; scrolling back removes it
 5. No import from `layout/home`, `layout/shared`, `layout.shared`, `search-toggle`, or `is-active` remains in the codebase
+6. Brand icon (`DynamicIcon`) is visible on all viewport sizes
+7. Mobile nav bar shows only: brand icon, LanguageToggle, ChevronDown trigger; ThemeToggle and GitHub link appear only inside the expanded menu
+8. Mobile trigger icon is `ChevronDown` rotating 180°, not a Menu/X swap
 
 ## Risks / Trade-offs
 

@@ -5,8 +5,9 @@ import {
   LanguageToggleText,
 } from "@/components/layout/language-toggle";
 import { cn } from "@/lib/utils";
-import { Languages, Menu, X } from "lucide-react";
+import { ChevronDown, Languages } from "lucide-react";
 import { GithubIcon } from "@/components/icons/github-icon";
+import { BrandIcon } from "@/components/layout/brand-icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -68,7 +69,16 @@ export function Navbar({
     >
       <div className="flex w-full max-w-7xl items-center px-6 lg:px-12">
         <div className="mt-4 flex h-14 w-full items-center rounded-xl px-4">
-          {/* Desktop link row */}
+          {/* Brand icon — all viewports */}
+          <Link
+            href={`/${lang}`}
+            className="mr-2 inline-flex items-center"
+            aria-label="Home"
+          >
+            <BrandIcon />
+          </Link>
+
+          {/* Desktop link row — lg+ only */}
           <div className="relative hidden items-center gap-1 lg:flex">
             {links.map((link, i) => {
               const url = `/${lang}/${link.path}`;
@@ -109,35 +119,31 @@ export function Navbar({
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-1.5">
-            <ThemeToggle />
-            <LanguageToggle availableLocales={["zh-TW", "en", "ja"]}>
-              <Languages className="size-5" />
-              <LanguageToggleText className="sr-only" />
-            </LanguageToggle>
+            {/* ThemeToggle + GitHub: desktop only — shown inside mobile menu */}
+            <ThemeToggle className="hidden lg:inline-flex" />
             <a
               href="https://github.com/andrewck24"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="text-muted-foreground hover:text-foreground inline-flex size-9 items-center justify-center rounded-md transition-colors"
+              className="text-muted-foreground hover:text-foreground hidden size-9 items-center justify-center rounded-md transition-colors lg:inline-flex"
             >
               <GithubIcon className="size-5" />
             </a>
 
-            {/* Mobile hamburger trigger — lg:hidden */}
+            {/* LanguageToggle: always visible */}
+            <LanguageToggle availableLocales={["zh-TW", "en", "ja"]}>
+              <Languages className="size-5" />
+              <LanguageToggleText className="sr-only" />
+            </LanguageToggle>
+
+            {/* Mobile trigger — lg:hidden */}
             <details ref={detailsRef} className="relative lg:hidden">
               <summary className="text-muted-foreground hover:text-foreground inline-flex size-9 cursor-pointer list-none items-center justify-center rounded-md transition-colors [&::-webkit-details-marker]:hidden">
-                <Menu className="size-5 [details[open]_&]:hidden" />
-                <X className="hidden size-5 [details[open]_&]:block" />
+                <ChevronDown className="size-5 transition-transform duration-300 [details[open]_&]:rotate-180" />
               </summary>
               {/* Panel — full-width, CSS grid expand animation */}
-              <div
-                className="bg-background/95 border-border fixed inset-x-0 top-[72px] grid border-b backdrop-blur-sm"
-                style={{
-                  gridTemplateRows: "0fr",
-                  transition: "grid-template-rows 300ms ease",
-                }}
-              >
+              <div className="bg-background/95 border-border fixed inset-x-0 top-[72px] grid grid-rows-[0fr] border-b backdrop-blur-sm transition-[grid-template-rows] duration-300 ease-in-out [details[open]_&]:grid-rows-[1fr]">
                 <div className="overflow-hidden">
                   <nav className="flex flex-col gap-1 px-6 py-4">
                     {links.map((link) => {
@@ -157,6 +163,19 @@ export function Navbar({
                         </Link>
                       );
                     })}
+                    {/* GitHub + ThemeToggle — only inside mobile menu */}
+                    <div className="mt-2 flex items-center gap-2 border-t pt-3">
+                      <a
+                        href="https://github.com/andrewck24"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="GitHub"
+                        className="text-muted-foreground hover:text-foreground inline-flex size-9 items-center justify-center rounded-md transition-colors"
+                      >
+                        <GithubIcon className="size-5" />
+                      </a>
+                      <ThemeToggle />
+                    </div>
                   </nav>
                 </div>
               </div>
