@@ -50,19 +50,20 @@ describe("Navbar — locale links", () => {
 describe("Navbar — scroll-aware backdrop", () => {
   beforeEach(() => mockUsePathname.mockReturnValue("/en"));
 
-  it("applies backdrop classes when isScrolled is true", () => {
+  it("applies backdrop classes to floating card when isScrolled is true", () => {
     const { container } = render(<Navbar lang="en" isScrolled={true} />);
-    const nav = container.querySelector("nav");
-    expect(nav?.className).toMatch(/bg-background\/60/);
-    expect(nav?.className).toMatch(/backdrop-blur-sm/);
-    expect(nav?.className).toMatch(/shadow-xl/);
+    // Background lives on the inner card div, not the outer <nav>
+    const card = container.querySelector("nav > div > div");
+    expect(card?.className).toMatch(/bg-background\/60/);
+    expect(card?.className).toMatch(/backdrop-blur-sm/);
+    expect(card?.className).toMatch(/shadow-xl/);
   });
 
-  it("no backdrop classes when isScrolled is false", () => {
+  it("no backdrop classes on card when isScrolled is false", () => {
     const { container } = render(<Navbar lang="en" isScrolled={false} />);
-    const nav = container.querySelector("nav");
-    expect(nav?.className).not.toMatch(/bg-background\/60/);
-    expect(nav?.className).not.toMatch(/shadow-xl/);
+    const card = container.querySelector("nav > div > div");
+    expect(card?.className).not.toMatch(/bg-background\/60/);
+    expect(card?.className).not.toMatch(/shadow-xl/);
   });
 });
 
@@ -99,10 +100,12 @@ describe("Navbar — active link detection", () => {
 });
 
 describe("Navbar — mobile menu", () => {
-  it("renders a details element for mobile menu", () => {
+  it("renders a toggle button for mobile menu", () => {
     mockUsePathname.mockReturnValue("/en");
-    const { container } = render(<Navbar lang="en" isScrolled={false} />);
-    expect(container.querySelector("details")).toBeInTheDocument();
+    render(<Navbar lang="en" isScrolled={false} />);
+    expect(
+      screen.getByRole("button", { name: /toggle menu/i })
+    ).toBeInTheDocument();
   });
 
   it("mobile menu contains locale nav links", () => {
@@ -112,16 +115,15 @@ describe("Navbar — mobile menu", () => {
     expect(links.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("closes menu on route change via ref", async () => {
+  it("closes menu on route change", () => {
     mockUsePathname.mockReturnValue("/en");
-    const { container, rerender } = render(
-      <Navbar lang="en" isScrolled={false} />
-    );
-    const details = container.querySelector("details") as HTMLDetailsElement;
-    details.open = true;
+    const { rerender } = render(<Navbar lang="en" isScrolled={false} />);
+    const trigger = screen.getByRole("button", { name: /toggle menu/i });
+    // menu starts closed
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
     mockUsePathname.mockReturnValue("/en/about");
     rerender(<Navbar lang="en" isScrolled={false} />);
-    expect(details.open).toBe(false);
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 });
 
