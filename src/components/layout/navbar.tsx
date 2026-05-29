@@ -1,6 +1,6 @@
 "use client";
+import { BrandIcon } from "@/components/icons/brand-icon";
 import { GithubIcon } from "@/components/icons/github-icon";
-import { BrandIcon } from "@/components/layout/brand-icon";
 import {
   LanguageToggle,
   LanguageToggleText,
@@ -30,13 +30,82 @@ const NAV_LINKS = {
 
 type NavLink = { text: string; path: string };
 
+export function Navbar({
+  lang,
+  isScrolled,
+}: {
+  lang: string;
+  isScrolled: boolean;
+}) {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+
+  // Derived-state reset: close menu when route changes without an effect
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setIsOpen(false);
+  }
+
+  const links = NAV_LINKS[lang as keyof typeof NAV_LINKS] ?? NAV_LINKS.en;
+  const activeIndex = links.findIndex((link) =>
+    isActive(pathname, `/${lang}/${link.path}`)
+  );
+
+  return (
+    <nav className="fixed inset-x-0 top-0 z-40 flex justify-center">
+      <div className="w-full max-w-7xl px-6 lg:px-12">
+        <div
+          style={
+            activeIndex >= 0
+              ? ({
+                  "--active-anchor": `--nav-link-${activeIndex}`,
+                } as React.CSSProperties)
+              : undefined
+          }
+          onMouseLeave={() => setIsOpen(false)}
+          className={cn(
+            "mt-4 w-full rounded-xl bg-transparent transition-all duration-300",
+            (isScrolled || isOpen) &&
+              "bg-background/60 shadow-secondary/60 shadow-xl backdrop-blur-sm"
+          )}
+        >
+          <div className="flex h-14 w-full items-center px-4">
+            <Link
+              href={`/${lang}`}
+              className="mr-2 inline-flex items-center"
+              aria-label="Home"
+            >
+              <BrandIcon />
+            </Link>
+            <DesktopLinks
+              lang={lang}
+              links={links}
+              pathname={pathname}
+              activeIndex={activeIndex}
+            />
+            <RightControls
+              isOpen={isOpen}
+              onToggle={() => setIsOpen((v) => !v)}
+            />
+          </div>
+          <MobilePanel
+            lang={lang}
+            links={links}
+            pathname={pathname}
+            isOpen={isOpen}
+          />
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 function isActive(pathname: string, url: string): boolean {
   const n = pathname.replace(/\/$/, "");
   const u = url.replace(/\/$/, "");
   return n === u || n.startsWith(u + "/");
 }
-
-// ─── Sub-components ────────────────────────────────────────────────────────
 
 function DesktopLinks({
   lang,
@@ -171,7 +240,7 @@ function MobilePanel({
               </Link>
             );
           })}
-          <div className="-ms-1.5 mt-2 flex items-center gap-1.5 border-t pt-3">
+          <div className="-ms-1.5 mt-2 flex justify-between gap-1.5">
             <a
               href="https://github.com/andrewck24"
               target="_blank"
@@ -181,83 +250,10 @@ function MobilePanel({
             >
               <GithubIcon className="size-5" />
             </a>
-            <div className="flex-1" />
             <ThemeToggle />
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-// ─── Main export ───────────────────────────────────────────────────────────
-
-export function Navbar({
-  lang,
-  isScrolled,
-}: {
-  lang: string;
-  isScrolled: boolean;
-}) {
-  const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-  const [prevPathname, setPrevPathname] = useState(pathname);
-
-  // Derived-state reset: close menu when route changes without an effect
-  if (prevPathname !== pathname) {
-    setPrevPathname(pathname);
-    setIsOpen(false);
-  }
-
-  const links = NAV_LINKS[lang as keyof typeof NAV_LINKS] ?? NAV_LINKS.en;
-  const activeIndex = links.findIndex((link) =>
-    isActive(pathname, `/${lang}/${link.path}`)
-  );
-
-  return (
-    <nav className="fixed inset-x-0 top-0 z-40 flex justify-center">
-      <div className="w-full max-w-7xl px-6 lg:px-12">
-        <div
-          style={
-            activeIndex >= 0
-              ? ({
-                  "--active-anchor": `--nav-link-${activeIndex}`,
-                } as React.CSSProperties)
-              : undefined
-          }
-          className={cn(
-            "mt-4 w-full rounded-xl bg-transparent transition-all duration-300",
-            (isScrolled || isOpen) &&
-              "bg-background/60 shadow-secondary/60 shadow-xl backdrop-blur-sm"
-          )}
-        >
-          <div className="flex h-14 w-full items-center px-4">
-            <Link
-              href={`/${lang}`}
-              className="mr-2 inline-flex items-center"
-              aria-label="Home"
-            >
-              <BrandIcon />
-            </Link>
-            <DesktopLinks
-              lang={lang}
-              links={links}
-              pathname={pathname}
-              activeIndex={activeIndex}
-            />
-            <RightControls
-              isOpen={isOpen}
-              onToggle={() => setIsOpen((v) => !v)}
-            />
-          </div>
-          <MobilePanel
-            lang={lang}
-            links={links}
-            pathname={pathname}
-            isOpen={isOpen}
-          />
-        </div>
-      </div>
-    </nav>
   );
 }
