@@ -17,8 +17,8 @@ verification.
 
 ## 2. Create NavLayout with IntersectionObserver scroll detection
 
-- [ ] 2.1 Implement `NavLayout` in `src/components/layout/index.tsx` per the spec "NavLayout renders layout structure with scroll detection": export `NavLayout({ lang, children })` that renders a fixed `<Navbar>` and a `<main>` whose first child is `<div id="nav-sentinel" className="h-[88px] shrink-0" />`; no `pt-*` padding on `<main>`; verify the sentinel renders as first child in browser dev tools
-- [ ] 2.2 Add native `IntersectionObserver` to `NavLayout` per the design decision "Replace motion/react useScroll with IntersectionObserver + sentinel element": observe `#nav-sentinel` and set `isScrolled` state to `true` when the sentinel is not intersecting; pass `isScrolled` to `<Navbar>`; verify that scrolling past the sentinel triggers `isScrolled: true` and scrolling back sets it to `false` (manual browser assertion)
+- [x] 2.1 Implement `NavLayout` in `src/components/layout/index.tsx` per the spec "NavLayout renders layout structure with scroll detection": export `NavLayout({ lang, children })` that renders a fixed `<Navbar>` and a `<main>` whose first child is `<div id="nav-sentinel" className="h-[88px] shrink-0" />`; no `pt-*` padding on `<main>`; verify the sentinel renders as first child in browser dev tools
+- [x] 2.2 Add native `IntersectionObserver` to `NavLayout` per the design decision "Replace motion/react useScroll with IntersectionObserver + sentinel element": observe `#nav-sentinel` and set `isScrolled` state to `true` when the sentinel is not intersecting; pass `isScrolled` to `<Navbar>`; verify that scrolling past the sentinel triggers `isScrolled: true` and scrolling back sets it to `false` (manual browser assertion)
 
 ## 3. Implement Navbar with hard-coded locale links
 
