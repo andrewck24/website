@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect, useRef, type ReactNode } from "react";
 import { Navbar } from "@/components/layout/navbar";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 export function NavLayout({
   lang,
@@ -31,7 +31,7 @@ export function NavLayout({
         <div
           id="nav-sentinel"
           ref={sentinelRef}
-          className="h-[88px] shrink-0"
+          className="mb-[calc(var(--navbar-scroll-offset)-1px)] h-px shrink-0"
         />
         {children}
       </main>

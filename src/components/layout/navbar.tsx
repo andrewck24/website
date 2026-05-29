@@ -7,28 +7,57 @@ import {
 } from "@/components/layout/language-toggle";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
+import { socialLinks } from "@/lib/data/social-links";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Languages } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-const NAV_LINKS = {
-  "zh-TW": [
-    { text: "專案", path: "projects" },
-    { text: "關於", path: "about" },
-  ],
-  en: [
-    { text: "Projects", path: "projects" },
-    { text: "About", path: "about" },
-  ],
-  ja: [
-    { text: "プロジェクト", path: "projects" },
-    { text: "私について", path: "about" },
-  ],
-} as const;
+const SUPPORTED_LOCALES = ["zh-TW", "en", "ja"] as const;
+const NAV_ITEMS = [
+  {
+    path: "projects",
+    labels: {
+      "zh-TW": "專案",
+      en: "Projects",
+      ja: "プロジェクト",
+    },
+  },
+  {
+    path: "about",
+    labels: {
+      "zh-TW": "關於",
+      en: "About",
+      ja: "私について",
+    },
+  },
+] as const;
 
+type Locale = (typeof SUPPORTED_LOCALES)[number];
 type NavLink = { text: string; path: string };
+
+function normalizeLocale(lang: string): Locale {
+  return SUPPORTED_LOCALES.includes(lang as Locale) ? (lang as Locale) : "en";
+}
+
+function buildNavHref(lang: Locale, path: string) {
+  return `/${lang}/${path}`;
+}
+
+function buildNavLinks(lang: Locale): readonly NavLink[] {
+  return NAV_ITEMS.map(({ path, labels }) => ({
+    path,
+    text: labels[lang],
+  }));
+}
+
+function getNavLinkState(pathname: string, href: string) {
+  return {
+    href,
+    active: isActive(pathname, href),
+  };
+}
 
 export function Navbar({
   lang,
@@ -47,9 +76,10 @@ export function Navbar({
     setIsOpen(false);
   }
 
-  const links = NAV_LINKS[lang as keyof typeof NAV_LINKS] ?? NAV_LINKS.en;
+  const locale = normalizeLocale(lang);
+  const links = buildNavLinks(locale);
   const activeIndex = links.findIndex((link) =>
-    isActive(pathname, `/${lang}/${link.path}`)
+    isActive(pathname, buildNavHref(locale, link.path))
   );
 
   return (
@@ -65,21 +95,21 @@ export function Navbar({
           }
           onMouseLeave={() => setIsOpen(false)}
           className={cn(
-            "mt-4 w-full rounded-xl bg-transparent transition-all duration-300",
+            "mt-(--navbar-top-gap) w-full rounded-xl bg-transparent transition-all duration-300",
             (isScrolled || isOpen) &&
               "bg-background/60 shadow-secondary/60 shadow-xl backdrop-blur-sm"
           )}
         >
-          <div className="flex h-14 w-full items-center px-4">
+          <div className="flex h-(--navbar-height) w-full items-center px-4">
             <Link
-              href={`/${lang}`}
+              href={`/${locale}`}
               className="mr-2 inline-flex items-center"
               aria-label="Home"
             >
               <BrandIcon />
             </Link>
             <DesktopLinks
-              lang={lang}
+              lang={locale}
               links={links}
               pathname={pathname}
               activeIndex={activeIndex}
@@ -90,7 +120,7 @@ export function Navbar({
             />
           </div>
           <MobilePanel
-            lang={lang}
+            lang={locale}
             links={links}
             pathname={pathname}
             isOpen={isOpen}
@@ -113,7 +143,7 @@ function DesktopLinks({
   pathname,
   activeIndex,
 }: {
-  lang: string;
+  lang: Locale;
   links: readonly NavLink[];
   pathname: string;
   activeIndex: number;
@@ -121,8 +151,10 @@ function DesktopLinks({
   return (
     <div className="relative hidden items-center gap-1 lg:flex">
       {links.map((link, i) => {
-        const url = `/${lang}/${link.path}`;
-        const active = isActive(pathname, url);
+        const { href: url, active } = getNavLinkState(
+          pathname,
+          buildNavHref(lang, link.path)
+        );
         return (
           <Link
             key={link.path}
@@ -170,7 +202,7 @@ function RightControls({
     <div className="flex flex-1 items-center justify-end gap-1.5">
       <ThemeToggle className="hidden lg:inline-flex" />
       <a
-        href="https://github.com/andrewck24"
+        href={socialLinks.github}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="GitHub"
@@ -209,7 +241,7 @@ function MobilePanel({
   pathname,
   isOpen,
 }: {
-  lang: string;
+  lang: Locale;
   links: readonly NavLink[];
   pathname: string;
   isOpen: boolean;
@@ -224,8 +256,10 @@ function MobilePanel({
       <div className="overflow-hidden">
         <div className="flex flex-col gap-1 px-4 pb-4">
           {links.map((link) => {
-            const url = `/${lang}/${link.path}`;
-            const active = isActive(pathname, url);
+            const { href: url, active } = getNavLinkState(
+              pathname,
+              buildNavHref(lang, link.path)
+            );
             return (
               <Link
                 key={link.path}
@@ -242,7 +276,7 @@ function MobilePanel({
           })}
           <div className="-ms-1.5 mt-2 flex justify-between gap-1.5">
             <a
-              href="https://github.com/andrewck24"
+              href={socialLinks.github}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
