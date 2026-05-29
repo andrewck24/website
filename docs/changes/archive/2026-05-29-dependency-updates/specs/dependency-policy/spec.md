@@ -2,7 +2,7 @@
 
 ### Requirement: Active dependencies are kept within one minor version of latest
 
-Direct dependencies in `andrewck24` that are actively maintained and not flagged for replacement SHALL be updated to their latest compatible version at least once per quarter. Packages pending replacement (e.g., by a planned migration) are exempt until the replacement is complete.
+Direct dependencies in `website` that are actively maintained and not flagged for replacement SHALL be updated to their latest compatible version at least once per quarter. Packages pending replacement (e.g., by a planned migration) are exempt until the replacement is complete.
 
 #### Scenario: Routine dependency update
 
@@ -40,11 +40,9 @@ Packages that are intentionally not upgraded SHALL have their deferral reason re
 
 ##### Example: Deferral reasons by category
 
-| Package                             | Deferral reason                                                                                    |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `eslint` (→10)                      | Requires dedicated breaking-change change; `eslint-config-next` peer dep compatibility unconfirmed |
-| `fumadocs-*`, `@orama/*`, `mermaid` | Planned replacement with sanity.io migration                                                       |
-| `typescript` (→6.x)                 | No stable release available as of 2026-05-19                                                       |
+| Package        | Deferral reason                                                                                                                         |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `eslint` (→10) | Blocked by `eslint-config-next` transitive dep `typescript-eslint@8.46.2` (peer dep `eslint@^8\|\|^9`); tracked in vercel/next.js#89764 |
 
 ### Requirement: Ecosystem-coupled packages are upgraded together
 
