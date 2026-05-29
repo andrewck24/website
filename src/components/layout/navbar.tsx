@@ -5,10 +5,11 @@ import {
   LanguageToggleText,
 } from "@/components/layout/language-toggle";
 import { cn } from "@/lib/utils";
-import { Languages } from "lucide-react";
+import { Languages, Menu, X } from "lucide-react";
 import { GithubIcon } from "@/components/icons/github-icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 const NAV_LINKS = {
   "zh-TW": [
@@ -41,10 +42,15 @@ export function Navbar({
   isScrolled: boolean;
 }) {
   const pathname = usePathname();
+  const detailsRef = useRef<HTMLDetailsElement>(null);
   const links = NAV_LINKS[lang as keyof typeof NAV_LINKS] ?? NAV_LINKS.en;
   const activeIndex = links.findIndex((link) =>
     isActive(pathname, `/${lang}/${link.path}`)
   );
+
+  useEffect(() => {
+    if (detailsRef.current) detailsRef.current.open = false;
+  }, [pathname]);
 
   return (
     <nav
@@ -117,6 +123,44 @@ export function Navbar({
             >
               <GithubIcon className="size-5" />
             </a>
+
+            {/* Mobile hamburger trigger — lg:hidden */}
+            <details ref={detailsRef} className="relative lg:hidden">
+              <summary className="text-muted-foreground hover:text-foreground inline-flex size-9 cursor-pointer list-none items-center justify-center rounded-md transition-colors [&::-webkit-details-marker]:hidden">
+                <Menu className="size-5 [details[open]_&]:hidden" />
+                <X className="hidden size-5 [details[open]_&]:block" />
+              </summary>
+              {/* Panel — full-width, CSS grid expand animation */}
+              <div
+                className="bg-background/95 border-border fixed inset-x-0 top-[72px] grid border-b backdrop-blur-sm"
+                style={{
+                  gridTemplateRows: "0fr",
+                  transition: "grid-template-rows 300ms ease",
+                }}
+              >
+                <div className="overflow-hidden">
+                  <nav className="flex flex-col gap-1 px-6 py-4">
+                    {links.map((link) => {
+                      const url = `/${lang}/${link.path}`;
+                      const active = isActive(pathname, url);
+                      return (
+                        <Link
+                          key={link.path}
+                          href={url}
+                          data-active={active || undefined}
+                          className={cn(
+                            "text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                            active && "text-foreground bg-muted"
+                          )}
+                        >
+                          {link.text}
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </div>

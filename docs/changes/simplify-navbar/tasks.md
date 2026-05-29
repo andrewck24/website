@@ -32,8 +32,8 @@ verification.
 
 ## 5. Implement mobile menu with native details and CSS animation
 
-- [ ] 5.1 Implement the mobile menu in `navbar.tsx` per the spec "Mobile menu uses native details element with CSS animation" and the design decision "Replace Radix NavigationMenu with native `<details>` for mobile menu": use `<details>`/`<summary>` with a full-width panel; animate open via `grid-template-rows: 0fr → 1fr` transition (300 ms) and fade-in via `@starting-style`; animate close by reversing with `transition-behavior: allow-discrete`; show below `lg` breakpoint; verify expand and collapse animations play in Chrome and Safari
-- [ ] 5.2 Close the mobile menu on route change: add a `useEffect` that watches `usePathname()` and imperatively sets `detailsRef.current.open = false` when the pathname changes; verify the menu closes automatically after navigating to a new route (manual browser assertion)
+- [x] 5.1 Implement the mobile menu in `navbar.tsx` per the spec "Mobile menu uses native details element with CSS animation" and the design decision "Replace Radix NavigationMenu with native `<details>` for mobile menu": use `<details>`/`<summary>` with a full-width panel; animate open via `grid-template-rows: 0fr → 1fr` transition (300 ms) and fade-in via `@starting-style`; animate close by reversing with `transition-behavior: allow-discrete`; show below `lg` breakpoint; verify expand and collapse animations play in Chrome and Safari
+- [x] 5.2 Close the mobile menu on route change: add a `useEffect` that watches `usePathname()` and imperatively sets `detailsRef.current.open = false` when the pathname changes; verify the menu closes automatically after navigating to a new route (manual browser assertion)
 
 ## 6. Wire up app layout and verify build
 
