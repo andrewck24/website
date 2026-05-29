@@ -12,7 +12,7 @@ During a discovery session (2026-05-29), additional scope was identified beyond 
 - `@vercel/analytics` 2.0.1: already installed.
 - `package.json` `name` changed from `andrewck24` → `website`: already applied to fix Turbopack absolute-path resolution.
 
-Deferred packages (not in this change): none — all remaining packages either have no pending updates or are removed from the project.
+Deferred packages (not in this change): `eslint` 9→10 — blocked by `eslint-config-next@16.2.6`'s transitive dependency `typescript-eslint@8.46.2`, which declares peer dep `eslint: "^8.57.0 || ^9.0.0"` and fails at runtime with ESLint 10 (`Class extends value undefined`). `typescript-eslint@8.60.0` adds ESLint 10 support, but `eslint-config-next` must ship it as its own dependency before the upgrade is viable without pnpm overrides. Tracked in vercel/next.js#89764. Upgrade once `eslint-config-next` ships with `typescript-eslint ≥ 8.60.0`.
 
 ## Goals / Non-Goals
 

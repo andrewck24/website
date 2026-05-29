@@ -60,15 +60,15 @@
 
 <!-- eslint 9→10: upgrade with flat-config verification -->
 
-- [ ] 4.1 Confirm the project uses flat config: verify `eslint.config.mjs` exists and exports a default array (not `.eslintrc.*` format). Verified by reading `eslint.config.mjs` and confirming it is a flat config file — required precondition for eslint v10 compatibility.
+- [x] 4.1 Confirm the project uses flat config: verify `eslint.config.mjs` exists and exports a default array (not `.eslintrc.*` format). Verified by reading `eslint.config.mjs` and confirming it is a flat config file — required precondition for eslint v10 compatibility.
 
-- [ ] 4.2 Upgrade `eslint` to ^10.0.0 in `package.json`. Verified by reading `package.json` and confirming the entry shows ^10.0.0.
+- [x] 4.2 Upgrade `eslint` to ^10.0.0 in `package.json`. Verified by reading `package.json` and confirming the entry shows ^10.0.0.
 
-- [ ] 4.3 Run `pnpm install` after eslint upgrade. Verified when install exits 0 with no peer-dependency errors about eslint version incompatibility from `eslint-config-next` or any plugin.
+- [x] 4.3 Run `pnpm install` after eslint upgrade. Verified when install exits 0 with no peer-dependency errors about eslint version incompatibility from `eslint-config-next` or any plugin.
 
-- [ ] 4.4 Run `pnpm lint` (`eslint . --max-warnings=0`) and confirm it exits 0. If any errors about removed APIs appear (e.g., `CLIEngine`, deprecated `env` key, `Linter.verify` direct calls), identify the source plugin and either update it or remove the API call. Verified by lint exit code 0.
+- [x] 4.4 Run `pnpm lint` (`eslint . --max-warnings=0`) and confirm it exits 0. If any errors about removed APIs appear (e.g., `CLIEngine`, deprecated `env` key, `Linter.verify` direct calls), identify the source plugin and either update it or remove the API call. Verified by lint exit code 0.
 
-- [ ] 4.5 Run `pnpm build` to confirm Next.js 16 build pipeline is compatible with eslint 10. Verified by build exit 0.
+- [x] 4.5 Run `pnpm build` to confirm Next.js 16 build pipeline is compatible with eslint 10. Verified by build exit 0.
 
 ## 5. Tier 5: next-sanity upgrade
 
