@@ -27,4 +27,5 @@ Changes can be parked（暫存）— temporarily moved out of `docs/changes/`. P
 
 <!-- SPECTRA:END -->
 
-@CLAUDE.md
+- Colors must use CSS variables defined in [globals.css](/src/app/globals.css)
+- Components must use existing components in `@/components/ui`, or add new shadcn/ui components
