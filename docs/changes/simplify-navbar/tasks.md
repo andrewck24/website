@@ -12,8 +12,8 @@ verification.
 
 ## 1. Relocate internal toggle components
 
-- [ ] [P] 1.1 Move `theme-toggle.tsx` into `src/components/layout/theme-toggle.tsx` so it is internal to the layout module per the design decision "Split layout into index.tsx (structure) and navbar.tsx (presentation)"; verify `pnpm build` resolves the import without errors
-- [ ] [P] 1.2 Move `language-toggle.tsx` into `src/components/layout/language-toggle.tsx`; update the import in `src/components/article/info.tsx` to `@/components/layout/language-toggle`; verify `pnpm build` resolves both files without errors
+- [x] [P] 1.1 Move `theme-toggle.tsx` into `src/components/layout/theme-toggle.tsx` so it is internal to the layout module per the design decision "Split layout into index.tsx (structure) and navbar.tsx (presentation)"; verify `pnpm build` resolves the import without errors
+- [x] [P] 1.2 Move `language-toggle.tsx` into `src/components/layout/language-toggle.tsx`; update the import in `src/components/article/info.tsx` to `@/components/layout/language-toggle`; verify `pnpm build` resolves both files without errors
 
 ## 2. Create NavLayout with IntersectionObserver scroll detection
 

@@ -1,4 +1,4 @@
-import { LanguageToggle } from "@/components/language-toggle";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 import { Menu } from "@/components/layout/home/menu";
 import { Navbar, NavbarLinkItem } from "@/components/layout/home/navbar";
 import {
@@ -8,7 +8,7 @@ import {
   type NavOptions,
 } from "@/components/layout/shared/index";
 import { LargeSearchToggle } from "@/components/search-toggle";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { cn } from "@/lib/utils";
 import { Languages } from "lucide-react";
 import Link from "next/link";

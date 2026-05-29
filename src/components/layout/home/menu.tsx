@@ -1,5 +1,5 @@
 "use client";
-import { LanguageToggle } from "@/components/language-toggle";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 import { isSecondary } from "@/components/layout/home";
 import {
   BaseLinkItem,
@@ -8,7 +8,7 @@ import {
   type LinkItemType,
 } from "@/components/layout/shared";
 import { SearchToggle } from "@/components/search-toggle";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import {
   NavigationMenuContent,
