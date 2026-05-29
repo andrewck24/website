@@ -86,13 +86,13 @@
 
 ## 6. Tier 6: typescript v6 upgrade
 
-- [ ] 6.1 Upgrade `typescript` to ^6.0.3 in `package.json` (typescript 5→6: upgrade with type-check verification — 6.0.3 confirmed available via `ncu`; `tsconfig.json` already uses `moduleResolution: "bundler"` and `module: "esnext"` — no deprecated options in use). Verified by reading `package.json` and confirming the entry shows ^6.0.3.
+- [x] 6.1 Upgrade `typescript` to ^6.0.3 in `package.json` (typescript 5→6: upgrade with type-check verification — 6.0.3 confirmed available via `ncu`; `tsconfig.json` already uses `moduleResolution: "bundler"` and `module: "esnext"` — no deprecated options in use). Verified by reading `package.json` and confirming the entry shows ^6.0.3.
 
-- [ ] 6.2 Run `pnpm install` after typescript upgrade. Verified when install exits 0.
+- [x] 6.2 Run `pnpm install` after typescript upgrade. Verified when install exits 0.
 
-- [ ] 6.3 Run `pnpm type-check` (`tsc --noEmit`) and confirm it exits 0. If stricter inference or removed compiler options surface errors, fix at the affected call site or tsconfig entry. Verified by type-check exit code 0 (satisfies spec: breaking-change upgrades are verified before merging).
+- [x] 6.3 Run `pnpm type-check` (`tsc --noEmit`) and confirm it exits 0. If stricter inference or removed compiler options surface errors, fix at the affected call site or tsconfig entry. Verified by type-check exit code 0 (satisfies spec: breaking-change upgrades are verified before merging).
 
-- [ ] 6.4 Run `pnpm build` to confirm the Next.js build pipeline is compatible with typescript 6. Verified by build exit 0.
+- [x] 6.4 Run `pnpm build` to confirm the Next.js build pipeline is compatible with typescript 6. Verified by build exit 0.
 
 ## 7. Final verification
 
