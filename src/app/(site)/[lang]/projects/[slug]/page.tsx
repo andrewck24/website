@@ -80,8 +80,6 @@ export async function generateMetadata({
       languages,
     },
     openGraph: {
-      title: project.title,
-      description: project.description,
       type: "article",
       publishedTime: project.date,
     },

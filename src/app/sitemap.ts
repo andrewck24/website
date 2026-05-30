@@ -33,8 +33,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]);
 
-  const noteEntries = (
-    await Promise.all(
+  const [noteEntries, projectEntries] = await Promise.all([
+    Promise.all(
       LOCALES.map(async (lang) => {
         const notes = await getAllNotes(lang);
         return notes.map((note) => ({
@@ -46,11 +46,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.6,
         }));
       })
-    )
-  ).flat();
-
-  const projectEntries = (
-    await Promise.all(
+    ).then((r) => r.flat()),
+    Promise.all(
       LOCALES.map(async (lang) => {
         const projects = await getAllProjects(lang);
         return projects.map((project) => ({
@@ -62,8 +59,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.6,
         }));
       })
-    )
-  ).flat();
+    ).then((r) => r.flat()),
+  ]);
 
   return [...staticEntries, ...noteEntries, ...projectEntries];
 }

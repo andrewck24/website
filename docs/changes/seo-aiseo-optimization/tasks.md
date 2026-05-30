@@ -32,8 +32,8 @@
 
 ### 8a. Critical Bugs
 
-- [ ] 8a.1 [P] **proxy missing `llms.txt` exclusion** (finding #1): `GET /llms.txt` was matched by the proxy and redirected to `/zh-TW/llms.txt` (404), making the llms.txt feature unreachable to LLM crawlers. Fix: add `llms\\.txt` to the matcher exclusion list in `src/proxy.ts`.
-- [ ] 8a.2 [P] **`getNoteQuery`/`getProjectQuery` missing `_updatedAt`** (finding #2): The detail-page queries did not include `_updatedAt`, so `note._updatedAt` and `project._updatedAt` were always `undefined` in the page component, causing `dateModified` to be silently omitted from Article/CreativeWork JSON-LD. Fix: add `_updatedAt` to both queries in `src/lib/sanity/queries.ts`.
+- [x] 8a.1 [P] **proxy missing `llms.txt` exclusion** (finding #1): `GET /llms.txt` was matched by the proxy and redirected to `/zh-TW/llms.txt` (404), making the llms.txt feature unreachable to LLM crawlers. Fix: add `llms\\.txt` to the matcher exclusion list in `src/proxy.ts`.
+- [x] 8a.2 [P] **`getNoteQuery`/`getProjectQuery` missing `_updatedAt`** (finding #2): The detail-page queries did not include `_updatedAt`, so `note._updatedAt` and `project._updatedAt` were always `undefined` in the page component, causing `dateModified` to be silently omitted from Article/CreativeWork JSON-LD. Fix: add `_updatedAt` to both queries in `src/lib/sanity/queries.ts`.
 
 ### 8b. SEO Correctness + Resilience
 
@@ -43,9 +43,9 @@
 
 ### 8c. Efficiency + Cleanup
 
-- [ ] 8c.1 **sitemap sequential `await`** (finding #5): `noteEntries` and `projectEntries` were awaited sequentially, adding notes latency + projects latency instead of max(notes, projects). Fix: wrap both in a single outer `Promise.all`.
-- [ ] 8c.2 **`getNote`/`getProject` called twice per build without memoization** (finding #6): `Page()` and `generateMetadata()` each call `getNote`/`getProject` independently, doubling Sanity requests at build time. Fix: wrap both functions with `React.cache` in `src/lib/data/notes.ts` and `src/lib/data/projects.ts`.
-- [ ] 8c.3 **redundant `openGraph.title`/`.description` in projects page** (finding #8): Next.js auto-fills OG title/description from top-level metadata; the explicit `openGraph` block in `projects/[slug]/page.tsx` is redundant and inconsistent with `notes/[slug]/page.tsx`. Fix: remove `openGraph.title` and `openGraph.description`, keep `type` and `publishedTime`.
+- [x] 8c.1 **sitemap sequential `await`** (finding #5): `noteEntries` and `projectEntries` were awaited sequentially, adding notes latency + projects latency instead of max(notes, projects). Fix: wrap both in a single outer `Promise.all`.
+- [x] 8c.2 **`getNote`/`getProject` called twice per build without memoization** (finding #6): `Page()` and `generateMetadata()` each call `getNote`/`getProject` independently, doubling Sanity requests at build time. Fix: wrap both functions with `React.cache` in `src/lib/data/notes.ts` and `src/lib/data/projects.ts`.
+- [x] 8c.3 **redundant `openGraph.title`/`.description` in projects page** (finding #8): Next.js auto-fills OG title/description from top-level metadata; the explicit `openGraph` block in `projects/[slug]/page.tsx` is redundant and inconsistent with `notes/[slug]/page.tsx`. Fix: remove `openGraph.title` and `openGraph.description`, keep `type` and `publishedTime`.
 
 ## 7. OG Image
 

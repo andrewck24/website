@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { client } from "@/lib/sanity/client";
 import {
   getAllNotesQuery,
@@ -26,18 +27,17 @@ export async function getFeaturedNotes(
     }));
 }
 
-export async function getNote(
-  locale: Locale,
-  slug: string
-): Promise<NotePageData | null> {
-  const note = await client.fetch(getNoteQuery, { locale, slug });
-  if (!note || !note.slug) return null;
-  return {
-    ...(note as unknown as NotePageData),
-    locale,
-    url: `/${locale}/notes/${note.slug as string}`,
-  };
-}
+export const getNote = cache(
+  async (locale: Locale, slug: string): Promise<NotePageData | null> => {
+    const note = await client.fetch(getNoteQuery, { locale, slug });
+    if (!note || !note.slug) return null;
+    return {
+      ...(note as unknown as NotePageData),
+      locale,
+      url: `/${locale}/notes/${note.slug as string}`,
+    };
+  }
+);
 
 export async function getAllNotes(locale: Locale): Promise<NoteCardData[]> {
   const notes = await client.fetch(getAllNotesQuery, { locale });
