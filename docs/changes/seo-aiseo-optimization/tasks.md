@@ -22,7 +22,7 @@
 
 ## 5. Dynamic Sitemap
 
-- [ ] 5.1 Extend `src/app/sitemap.ts` so "sitemap includes all published Sanity notes and projects": call `getAllNotes` and `getAllProjects` for each of the three locales and append entries to the returned array. Each entry's `lastModified` SHALL use the document's `_updatedAt` value (not `new Date()`). "Sitemap extended in-place, not split" — no new sitemap file is created. Verify: `curl <host>/sitemap.xml` contains at least one `/notes/` and one `/projects/` URL; `lastModified` values differ between documents.
+- [x] 5.1 Extend `src/app/sitemap.ts` so "sitemap includes all published Sanity notes and projects": call `getAllNotes` and `getAllProjects` for each of the three locales and append entries to the returned array. Each entry's `lastModified` SHALL use the document's `_updatedAt` value (not `new Date()`). "Sitemap extended in-place, not split" — no new sitemap file is created. Verify: `curl <host>/sitemap.xml` contains at least one `/notes/` and one `/projects/` URL; `lastModified` values differ between documents.
 
 ## 6. llms.txt Route Handler
 
