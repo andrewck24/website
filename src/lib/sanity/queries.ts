@@ -76,6 +76,7 @@ export const getAllNotesQuery = /* groq */ `
     description,
     date,
     featured,
+    _updatedAt,
     ${tagProjection},
     ${coverImageProjection}
   }
@@ -89,6 +90,7 @@ export const getAllProjectsQuery = /* groq */ `
     date,
     featured,
     order,
+    _updatedAt,
     ${tagProjection},
     ${coverImageProjection}
   }
@@ -107,4 +109,20 @@ export const getAboutQuery = /* groq */ `
 
 export const getAvailableAboutLocalesQuery = /* groq */ `
   *[_type == "about" && defined(language)].language
+`;
+
+export const getLlmsNotesQuery = /* groq */ `
+  *[_type == "note" && language == "en" && defined(slug.current)] | order(_createdAt asc) {
+    title,
+    "slug": slug.current,
+    description
+  }
+`;
+
+export const getLlmsProjectsQuery = /* groq */ `
+  *[_type == "project" && language == "en" && defined(slug.current)] | order(order asc) {
+    title,
+    "slug": slug.current,
+    description
+  }
 `;

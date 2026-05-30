@@ -5,8 +5,8 @@
 
 ## 2. Sanity Query Updates
 
-- [ ] 2.1 Add `_updatedAt` field to all note and project queries in `src/lib/sanity/queries.ts` that will feed the sitemap (`getAllNotesQuery`, `getAllProjectsQuery`). Each returned document object SHALL include `_updatedAt` as an ISO date string. Verify: TypeScript compilation passes and the sitemap task (5.1) can reference `_updatedAt` without type errors.
-- [ ] 2.2 Add `llms.txt` GROQ queries to `src/lib/sanity/queries.ts`: new exported constants `getLlmsNotesQuery` and `getLlmsProjectsQuery` that fetch `title`, `slug.current`, `description`, and `language == "en"` notes/projects. Verify: queries are importable and return the expected shape in local development.
+- [x] 2.1 Add `_updatedAt` field to all note and project queries in `src/lib/sanity/queries.ts` that will feed the sitemap (`getAllNotesQuery`, `getAllProjectsQuery`). Each returned document object SHALL include `_updatedAt` as an ISO date string. Verify: TypeScript compilation passes and the sitemap task (5.1) can reference `_updatedAt` without type errors.
+- [x] 2.2 Add `llms.txt` GROQ queries to `src/lib/sanity/queries.ts`: new exported constants `getLlmsNotesQuery` and `getLlmsProjectsQuery` that fetch `title`, `slug.current`, `description`, and `language == "en"` notes/projects. Verify: queries are importable and return the expected shape in local development.
 
 ## 3. Layout and Static Pages — hreflang and JSON-LD
 
