@@ -28,6 +28,25 @@
 
 - [x] 6.1 /llms.txt serves LLM-readable site index: create `src/app/llms.txt/route.ts` as llms.txt served as a Next.js Route Handler — export a `GET` function that fetches English notes and projects from Sanity at request time via `getLlmsNotesQuery` and `getLlmsProjectsQuery` and returns `Content-Type: text/plain` Markdown with `# Andrew Tseng`, `## Notes`, and `## Projects` sections. Verify: `curl <host>/llms.txt` returns `Content-Type: text/plain`, contains both sections with populated entries, and reflects newly published Sanity content without a rebuild.
 
+## 8. Post-Review Fixes
+
+### 8a. Critical Bugs
+
+- [ ] 8a.1 [P] **proxy missing `llms.txt` exclusion** (finding #1): `GET /llms.txt` was matched by the proxy and redirected to `/zh-TW/llms.txt` (404), making the llms.txt feature unreachable to LLM crawlers. Fix: add `llms\\.txt` to the matcher exclusion list in `src/proxy.ts`.
+- [ ] 8a.2 [P] **`getNoteQuery`/`getProjectQuery` missing `_updatedAt`** (finding #2): The detail-page queries did not include `_updatedAt`, so `note._updatedAt` and `project._updatedAt` were always `undefined` in the page component, causing `dateModified` to be silently omitted from Article/CreativeWork JSON-LD. Fix: add `_updatedAt` to both queries in `src/lib/sanity/queries.ts`.
+
+### 8b. SEO Correctness + Resilience
+
+- [ ] 8b.1 [P] **`x-default` hreflang pointing to non-existent zh-TW slug** (finding #3): `x-default` was unconditionally set to `/zh-TW/${type}/${slug}`, which 404s when the zh-TW variant of an article does not exist. Fix: derive the x-default locale from `availableLocales` — use zh-TW if present, otherwise the first available locale.
+- [ ] 8b.2 **`llms.txt` route no error handling** (finding #4): A Sanity outage would cause an unhandled rejection and a 500 response. Fix: wrap `Promise.all` in try/catch and return a minimal static body on failure so crawlers always receive a valid `text/plain` 200.
+- [ ] 8b.3 **`llms.txt` route no revalidation directive** (finding #7): Without `export const revalidate`, every crawler request triggers fresh Sanity queries. Fix: add `export const revalidate = 3600` to cache the response at the Next.js edge for one hour.
+
+### 8c. Efficiency + Cleanup
+
+- [ ] 8c.1 **sitemap sequential `await`** (finding #5): `noteEntries` and `projectEntries` were awaited sequentially, adding notes latency + projects latency instead of max(notes, projects). Fix: wrap both in a single outer `Promise.all`.
+- [ ] 8c.2 **`getNote`/`getProject` called twice per build without memoization** (finding #6): `Page()` and `generateMetadata()` each call `getNote`/`getProject` independently, doubling Sanity requests at build time. Fix: wrap both functions with `React.cache` in `src/lib/data/notes.ts` and `src/lib/data/projects.ts`.
+- [ ] 8c.3 **redundant `openGraph.title`/`.description` in projects page** (finding #8): Next.js auto-fills OG title/description from top-level metadata; the explicit `openGraph` block in `projects/[slug]/page.tsx` is redundant and inconsistent with `notes/[slug]/page.tsx`. Fix: remove `openGraph.title` and `openGraph.description`, keep `type` and `publishedTime`.
+
 ## 7. OG Image
 
 - [x] 7.1 [P] OG image is registered via Next.js file-based convention for notes — create `src/app/(site)/[lang]/notes/[slug]/opengraph-image.tsx` using OG image uses Next.js file-based convention (`opengraph-image.tsx`): export `size` (`{ width: 1200, height: 630 }`) and a default async function returning `ImageResponse`. Article OG image uses Sanity coverImage when available: fetch the note from Sanity and return the `coverImage` URL as the image source when present. Article OG image falls back to ImageResponse when coverImage is absent: render a fallback layout with the note title and "Andrew Tseng" on a plain background. Verify: a note with `coverImage` — `og:image` resolves to the Sanity image; a note without `coverImage` — `og:image` resolves to the generated route and renders the fallback.
