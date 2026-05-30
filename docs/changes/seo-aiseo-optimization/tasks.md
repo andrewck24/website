@@ -10,10 +10,10 @@
 
 ## 3. Layout and Static Pages — hreflang and JSON-LD
 
-- [ ] 3.1 Implement hreflang emitted via Next.js `alternates` in `generateMetadata` and homepage emits Person and WebSite JSON-LD in `src/app/(site)/[lang]/layout.tsx`: extend `generateMetadata` to return `alternates.canonical` (current locale URL) and `alternates.languages` with hardcoded `zh-TW`, `en`, `ja`, and `x-default: /zh-TW` entries. Also render a JSON-LD injected via `<script type="application/ld+json">` in page components containing `Person` and `WebSite` schemas. Verify: inspect `<head>` on `/<lang>` — canonical, three hreflang tags, x-default, and JSON-LD script are all present.
-- [ ] 3.2 [P] Add alternates (canonical + hreflang) to `src/app/(site)/[lang]/notes/page.tsx` `generateMetadata` so "all pages emit hreflang and canonical link tags" — hardcode all three locales plus `x-default`. Verify: `<head>` of `/zh-TW/notes` contains four hreflang entries and a canonical tag.
-- [ ] 3.3 [P] Add alternates (canonical + hreflang) to `src/app/(site)/[lang]/projects/page.tsx` `generateMetadata`, same pattern as 3.2. Verify: `<head>` of `/zh-TW/projects` contains four hreflang entries and a canonical tag.
-- [ ] 3.4 [P] Add alternates (canonical + hreflang) to `src/app/(site)/[lang]/about/[[...slug]]/page.tsx` `generateMetadata`, same pattern as 3.2. Verify: `<head>` of `/zh-TW/about` contains four hreflang entries and a canonical tag.
+- [x] 3.1 Implement hreflang emitted via Next.js `alternates` in `generateMetadata` and homepage emits Person and WebSite JSON-LD in `src/app/(site)/[lang]/layout.tsx`: extend `generateMetadata` to return `alternates.canonical` (current locale URL) and `alternates.languages` with hardcoded `zh-TW`, `en`, `ja`, and `x-default: /zh-TW` entries. Also render a JSON-LD injected via `<script type="application/ld+json">` in page components containing `Person` and `WebSite` schemas. Verify: inspect `<head>` on `/<lang>` — canonical, three hreflang tags, x-default, and JSON-LD script are all present.
+- [x] 3.2 [P] Add alternates (canonical + hreflang) to `src/app/(site)/[lang]/notes/page.tsx` `generateMetadata` so "all pages emit hreflang and canonical link tags" — hardcode all three locales plus `x-default`. Verify: `<head>` of `/zh-TW/notes` contains four hreflang entries and a canonical tag.
+- [x] 3.3 [P] Add alternates (canonical + hreflang) to `src/app/(site)/[lang]/projects/page.tsx` `generateMetadata`, same pattern as 3.2. Verify: `<head>` of `/zh-TW/projects` contains four hreflang entries and a canonical tag.
+- [x] 3.4 [P] Add alternates (canonical + hreflang) to `src/app/(site)/[lang]/about/[[...slug]]/page.tsx` `generateMetadata`, same pattern as 3.2. Verify: `<head>` of `/zh-TW/about` contains four hreflang entries and a canonical tag.
 
 ## 4. Dynamic Slug Pages — hreflang and JSON-LD
 

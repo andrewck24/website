@@ -32,6 +32,15 @@ export async function generateMetadata({
     metadataBase: new URL("https://andrewck24.vercel.app"),
     title: { template: `%s | ${title}`, default: title },
     description,
+    alternates: {
+      canonical: `/${lang}`,
+      languages: {
+        "zh-TW": "/zh-TW",
+        en: "/en",
+        ja: "/ja",
+        "x-default": "/zh-TW",
+      },
+    },
     keywords: [
       "Full-stack Developer",
       "React",
@@ -91,11 +100,35 @@ interface LangLayoutProps {
   params: Promise<{ lang: string }>;
 }
 
+const jsonLd = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Andrew Tseng",
+    jobTitle: "Software Engineer",
+    url: "https://andrewck24.vercel.app",
+    sameAs: [
+      "https://github.com/andrewck24",
+      "https://www.linkedin.com/in/andrewck24",
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Andrew Tseng",
+    url: "https://andrewck24.vercel.app",
+  },
+]);
+
 export default async function Layout({ children, params }: LangLayoutProps) {
   const { lang } = await params;
 
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLd }}
+      />
       <LangSetter lang={lang} />
       <div className="flex min-h-screen flex-col items-center">
         <NavLayout lang={lang}>{children}</NavLayout>

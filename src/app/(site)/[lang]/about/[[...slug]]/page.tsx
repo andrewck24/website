@@ -52,5 +52,16 @@ export async function generateMetadata({
     en: "About",
     ja: "私について",
   };
-  return { title: titles[lang] ?? "About" };
+  return {
+    title: titles[lang] ?? "About",
+    alternates: {
+      canonical: `/${lang}/about`,
+      languages: {
+        "zh-TW": "/zh-TW/about",
+        en: "/en/about",
+        ja: "/ja/about",
+        "x-default": "/zh-TW/about",
+      },
+    },
+  };
 }
