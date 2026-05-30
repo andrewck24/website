@@ -80,5 +80,11 @@ export async function generateMetadata({
       canonical: `/${lang}/notes/${slug}`,
       languages,
     },
+    openGraph: {
+      title: note.title,
+      description: note.description,
+      type: "article",
+      publishedTime: note.date,
+    },
   };
 }
