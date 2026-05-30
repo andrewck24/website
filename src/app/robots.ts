@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/_next/", "/private/", "*.json"],
+        disallow: ["/api/", "/_next/", "/private/", "/studio/"],
       },
     ],
     sitemap: "https://andrewck24.vercel.app/sitemap.xml",

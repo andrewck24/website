@@ -1,7 +1,7 @@
 ## 1. Crawlability Fixes
 
-- [ ] 1.1 [P] Proxy matcher excludes static SEO files via filename pattern: update the `matcher` regex in `src/proxy.ts` to add `robots\\.txt|sitemap\\.xml` exclusions so that "proxy excludes static SEO files from locale redirect" — requests to `/robots.txt` pass through without a locale prefix being added. Verify: `curl -I <host>/robots.txt` returns 200; `curl -I <host>/zh-TW/robots.txt` returns 404 with no redirect chain.
-- [ ] 1.2 [P] robots.txt disallows Sanity Studio and omits unreliable wildcard: add `"/studio/"` to the disallow array and remove the `"*.json"` entry in `src/app/robots.ts`. Verify: `curl <host>/robots.txt` response contains `Disallow: /studio/` and does not contain `*.json`.
+- [x] 1.1 [P] Proxy matcher excludes static SEO files via filename pattern: update the `matcher` regex in `src/proxy.ts` to add `robots\\.txt|sitemap\\.xml` exclusions so that "proxy excludes static SEO files from locale redirect" — requests to `/robots.txt` pass through without a locale prefix being added. Verify: `curl -I <host>/robots.txt` returns 200; `curl -I <host>/zh-TW/robots.txt` returns 404 with no redirect chain.
+- [x] 1.2 [P] robots.txt disallows Sanity Studio and omits unreliable wildcard: add `"/studio/"` to the disallow array and remove the `"*.json"` entry in `src/app/robots.ts`. Verify: `curl <host>/robots.txt` response contains `Disallow: /studio/` and does not contain `*.json`.
 
 ## 2. Sanity Query Updates
 
