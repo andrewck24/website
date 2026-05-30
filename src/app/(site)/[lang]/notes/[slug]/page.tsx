@@ -83,8 +83,17 @@ export async function generateMetadata({
     openGraph: {
       title: note.title,
       description: note.description,
+      url: `/${lang}/notes/${slug}`,
+      siteName: "Andrew Tseng - Software Engineer",
+      locale: lang === "zh-TW" ? "zh_TW" : lang === "ja" ? "ja_JP" : "en_US",
       type: "article",
       publishedTime: note.date,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: note.title,
+      description: note.description,
+      creator: "@andrewck24",
     },
   };
 }
