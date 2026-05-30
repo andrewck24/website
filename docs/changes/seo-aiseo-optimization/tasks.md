@@ -26,7 +26,7 @@
 
 ## 6. llms.txt Route Handler
 
-- [ ] 6.1 /llms.txt serves LLM-readable site index: create `src/app/llms.txt/route.ts` as llms.txt served as a Next.js Route Handler — export a `GET` function that fetches English notes and projects from Sanity at request time via `getLlmsNotesQuery` and `getLlmsProjectsQuery` and returns `Content-Type: text/plain` Markdown with `# Andrew Tseng`, `## Notes`, and `## Projects` sections. Verify: `curl <host>/llms.txt` returns `Content-Type: text/plain`, contains both sections with populated entries, and reflects newly published Sanity content without a rebuild.
+- [x] 6.1 /llms.txt serves LLM-readable site index: create `src/app/llms.txt/route.ts` as llms.txt served as a Next.js Route Handler — export a `GET` function that fetches English notes and projects from Sanity at request time via `getLlmsNotesQuery` and `getLlmsProjectsQuery` and returns `Content-Type: text/plain` Markdown with `# Andrew Tseng`, `## Notes`, and `## Projects` sections. Verify: `curl <host>/llms.txt` returns `Content-Type: text/plain`, contains both sections with populated entries, and reflects newly published Sanity content without a rebuild.
 
 ## 7. OG Image
 
