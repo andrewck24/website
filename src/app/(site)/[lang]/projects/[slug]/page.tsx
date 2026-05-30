@@ -25,13 +25,28 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   const availableLocales = await getAvailableLocales(slug, "projects");
   if (availableLocales.length === 0) availableLocales.push(locale);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    description: project.description,
+    author: { "@type": "Person", name: "Andrew Tseng" },
+    ...(project._updatedAt ? { dateModified: project._updatedAt } : {}),
+  };
+
   return (
-    <Article
-      article={project}
-      contentType="projects"
-      backLinkText={backLinkTexts[locale]}
-      availableLocales={availableLocales}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Article
+        article={project}
+        contentType="projects"
+        backLinkText={backLinkTexts[locale]}
+        availableLocales={availableLocales}
+      />
+    </>
   );
 }
 
@@ -47,12 +62,24 @@ export async function generateMetadata({
   const project = await getProject(lang as Locale, slug);
   if (!project) return { title: "Project Not Found" };
 
+  const availableLocales = await getAvailableLocales(slug, "projects");
+  const languages: Record<string, string> = {};
+  for (const locale of availableLocales) {
+    languages[locale] = `/${locale}/projects/${slug}`;
+  }
+  const xDefaultLocale = availableLocales.includes("zh-TW")
+    ? "zh-TW"
+    : availableLocales[0];
+  languages["x-default"] = `/${xDefaultLocale}/projects/${slug}`;
+
   return {
     title: project.title,
     description: project.description,
+    alternates: {
+      canonical: `/${lang}/projects/${slug}`,
+      languages,
+    },
     openGraph: {
-      title: project.title,
-      description: project.description,
       type: "article",
       publishedTime: project.date,
     },

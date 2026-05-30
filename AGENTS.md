@@ -29,3 +29,8 @@ Changes can be parked（暫存）— temporarily moved out of `docs/changes/`. P
 
 - Colors must use CSS variables defined in [globals.css](/src/app/globals.css)
 - Components must use existing components in `@/components/ui`, or add new shadcn/ui components
+- When `/spectra-apply`ing a change:
+  - Commit after each task section; message states the section purpose and includes related artifacts (tasks.md, spec files, etc.)
+  - Run `pnpm type-check` before each commit; `pnpm build` before the final commit
+  - Skip checks only if the section is intentionally incomplete; final commit MUST pass both
+- For complex commits, include a body focused on **why**; "what" may be included as supporting context

@@ -3,7 +3,7 @@ import { urlFor } from "@/lib/sanity/image";
 import type { Locale } from "@/types/article";
 import { ImageResponse } from "next/og";
 
-export const size = { width: 1200, height: 675 };
+export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const runtime = "nodejs";
 
@@ -29,7 +29,10 @@ export default async function Image({
         fontWeight: "bold",
       }}
     >
-      {project?.title || "Project"}
+      <div>{project?.title || "Project"}</div>
+      <div style={{ fontSize: 24, marginTop: 16, opacity: 0.8 }}>
+        Andrew Tseng
+      </div>
     </div>
   );
 
@@ -39,7 +42,7 @@ export default async function Image({
 
   const imageUrl = urlFor(project.coverImage)
     .width(1200)
-    .height(675)
+    .height(630)
     .fit("crop")
     .url();
 

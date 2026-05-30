@@ -35,6 +35,7 @@ export interface BaseArticle {
   title: string;
   description?: string;
   date: string;
+  _updatedAt?: string;
   tags: ArticleTag[];
   featured: boolean;
   coverImage?: SanityImage;

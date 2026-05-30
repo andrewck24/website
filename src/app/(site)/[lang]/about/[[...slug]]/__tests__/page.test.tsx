@@ -1,4 +1,4 @@
-import AboutPage from "../page";
+import AboutPage, { generateMetadata } from "../page";
 
 jest.mock("next/navigation", () => ({
   ...jest.requireActual("next/navigation"),
@@ -31,6 +31,26 @@ const mockNotFound = notFound as unknown as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+});
+
+describe("generateMetadata", () => {
+  it("returns alternates.canonical as /zh-TW/about when lang is zh-TW", async () => {
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ lang: "zh-TW" }),
+    });
+    expect(metadata.alternates?.canonical).toBe("/zh-TW/about");
+  });
+
+  it("returns alternates.languages with zh-TW, en, ja, and x-default", async () => {
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ lang: "zh-TW" }),
+    });
+    const languages = metadata.alternates?.languages as Record<string, string>;
+    expect(languages["zh-TW"]).toBe("/zh-TW/about");
+    expect(languages["en"]).toBe("/en/about");
+    expect(languages["ja"]).toBe("/ja/about");
+    expect(languages["x-default"]).toBe("/zh-TW/about");
+  });
 });
 
 describe("AboutPage", () => {

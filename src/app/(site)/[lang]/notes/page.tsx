@@ -91,5 +91,14 @@ export async function generateMetadata({
   return {
     title: pageTitles[locale],
     description: pageDescriptions[locale],
+    alternates: {
+      canonical: `/${lang}/notes`,
+      languages: {
+        "zh-TW": "/zh-TW/notes",
+        en: "/en/notes",
+        ja: "/ja/notes",
+        "x-default": "/zh-TW/notes",
+      },
+    },
   };
 }

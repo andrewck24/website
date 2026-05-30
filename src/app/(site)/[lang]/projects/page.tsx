@@ -39,5 +39,14 @@ export async function generateMetadata({
   return {
     title: titles[lang as Locale] || titles["zh-TW"],
     description: descriptions[lang as Locale] || descriptions["zh-TW"],
+    alternates: {
+      canonical: `/${lang}/projects`,
+      languages: {
+        "zh-TW": "/zh-TW/projects",
+        en: "/en/projects",
+        ja: "/ja/projects",
+        "x-default": "/zh-TW/projects",
+      },
+    },
   };
 }
