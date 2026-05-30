@@ -64,13 +64,22 @@ describe("projects/[slug]/page — generateMetadata", () => {
     });
   });
 
-  it("sets x-default to zh-TW URL", async () => {
+  it("sets x-default to zh-TW URL when zh-TW is available", async () => {
     const metadata = await generateMetadata({
       params: Promise.resolve({ lang: "en", slug: "my-project" }),
     });
     expect(metadata.alternates?.languages).toMatchObject({
       "x-default": "/zh-TW/projects/my-project",
     });
+  });
+
+  it("x-default falls back to first available locale when zh-TW is absent", async () => {
+    mockGetAvailableLocales.mockResolvedValue(["en", "ja"]);
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ lang: "en", slug: "my-project" }),
+    });
+    const languages = metadata.alternates?.languages as Record<string, string>;
+    expect(languages["x-default"]).toBe("/en/projects/my-project");
   });
 
   it("does NOT include ja when ja is not in available locales", async () => {

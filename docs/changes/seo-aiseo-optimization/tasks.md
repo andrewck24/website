@@ -37,9 +37,9 @@
 
 ### 8b. SEO Correctness + Resilience
 
-- [ ] 8b.1 [P] **`x-default` hreflang pointing to non-existent zh-TW slug** (finding #3): `x-default` was unconditionally set to `/zh-TW/${type}/${slug}`, which 404s when the zh-TW variant of an article does not exist. Fix: derive the x-default locale from `availableLocales` — use zh-TW if present, otherwise the first available locale.
-- [ ] 8b.2 **`llms.txt` route no error handling** (finding #4): A Sanity outage would cause an unhandled rejection and a 500 response. Fix: wrap `Promise.all` in try/catch and return a minimal static body on failure so crawlers always receive a valid `text/plain` 200.
-- [ ] 8b.3 **`llms.txt` route no revalidation directive** (finding #7): Without `export const revalidate`, every crawler request triggers fresh Sanity queries. Fix: add `export const revalidate = 3600` to cache the response at the Next.js edge for one hour.
+- [x] 8b.1 [P] **`x-default` hreflang pointing to non-existent zh-TW slug** (finding #3): `x-default` was unconditionally set to `/zh-TW/${type}/${slug}`, which 404s when the zh-TW variant of an article does not exist. Fix: derive the x-default locale from `availableLocales` — use zh-TW if present, otherwise the first available locale.
+- [x] 8b.2 **`llms.txt` route no error handling** (finding #4): A Sanity outage would cause an unhandled rejection and a 500 response. Fix: wrap `Promise.all` in try/catch and return a minimal static body on failure so crawlers always receive a valid `text/plain` 200.
+- [x] 8b.3 **`llms.txt` route no revalidation directive** (finding #7): Without `export const revalidate`, every crawler request triggers fresh Sanity queries. Fix: add `export const revalidate = 3600` to cache the response at the Next.js edge for one hour.
 
 ### 8c. Efficiency + Cleanup
 

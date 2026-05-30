@@ -60,12 +60,21 @@ describe("generateMetadata", () => {
     expect(languages["en"]).toBe("/en/notes/test-slug");
   });
 
-  it("always includes x-default pointing to zh-TW", async () => {
+  it("x-default points to zh-TW when zh-TW is available", async () => {
     const metadata = await generateMetadata({
       params: Promise.resolve({ lang: "zh-TW", slug: "test-slug" }),
     });
     const languages = metadata.alternates?.languages as Record<string, string>;
     expect(languages["x-default"]).toBe("/zh-TW/notes/test-slug");
+  });
+
+  it("x-default falls back to first available locale when zh-TW is absent", async () => {
+    mockGetAvailableLocales.mockResolvedValue(["en", "ja"]);
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ lang: "en", slug: "test-slug" }),
+    });
+    const languages = metadata.alternates?.languages as Record<string, string>;
+    expect(languages["x-default"]).toBe("/en/notes/test-slug");
   });
 
   it("does not include unavailable locales (ja)", async () => {

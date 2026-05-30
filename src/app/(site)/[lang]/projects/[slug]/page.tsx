@@ -67,7 +67,10 @@ export async function generateMetadata({
   for (const locale of availableLocales) {
     languages[locale] = `/${locale}/projects/${slug}`;
   }
-  languages["x-default"] = `/zh-TW/projects/${slug}`;
+  const xDefaultLocale = availableLocales.includes("zh-TW")
+    ? "zh-TW"
+    : availableLocales[0];
+  languages["x-default"] = `/${xDefaultLocale}/projects/${slug}`;
 
   return {
     title: project.title,
