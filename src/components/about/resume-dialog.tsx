@@ -14,6 +14,8 @@ interface ResumeDialogProps {
   lang: Lang;
   pdfUrls: { zh: string | null; en: string | null };
   defaultOpen?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const i18n: Record<
@@ -44,11 +46,15 @@ export function ResumeDialog({
   lang,
   pdfUrls,
   defaultOpen = false,
+  open,
+  onOpenChange,
 }: ResumeDialogProps) {
   const t = i18n[lang];
+  const controlledProps =
+    open !== undefined ? { open, onOpenChange } : { defaultOpen };
 
   return (
-    <Dialog defaultOpen={defaultOpen}>
+    <Dialog {...controlledProps}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t.title}</DialogTitle>

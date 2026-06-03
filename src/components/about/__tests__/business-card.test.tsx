@@ -57,4 +57,33 @@ describe("BusinessCard", () => {
       screen.getByRole("button", { name: /pdf|resume|履歷|download/i })
     ).toBeInTheDocument();
   });
+
+  describe("collapsed state CSS structure", () => {
+    it("wrapper has data-testid for collapsed CSS selector targeting", () => {
+      const { container } = render(<BusinessCard {...defaultProps} />);
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper).toHaveAttribute("data-testid", "about-business-card");
+    });
+
+    it("h1 and p are rendered for collapsed display", () => {
+      render(<BusinessCard {...defaultProps} />);
+      expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+      expect(screen.getByText("Software Engineer")).toBeInTheDocument();
+    });
+  });
+
+  describe("sentinel for IntersectionObserver", () => {
+    it("renders a sentinel element as the first child of the wrapper", () => {
+      const { container } = render(<BusinessCard {...defaultProps} />);
+      const wrapper = container.firstChild as HTMLElement;
+      const firstChild = wrapper?.firstElementChild;
+      expect(firstChild).toHaveAttribute("data-sentinel");
+    });
+
+    it("sentinel has zero height", () => {
+      const { container } = render(<BusinessCard {...defaultProps} />);
+      const sentinel = container.querySelector("[data-sentinel]");
+      expect(sentinel?.className).toContain("h-0");
+    });
+  });
 });
