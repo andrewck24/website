@@ -1,4 +1,4 @@
-import { PersonalInfo } from "@/components/about/personal-info";
+import { BusinessCard } from "@/components/about/business-card";
 import { portableTextComponents } from "@/components/mdx/portable-text";
 import { client } from "@/lib/sanity/client";
 import { getAboutQuery } from "@/lib/sanity/queries";
@@ -23,11 +23,17 @@ export default async function AboutPage({ params }: PageProps) {
       data-testid="about-page"
       className={cn(
         "relative backdrop-blur-lg",
-        "flex flex-col items-center justify-start gap-4 lg:flex-row lg:items-start lg:justify-center"
+        "flex flex-col items-center justify-start gap-4"
       )}
     >
-      <PersonalInfo />
-      <article className="prose border-border bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl border px-4 py-12 lg:px-8">
+      <BusinessCard
+        lang={lang as "zh-TW" | "en" | "ja"}
+        pdfUrls={{
+          zh: about.resumePdfZhUrl ?? null,
+          en: about.resumePdfEnUrl ?? null,
+        }}
+      />
+      <article className="prose bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl px-0 py-6 lg:px-8 lg:py-12">
         {about?.body && (
           <PortableText
             value={about.body}
