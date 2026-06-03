@@ -105,7 +105,9 @@ export const getAvailableLocalesQuery = /* groq */ `
 export const getAboutQuery = /* groq */ `
   *[_type == "about" && language == $locale][0] {
     title,
-    body
+    body,
+    "resumePdfZhUrl": resumePdfZh.asset->url,
+    "resumePdfEnUrl": resumePdfEn.asset->url
   }
 `;
 

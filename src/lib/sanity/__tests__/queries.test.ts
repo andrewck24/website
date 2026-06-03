@@ -4,6 +4,7 @@ import {
   getAllProjectsQuery,
   getLlmsNotesQuery,
   getLlmsProjectsQuery,
+  getAboutQuery,
 } from "@/lib/sanity/queries";
 
 describe("getAllNotesQuery", () => {
@@ -49,6 +50,18 @@ describe("getLlmsProjectsQuery", () => {
     expect(getLlmsProjectsQuery).toContain("title");
     expect(getLlmsProjectsQuery).toContain("slug");
     expect(getLlmsProjectsQuery).toContain("description");
+  });
+});
+
+describe("getAboutQuery", () => {
+  it("projects resumePdfZhUrl from resumePdfZh asset", () => {
+    expect(getAboutQuery).toContain("resumePdfZhUrl");
+    expect(getAboutQuery).toContain("resumePdfZh.asset->url");
+  });
+
+  it("projects resumePdfEnUrl from resumePdfEn asset", () => {
+    expect(getAboutQuery).toContain("resumePdfEnUrl");
+    expect(getAboutQuery).toContain("resumePdfEn.asset->url");
   });
 });
 

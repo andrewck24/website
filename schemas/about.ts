@@ -22,5 +22,17 @@ export const about = defineType({
       readOnly: true,
       hidden: true,
     }),
+    defineField({
+      name: "resumePdfZh",
+      title: "Resume PDF (Traditional Chinese)",
+      type: "file",
+      options: { accept: ".pdf" },
+    }),
+    defineField({
+      name: "resumePdfEn",
+      title: "Resume PDF (English)",
+      type: "file",
+      options: { accept: ".pdf" },
+    }),
   ],
 });

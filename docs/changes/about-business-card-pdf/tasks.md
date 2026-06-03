@@ -1,8 +1,8 @@
 ## 1. Sanity Schema and Query
 
-- [ ] 1.1 Add `resumePdfZh` and `resumePdfEn` optional `file` fields (`.pdf` only) to the `about` schema in `src/sanity/schemas/about.ts`. Verify: both fields appear in Sanity Studio's about document editor after local `pnpm sanity dev` startup. Satisfies: Sanity resume PDF fields requirement.
+- [x] 1.1 Add `resumePdfZh` and `resumePdfEn` optional `file` fields (`.pdf` only) to the `about` schema in `schemas/about.ts`. Verify: both fields appear in Sanity Studio's about document editor after local `pnpm sanity dev` startup. Satisfies: Sanity resume PDF fields requirement.
 
-- [ ] 1.2 Update `getAboutQuery` in `src/lib/sanity/queries.ts` to project `"resumePdfZhUrl": resumePdfZh.asset->url` and `"resumePdfEnUrl": resumePdfEn.asset->url`. Verify: a TypeScript type for the query result includes `resumePdfZhUrl: string | null` and `resumePdfEnUrl: string | null`; `pnpm type-check` passes. Satisfies: Sanity resume PDF fields requirement; implements the Sanity two-field approach for resume PDFs design decision.
+- [x] 1.2 Update `getAboutQuery` in `src/lib/sanity/queries.ts` to project `"resumePdfZhUrl": resumePdfZh.asset->url` and `"resumePdfEnUrl": resumePdfEn.asset->url`. Verify: a TypeScript type for the query result includes `resumePdfZhUrl: string | null` and `resumePdfEnUrl: string | null`; `pnpm type-check` passes. Satisfies: Sanity resume PDF fields requirement; implements the Sanity two-field approach for resume PDFs design decision.
 
 ## 2. Page Wiring
 

@@ -26,5 +26,5 @@ The About page's `PersonalInfo` sidebar lacks a resume download path and uses a 
 - Affected specs: `resume-pdf-download` (new), `about-page` (modified)
 - Affected code:
   - New: `src/components/about/business-card.tsx`, `src/components/about/resume-dialog.tsx`
-  - Modified: `src/sanity/schemas/about.ts`, `src/lib/sanity/queries.ts`, `src/app/(site)/[lang]/about/[[...slug]]/page.tsx`, `src/components/about/personal-info.tsx`
+  - Modified: `schemas/about.ts`, `src/lib/sanity/queries.ts`, `src/app/(site)/[lang]/about/[[...slug]]/page.tsx`, `src/components/about/personal-info.tsx`
   - Removed: none (personal-info.tsx will be replaced in-place)
