@@ -15,6 +15,15 @@ function buildStructure(S: StructureBuilder) {
       S.documentTypeListItem("tag").title("Tags"),
       S.divider(),
       S.listItem()
+        .title("Site Settings")
+        .id("siteSettings")
+        .child(
+          S.document()
+            .schemaType("siteSettings")
+            .documentId("siteSettings")
+            .title("Site Settings")
+        ),
+      S.listItem()
         .title("About")
         .child(
           S.list()
