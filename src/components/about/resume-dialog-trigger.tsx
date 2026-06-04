@@ -40,7 +40,10 @@ function ResumeDialogTriggerInner({ lang, pdfUrls }: Props) {
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen && openedViaParam) {
-      router.replace(pathname, { scroll: false });
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("resume");
+      const newUrl = params.size > 0 ? `${pathname}?${params}` : pathname;
+      router.replace(newUrl, { scroll: false });
     }
   };
 
