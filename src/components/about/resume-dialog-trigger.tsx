@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Download } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { Locale } from "@/types/article";
 import React, { Component, Suspense, useState } from "react";
 import { ResumeDialog } from "./resume-dialog";
 
-type Lang = "zh-TW" | "en" | "ja";
-
 interface Props {
-  lang: Lang;
+  lang: Locale;
   pdfUrls: { tw: string | null; en: string | null; ja: string | null };
 }
 

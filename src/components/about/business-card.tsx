@@ -4,13 +4,12 @@ import { CakeIcon } from "@/components/icons/cake-icon";
 import { GithubIcon } from "@/components/icons/github-icon";
 import { LinkedinIcon } from "@/components/icons/linkedin-icon";
 import { Button } from "@/components/ui/button";
+import type { Locale } from "@/types/article";
 import Link from "next/link";
 import { ResumeDialogTrigger } from "./resume-dialog-trigger";
 
-type Lang = "zh-TW" | "en" | "ja";
-
 interface BusinessCardProps {
-  lang: Lang;
+  lang: Locale;
   pdfUrls: { tw: string | null; en: string | null; ja: string | null };
 }
 

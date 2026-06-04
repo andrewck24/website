@@ -7,11 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-type Lang = "zh-TW" | "en" | "ja";
+import type { Locale } from "@/types/article";
 
 interface ResumeDialogProps {
-  lang: Lang;
+  lang: Locale;
   pdfUrls: { tw: string | null; en: string | null; ja: string | null };
   defaultOpen?: boolean;
   open?: boolean;
@@ -19,7 +18,7 @@ interface ResumeDialogProps {
 }
 
 const i18n: Record<
-  Lang,
+  Locale,
   { title: string; description: string; tw: string; en: string; ja: string }
 > = {
   "zh-TW": {
