@@ -3,11 +3,15 @@ import { render, screen } from "@testing-library/react";
 import { ResumeDialog } from "../resume-dialog";
 
 describe("ResumeDialog", () => {
-  it("shows zh download link when pdfUrls.zh is non-null (zh-TW locale)", () => {
+  it("shows tw download link when pdfUrls.tw is non-null (zh-TW locale)", () => {
     render(
       <ResumeDialog
         lang="zh-TW"
-        pdfUrls={{ zh: "https://cdn.sanity.io/files/zh.pdf", en: null }}
+        pdfUrls={{
+          tw: "https://cdn.sanity.io/files/tw.pdf",
+          en: null,
+          ja: null,
+        }}
         defaultOpen={true}
       />
     );
@@ -18,29 +22,71 @@ describe("ResumeDialog", () => {
     render(
       <ResumeDialog
         lang="en"
-        pdfUrls={{ zh: null, en: "https://cdn.sanity.io/files/en.pdf" }}
+        pdfUrls={{
+          tw: null,
+          en: "https://cdn.sanity.io/files/en.pdf",
+          ja: null,
+        }}
         defaultOpen={true}
       />
     );
     expect(screen.getByText("English")).toBeInTheDocument();
   });
 
-  it("does not show zh link when pdfUrls.zh is null", () => {
+  it("shows ja download link when pdfUrls.ja is non-null (ja locale)", () => {
+    render(
+      <ResumeDialog
+        lang="ja"
+        pdfUrls={{
+          tw: null,
+          en: null,
+          ja: "https://cdn.sanity.io/files/ja.pdf",
+        }}
+        defaultOpen={true}
+      />
+    );
+    expect(screen.getByText("日本語")).toBeInTheDocument();
+  });
+
+  it("does not show tw link when pdfUrls.tw is null", () => {
     render(
       <ResumeDialog
         lang="zh-TW"
-        pdfUrls={{ zh: null, en: "https://cdn.sanity.io/files/en.pdf" }}
+        pdfUrls={{
+          tw: null,
+          en: "https://cdn.sanity.io/files/en.pdf",
+          ja: null,
+        }}
         defaultOpen={true}
       />
     );
     expect(screen.queryByText("中文")).not.toBeInTheDocument();
   });
 
+  it("does not show ja link when pdfUrls.ja is null", () => {
+    render(
+      <ResumeDialog
+        lang="ja"
+        pdfUrls={{
+          tw: "https://cdn.sanity.io/files/tw.pdf",
+          en: null,
+          ja: null,
+        }}
+        defaultOpen={true}
+      />
+    );
+    expect(screen.queryByText("日本語")).not.toBeInTheDocument();
+  });
+
   it("shows dialog title in zh-TW locale", () => {
     render(
       <ResumeDialog
         lang="zh-TW"
-        pdfUrls={{ zh: "https://cdn.sanity.io/files/zh.pdf", en: null }}
+        pdfUrls={{
+          tw: "https://cdn.sanity.io/files/tw.pdf",
+          en: null,
+          ja: null,
+        }}
         defaultOpen={true}
       />
     );
@@ -51,7 +97,11 @@ describe("ResumeDialog", () => {
     render(
       <ResumeDialog
         lang="en"
-        pdfUrls={{ zh: null, en: "https://cdn.sanity.io/files/en.pdf" }}
+        pdfUrls={{
+          tw: null,
+          en: "https://cdn.sanity.io/files/en.pdf",
+          ja: null,
+        }}
         defaultOpen={true}
       />
     );
@@ -63,8 +113,9 @@ describe("ResumeDialog", () => {
       <ResumeDialog
         lang="en"
         pdfUrls={{
-          zh: "https://cdn.sanity.io/files/zh.pdf",
+          tw: "https://cdn.sanity.io/files/tw.pdf",
           en: "https://cdn.sanity.io/files/en.pdf",
+          ja: "https://cdn.sanity.io/files/ja.pdf",
         }}
         defaultOpen={true}
       />
@@ -76,18 +127,20 @@ describe("ResumeDialog", () => {
     });
   });
 
-  it("shows both links when both pdfUrls are non-null", () => {
+  it("shows all three links when all pdfUrls are non-null", () => {
     render(
       <ResumeDialog
         lang="en"
         pdfUrls={{
-          zh: "https://cdn.sanity.io/files/zh.pdf",
+          tw: "https://cdn.sanity.io/files/tw.pdf",
           en: "https://cdn.sanity.io/files/en.pdf",
+          ja: "https://cdn.sanity.io/files/ja.pdf",
         }}
         defaultOpen={true}
       />
     );
     expect(screen.getByText("Traditional Chinese")).toBeInTheDocument();
     expect(screen.getByText("English")).toBeInTheDocument();
+    expect(screen.getByText("Japanese")).toBeInTheDocument();
   });
 });

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Download } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { Component, Suspense, useState } from "react";
 import { ResumeDialog } from "./resume-dialog";
@@ -10,14 +11,8 @@ type Lang = "zh-TW" | "en" | "ja";
 
 interface Props {
   lang: Lang;
-  pdfUrls: { zh: string | null; en: string | null };
+  pdfUrls: { tw: string | null; en: string | null; ja: string | null };
 }
-
-const triggerLabel: Record<Lang, string> = {
-  "zh-TW": "履歷 PDF",
-  en: "Resume PDF",
-  ja: "履歴書PDF",
-};
 
 class ErrorBoundary extends Component<
   { children: React.ReactNode },
@@ -36,7 +31,7 @@ export function ResumeTriggerSkeleton() {
   return <Skeleton className="h-9 w-24 rounded-md" />;
 }
 
-function ResumeDialogWithParamsInner({ lang, pdfUrls }: Props) {
+function ResumeDialogTriggerInner({ lang, pdfUrls }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -53,7 +48,7 @@ function ResumeDialogWithParamsInner({ lang, pdfUrls }: Props) {
   return (
     <>
       <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
-        {triggerLabel[lang]}
+        <Download className="mr-1 size-4" /> resume
       </Button>
       <ResumeDialog
         lang={lang}
@@ -65,11 +60,11 @@ function ResumeDialogWithParamsInner({ lang, pdfUrls }: Props) {
   );
 }
 
-export function ResumeDialogWithParams(props: Props) {
+export function ResumeDialogTrigger(props: Props) {
   return (
     <ErrorBoundary>
       <Suspense fallback={<ResumeTriggerSkeleton />}>
-        <ResumeDialogWithParamsInner {...props} />
+        <ResumeDialogTriggerInner {...props} />
       </Suspense>
     </ErrorBoundary>
   );

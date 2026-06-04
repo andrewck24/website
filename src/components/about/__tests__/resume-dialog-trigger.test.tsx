@@ -16,15 +16,15 @@ jest.mock("../resume-dialog", () => ({
     }),
 }));
 
-import { ResumeDialogWithParams } from "../resume-dialog-with-params";
+import { ResumeDialogTrigger } from "../resume-dialog-trigger";
 import { useSearchParams } from "next/navigation";
 
 const mockUseSearchParams = useSearchParams as jest.Mock;
 
-describe("ResumeDialogWithParams", () => {
+describe("ResumeDialogTrigger", () => {
   const defaultProps = {
     lang: "zh-TW" as const,
-    pdfUrls: { zh: "https://cdn.sanity.io/files/zh.pdf", en: null },
+    pdfUrls: { tw: "https://cdn.sanity.io/files/tw.pdf", en: null, ja: null },
   };
 
   it("passes open=false when ?resume param is absent", () => {
@@ -32,7 +32,7 @@ describe("ResumeDialogWithParams", () => {
 
     render(
       <Suspense fallback={null}>
-        <ResumeDialogWithParams {...defaultProps} />
+        <ResumeDialogTrigger {...defaultProps} />
       </Suspense>
     );
     const dialog = screen.getByTestId("resume-dialog");
@@ -44,23 +44,21 @@ describe("ResumeDialogWithParams", () => {
 
     render(
       <Suspense fallback={null}>
-        <ResumeDialogWithParams {...defaultProps} />
+        <ResumeDialogTrigger {...defaultProps} />
       </Suspense>
     );
     const dialog = screen.getByTestId("resume-dialog");
     expect(dialog).toHaveAttribute("data-open", "true");
   });
 
-  it("renders a trigger button", () => {
+  it("renders a trigger button with Download icon and 'resume' label", () => {
     mockUseSearchParams.mockReturnValue(new URLSearchParams());
 
     render(
       <Suspense fallback={null}>
-        <ResumeDialogWithParams {...defaultProps} />
+        <ResumeDialogTrigger {...defaultProps} />
       </Suspense>
     );
-    expect(
-      screen.getByRole("button", { name: /pdf|resume|履歷/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /resume/i })).toBeInTheDocument();
   });
 });

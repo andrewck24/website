@@ -115,6 +115,14 @@ export const getAvailableAboutLocalesQuery = /* groq */ `
   *[_type == "about" && defined(language)].language
 `;
 
+export const getSiteSettingsQuery = /* groq */ `
+  *[_type == "siteSettings"][0] {
+    "resumePdfTwUrl": resumePdfTw.asset->url,
+    "resumePdfEnUrl": resumePdfEn.asset->url,
+    "resumePdfJaUrl": resumePdfJa.asset->url
+  }
+`;
+
 export const getLlmsNotesQuery = /* groq */ `
   *[_type == "note" && language == "en" && defined(slug.current)] | order(_createdAt asc) {
     title,

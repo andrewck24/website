@@ -4,73 +4,30 @@ import { CakeIcon } from "@/components/icons/cake-icon";
 import { GithubIcon } from "@/components/icons/github-icon";
 import { LinkedinIcon } from "@/components/icons/linkedin-icon";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { ResumeDialogWithParams } from "./resume-dialog-with-params";
+import { ResumeDialogTrigger } from "./resume-dialog-trigger";
 
 type Lang = "zh-TW" | "en" | "ja";
 
 interface BusinessCardProps {
   lang: Lang;
-  pdfUrls: { zh: string | null; en: string | null };
+  pdfUrls: { tw: string | null; en: string | null; ja: string | null };
 }
 
 const hasPdf = (pdfUrls: BusinessCardProps["pdfUrls"]) =>
-  pdfUrls.zh !== null || pdfUrls.en !== null;
+  pdfUrls.tw !== null || pdfUrls.en !== null || pdfUrls.ja !== null;
 
 export function BusinessCard({ lang, pdfUrls }: BusinessCardProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-
-    const navBottom =
-      document.querySelector("nav")?.getBoundingClientRect().bottom ?? 72;
-    const triggerY =
-      wrapper.getBoundingClientRect().top + window.scrollY - navBottom;
-
-    const handleScroll = () => {
-      if (window.scrollY >= triggerY) {
-        wrapper.setAttribute("data-collapsed", "true");
-      } else {
-        wrapper.removeAttribute("data-collapsed");
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const handleClick = () => {
-    if (wrapperRef.current?.hasAttribute("data-collapsed")) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
   return (
     <div
-      ref={wrapperRef}
       data-testid="about-business-card"
-      onClick={handleClick}
-      className={cn(
-        "from-gradient-3 to-gradient-5 w-full rounded-2xl bg-linear-to-br transition-[padding,font-size,opacity] duration-200",
-        "px-4 pt-12 pb-4",
-        "data-collapsed:sticky data-collapsed:top-[calc(var(--navbar-top-gap,1rem)+var(--navbar-height,3.5rem))] data-collapsed:z-50",
-        "data-collapsed:cursor-pointer",
-        "data-collapsed:flex data-collapsed:flex-row data-collapsed:items-center data-collapsed:gap-3",
-        "data-collapsed:p-4"
-      )}
+      className="from-gradient-3 to-gradient-5 w-full rounded-2xl bg-linear-to-br px-4 pt-12 pb-4"
     >
-      <h1 className="mb-6 scroll-m-20 text-4xl font-bold tracking-tight text-[oklch(0.984_0.003_247.858)] in-data-collapsed:mb-0 in-data-collapsed:text-xl">
+      <h1 className="mb-6 scroll-m-20 text-4xl font-bold tracking-tight text-[oklch(0.984_0.003_247.858)]">
         Andrew Tseng
       </h1>
-      <p className="mb-4 text-[oklch(0.704_0.04_256.788)] in-data-collapsed:mb-0 max-lg:in-data-collapsed:hidden">
-        Software Engineer
-      </p>
-      <div className="flex flex-row items-center justify-end gap-1 in-data-collapsed:ml-auto max-lg:in-data-collapsed:hidden">
+      <p className="mb-4 text-[oklch(0.704_0.04_256.788)]">Software Engineer</p>
+      <div className="flex flex-row items-center justify-end gap-1">
         <Button variant="ghost" size="icon" asChild>
           <Link href="https://github.com/andrewck24">
             <GithubIcon />
@@ -87,7 +44,7 @@ export function BusinessCard({ lang, pdfUrls }: BusinessCardProps) {
           </Link>
         </Button>
         {hasPdf(pdfUrls) && (
-          <ResumeDialogWithParams lang={lang} pdfUrls={pdfUrls} />
+          <ResumeDialogTrigger lang={lang} pdfUrls={pdfUrls} />
         )}
       </div>
     </div>

@@ -6,31 +6,17 @@ jest.mock("sanity", () => ({
 import { about } from "../about";
 
 describe("about schema", () => {
-  it("has resumePdfZh field", () => {
-    const field = (
-      about as { fields: { name: string; type: string }[] }
-    ).fields.find((f) => f.name === "resumePdfZh");
-    expect(field).toBeDefined();
+  it("does not have resumePdfZh field", () => {
+    const field = (about as { fields: { name: string }[] }).fields.find(
+      (f) => f.name === "resumePdfZh"
+    );
+    expect(field).toBeUndefined();
   });
 
-  it("has resumePdfEn field", () => {
-    const field = (
-      about as { fields: { name: string; type: string }[] }
-    ).fields.find((f) => f.name === "resumePdfEn");
-    expect(field).toBeDefined();
-  });
-
-  it("resumePdfZh is optional file type", () => {
-    const field = (
-      about as { fields: { name: string; type: string }[] }
-    ).fields.find((f) => f.name === "resumePdfZh");
-    expect(field?.type).toBe("file");
-  });
-
-  it("resumePdfEn is optional file type", () => {
-    const field = (
-      about as { fields: { name: string; type: string }[] }
-    ).fields.find((f) => f.name === "resumePdfEn");
-    expect(field?.type).toBe("file");
+  it("does not have resumePdfEn field", () => {
+    const field = (about as { fields: { name: string }[] }).fields.find(
+      (f) => f.name === "resumePdfEn"
+    );
+    expect(field).toBeUndefined();
   });
 });

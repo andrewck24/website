@@ -21,13 +21,14 @@ jest.mock("../../../../../../components/about/business-card", () => ({
     pdfUrls,
   }: {
     lang: string;
-    pdfUrls: { zh: string | null; en: string | null };
+    pdfUrls: { tw: string | null; en: string | null; ja: string | null };
   }) =>
     React.createElement("div", {
       "data-testid": "business-card",
       "data-lang": lang,
-      "data-pdf-zh": pdfUrls.zh,
+      "data-pdf-tw": pdfUrls.tw,
       "data-pdf-en": pdfUrls.en,
+      "data-pdf-ja": pdfUrls.ja,
     }),
 }));
 
@@ -72,8 +73,10 @@ describe("generateMetadata", () => {
 });
 
 describe("AboutPage", () => {
-  it("calls notFound() when Sanity returns null", async () => {
-    mockFetch.mockResolvedValue(null);
+  it("calls notFound() when Sanity returns null for about", async () => {
+    mockFetch
+      .mockResolvedValueOnce(null) // about
+      .mockResolvedValueOnce(null); // siteSettings
 
     await expect(
       AboutPage({ params: Promise.resolve({ lang: "en" }) })
@@ -83,7 +86,9 @@ describe("AboutPage", () => {
   });
 
   it("renders without calling notFound() when about document exists", async () => {
-    mockFetch.mockResolvedValue({ title: "About", body: [] });
+    mockFetch
+      .mockResolvedValueOnce({ title: "About", body: [] })
+      .mockResolvedValueOnce(null);
 
     await expect(
       AboutPage({ params: Promise.resolve({ lang: "zh-TW" }) })
@@ -93,12 +98,9 @@ describe("AboutPage", () => {
   });
 
   it("renders BusinessCard instead of PersonalInfo", async () => {
-    mockFetch.mockResolvedValue({
-      title: "About",
-      body: [],
-      resumePdfZhUrl: null,
-      resumePdfEnUrl: null,
-    });
+    mockFetch
+      .mockResolvedValueOnce({ title: "About", body: [] })
+      .mockResolvedValueOnce(null);
 
     const jsx = await AboutPage({ params: Promise.resolve({ lang: "zh-TW" }) });
     const { queryByTestId } = render(jsx as React.ReactElement);
@@ -107,31 +109,46 @@ describe("AboutPage", () => {
     expect(queryByTestId("about-personal-info")).not.toBeInTheDocument();
   });
 
-  it("passes pdfUrls from Sanity query to BusinessCard", async () => {
-    mockFetch.mockResolvedValue({
-      title: "About",
-      body: [],
-      resumePdfZhUrl: "https://cdn.sanity.io/files/zh.pdf",
-      resumePdfEnUrl: null,
-    });
+  it("passes pdfUrls from siteSettings to BusinessCard", async () => {
+    mockFetch
+      .mockResolvedValueOnce({ title: "About", body: [] })
+      .mockResolvedValueOnce({
+        resumePdfTwUrl: "https://cdn.sanity.io/files/tw.pdf",
+        resumePdfEnUrl: null,
+        resumePdfJaUrl: "https://cdn.sanity.io/files/ja.pdf",
+      });
 
     const jsx = await AboutPage({ params: Promise.resolve({ lang: "zh-TW" }) });
     const { getByTestId } = render(jsx as React.ReactElement);
 
     const card = getByTestId("business-card");
-    expect(card.getAttribute("data-pdf-zh")).toBe(
-      "https://cdn.sanity.io/files/zh.pdf"
+    expect(card.getAttribute("data-pdf-tw")).toBe(
+      "https://cdn.sanity.io/files/tw.pdf"
     );
     expect(card.getAttribute("data-pdf-en")).toBeNull();
+    expect(card.getAttribute("data-pdf-ja")).toBe(
+      "https://cdn.sanity.io/files/ja.pdf"
+    );
+  });
+
+  it("passes null pdfUrls when siteSettings is null", async () => {
+    mockFetch
+      .mockResolvedValueOnce({ title: "About", body: [] })
+      .mockResolvedValueOnce(null);
+
+    const jsx = await AboutPage({ params: Promise.resolve({ lang: "zh-TW" }) });
+    const { getByTestId } = render(jsx as React.ReactElement);
+
+    const card = getByTestId("business-card");
+    expect(card.getAttribute("data-pdf-tw")).toBeNull();
+    expect(card.getAttribute("data-pdf-en")).toBeNull();
+    expect(card.getAttribute("data-pdf-ja")).toBeNull();
   });
 
   it("article does not have border class", async () => {
-    mockFetch.mockResolvedValue({
-      title: "About",
-      body: [],
-      resumePdfZhUrl: null,
-      resumePdfEnUrl: null,
-    });
+    mockFetch
+      .mockResolvedValueOnce({ title: "About", body: [] })
+      .mockResolvedValueOnce(null);
 
     const jsx = await AboutPage({ params: Promise.resolve({ lang: "zh-TW" }) });
     const { container } = render(jsx as React.ReactElement);
@@ -143,12 +160,9 @@ describe("AboutPage", () => {
   });
 
   it("page wrapper does not have lg:flex-row class", async () => {
-    mockFetch.mockResolvedValue({
-      title: "About",
-      body: [],
-      resumePdfZhUrl: null,
-      resumePdfEnUrl: null,
-    });
+    mockFetch
+      .mockResolvedValueOnce({ title: "About", body: [] })
+      .mockResolvedValueOnce(null);
 
     const jsx = await AboutPage({ params: Promise.resolve({ lang: "zh-TW" }) });
     const { getByTestId } = render(jsx as React.ReactElement);

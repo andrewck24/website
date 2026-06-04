@@ -12,7 +12,7 @@ type Lang = "zh-TW" | "en" | "ja";
 
 interface ResumeDialogProps {
   lang: Lang;
-  pdfUrls: { zh: string | null; en: string | null };
+  pdfUrls: { tw: string | null; en: string | null; ja: string | null };
   defaultOpen?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -20,25 +20,28 @@ interface ResumeDialogProps {
 
 const i18n: Record<
   Lang,
-  { title: string; description: string; zh: string; en: string }
+  { title: string; description: string; tw: string; en: string; ja: string }
 > = {
   "zh-TW": {
     title: "下載履歷 PDF",
     description: "選擇語言版本",
-    zh: "中文",
+    tw: "中文",
     en: "英文",
+    ja: "日文",
   },
   en: {
     title: "Download Resume PDF",
     description: "Choose your preferred language",
-    zh: "Traditional Chinese",
+    tw: "Traditional Chinese",
     en: "English",
+    ja: "Japanese",
   },
   ja: {
     title: "履歴書PDFをダウンロード",
     description: "言語を選択してください",
-    zh: "台湾華語",
+    tw: "台湾華語",
     en: "英語",
+    ja: "日本語",
   },
 };
 
@@ -61,14 +64,14 @@ export function ResumeDialog({
           <DialogDescription>{t.description}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3 pt-2">
-          {pdfUrls.zh && (
+          {pdfUrls.tw && (
             <a
-              href={pdfUrls.zh}
+              href={pdfUrls.tw}
               target="_blank"
               rel="noopener noreferrer"
               className="text-foreground hover:underline"
             >
-              {t.zh}
+              {t.tw}
             </a>
           )}
           {pdfUrls.en && (
@@ -79,6 +82,16 @@ export function ResumeDialog({
               className="text-foreground hover:underline"
             >
               {t.en}
+            </a>
+          )}
+          {pdfUrls.ja && (
+            <a
+              href={pdfUrls.ja}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground hover:underline"
+            >
+              {t.ja}
             </a>
           )}
         </div>
