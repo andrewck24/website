@@ -1,12 +1,12 @@
 "use client";
 
+import { ResumeDialogTrigger } from "@/components/about/resume-dialog-trigger";
 import { CakeIcon } from "@/components/icons/cake-icon";
 import { GithubIcon } from "@/components/icons/github-icon";
 import { LinkedinIcon } from "@/components/icons/linkedin-icon";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/types/article";
 import Link from "next/link";
-import { ResumeDialogTrigger } from "./resume-dialog-trigger";
 
 interface BusinessCardProps {
   lang: Locale;
