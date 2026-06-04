@@ -33,7 +33,7 @@ export default async function AboutPage({ params }: PageProps) {
           en: about.resumePdfEnUrl ?? null,
         }}
       />
-      <article className="prose bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl px-0 py-6 lg:px-8 lg:py-12">
+      <article className="prose bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl px-0 py-6">
         {about?.body && (
           <PortableText
             value={about.body}
