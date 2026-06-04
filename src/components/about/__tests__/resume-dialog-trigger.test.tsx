@@ -4,7 +4,6 @@ import React, { Suspense } from "react";
 jest.mock("next/navigation", () => ({
   ...jest.requireActual("next/navigation"),
   useSearchParams: jest.fn(() => new URLSearchParams()),
-  useRouter: jest.fn(() => ({ replace: jest.fn() })),
   usePathname: jest.fn(() => "/zh-TW/about"),
 }));
 
@@ -28,16 +27,25 @@ jest.mock("../resume-dialog", () => ({
     MockResumeDialog(...(args as Parameters<typeof MockResumeDialog>)),
 }));
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { ResumeDialogTrigger } from "../resume-dialog-trigger";
 
 const mockUseSearchParams = useSearchParams as jest.Mock;
-const mockUseRouter = useRouter as jest.Mock;
 
 describe("ResumeDialogTrigger", () => {
+  let mockReplaceState: jest.SpyInstance;
+
   beforeEach(() => {
     MockResumeDialog.mockClear();
+    mockReplaceState = jest
+      .spyOn(window.history, "replaceState")
+      .mockImplementation(() => {});
   });
+
+  afterEach(() => {
+    mockReplaceState.mockRestore();
+  });
+
   const defaultProps = {
     lang: "zh-TW" as const,
     pdfUrls: { tw: "https://cdn.sanity.io/files/tw.pdf", en: null, ja: null },
@@ -51,8 +59,10 @@ describe("ResumeDialogTrigger", () => {
         <ResumeDialogTrigger {...defaultProps} />
       </Suspense>
     );
-    const dialog = screen.getByTestId("resume-dialog");
-    expect(dialog).toHaveAttribute("data-open", "false");
+    expect(screen.getByTestId("resume-dialog")).toHaveAttribute(
+      "data-open",
+      "false"
+    );
   });
 
   it("passes open=true when ?resume=open", () => {
@@ -63,14 +73,14 @@ describe("ResumeDialogTrigger", () => {
         <ResumeDialogTrigger {...defaultProps} />
       </Suspense>
     );
-    const dialog = screen.getByTestId("resume-dialog");
-    expect(dialog).toHaveAttribute("data-open", "true");
+    expect(screen.getByTestId("resume-dialog")).toHaveAttribute(
+      "data-open",
+      "true"
+    );
   });
 
-  it("calls router.replace with pathname (no query) when dialog is closed after arriving via ?resume=open", async () => {
-    const mockReplace = jest.fn();
+  it("calls history.replaceState with clean pathname when dialog is closed after ?resume=open", async () => {
     mockUseSearchParams.mockReturnValue(new URLSearchParams("resume=open"));
-    mockUseRouter.mockReturnValue({ replace: mockReplace });
 
     render(
       <Suspense fallback={null}>
@@ -78,28 +88,20 @@ describe("ResumeDialogTrigger", () => {
       </Suspense>
     );
 
-    // Dialog should be open initially
     expect(screen.getByTestId("resume-dialog")).toHaveAttribute(
       "data-open",
       "true"
     );
 
-    // Simulate dialog close (onOpenChange(false))
     await act(async () => {
       screen.getByTestId("resume-dialog").click();
     });
 
-    // Explicitly constructs URL without resume param — required for production static pages
-    expect(mockReplace).toHaveBeenCalledWith("/zh-TW/about", { scroll: false });
-    // Ensure resume param is absent from the called URL
-    const calledUrl = mockReplace.mock.calls[0][0] as string;
-    expect(calledUrl).not.toContain("resume");
+    expect(mockReplaceState).toHaveBeenCalledWith(null, "", "/zh-TW/about");
   });
 
-  it("does NOT call router.replace when dialog is closed without ?resume=open param", async () => {
-    const mockReplace = jest.fn();
-    mockUseSearchParams.mockReturnValue(new URLSearchParams());
-    mockUseRouter.mockReturnValue({ replace: mockReplace });
+  it("preserves other query params when removing only resume", async () => {
+    mockUseSearchParams.mockReturnValue(new URLSearchParams("resume=open&x=1"));
 
     render(
       <Suspense fallback={null}>
@@ -111,7 +113,23 @@ describe("ResumeDialogTrigger", () => {
       screen.getByTestId("resume-dialog").click();
     });
 
-    expect(mockReplace).not.toHaveBeenCalled();
+    expect(mockReplaceState).toHaveBeenCalledWith(null, "", "/zh-TW/about?x=1");
+  });
+
+  it("does NOT call history.replaceState when dialog is closed without ?resume=open", async () => {
+    mockUseSearchParams.mockReturnValue(new URLSearchParams());
+
+    render(
+      <Suspense fallback={null}>
+        <ResumeDialogTrigger {...defaultProps} />
+      </Suspense>
+    );
+
+    await act(async () => {
+      screen.getByTestId("resume-dialog").click();
+    });
+
+    expect(mockReplaceState).not.toHaveBeenCalled();
   });
 
   it("renders a trigger button with Download icon and 'resume' label", () => {

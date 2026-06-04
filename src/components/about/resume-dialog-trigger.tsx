@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Download } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import type { Locale } from "@/types/article";
 import React, { Component, Suspense, useState } from "react";
 import { ResumeDialog } from "./resume-dialog";
@@ -32,7 +32,6 @@ export function ResumeTriggerSkeleton() {
 
 function ResumeDialogTriggerInner({ lang, pdfUrls }: Props) {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
   const openedViaParam = searchParams.get("resume") === "open";
   const [open, setOpen] = useState(openedViaParam);
@@ -43,7 +42,10 @@ function ResumeDialogTriggerInner({ lang, pdfUrls }: Props) {
       const params = new URLSearchParams(searchParams.toString());
       params.delete("resume");
       const newUrl = params.size > 0 ? `${pathname}?${params}` : pathname;
-      router.replace(newUrl, { scroll: false });
+      // router.replace(pathname) is a no-op in Vercel production static App Router
+      // when the resulting URL has no query string — Next.js rewrites it back.
+      // Use native History API to guarantee the URL is cleared.
+      window.history.replaceState(null, "", newUrl);
     }
   };
 

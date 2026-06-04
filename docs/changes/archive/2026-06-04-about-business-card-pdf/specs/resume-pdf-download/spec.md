@@ -65,7 +65,7 @@ The About page SHALL support a `?resume=open` URL query parameter that causes th
 
 The dialog trigger button SHALL NOT modify the URL when clicked.
 
-When the user closes a dialog that was opened via `?resume=open`, the system SHALL remove the `resume` query parameter and navigate to the clean pathname without adding a new browser history entry. The implementation SHALL explicitly construct the target URL using `URLSearchParams.delete('resume')` rather than relying on `router.replace(pathname)` alone — the latter does not reliably clear search params on statically generated pages in Next.js App Router production builds.
+When the user closes a dialog that was opened via `?resume=open`, the system SHALL remove the `resume` query parameter and navigate to the clean pathname without adding a new browser history entry. The implementation SHALL explicitly construct the target URL using `URLSearchParams.delete('resume')` and call `window.history.replaceState` directly — `router.replace(pathname)` is a no-op on statically generated pages in Vercel production when the resulting URL has no query string (Next.js rewrites it back to the original URL).
 
 The client component that reads `useSearchParams` SHALL be wrapped in a `<Suspense>` boundary to preserve static page generation.
 
