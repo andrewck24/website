@@ -47,6 +47,25 @@ The page SHALL achieve a Lighthouse performance score > 90 and fully load within
 
 ## Requirements
 
+### Requirement: BusinessCard above-article layout
+
+The About page layout SHALL render the BusinessCard component above the article on all viewport widths. The two-column sticky aside layout (PersonalInfo as `lg:aside`) SHALL NOT be used.
+
+The BusinessCard component SHALL contain the gradient name card and all social link buttons (GitHub, LinkedIn, Cake). The social link buttons SHALL be rendered inside the gradient card, not in a separate row below it.
+
+#### Scenario: layout on large viewport
+
+- **WHEN** the About page is viewed at viewport width ≥ 1024px
+- **THEN** the BusinessCard renders as a full-width block above the article content
+- **THEN** all social icon buttons are inside the gradient card
+
+#### Scenario: layout on small viewport
+
+- **WHEN** the About page is viewed at viewport width < 1024px
+- **THEN** the BusinessCard renders above the article content with the same structure
+
+---
+
 ### Requirement: about-page not-found guard
 
 When the Sanity client returns no about document for the requested locale, the system SHALL call `notFound()` to return HTTP 404 instead of rendering a blank page.

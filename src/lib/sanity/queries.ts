@@ -105,12 +105,22 @@ export const getAvailableLocalesQuery = /* groq */ `
 export const getAboutQuery = /* groq */ `
   *[_type == "about" && language == $locale][0] {
     title,
-    body
+    body,
+    "resumePdfZhUrl": resumePdfZh.asset->url,
+    "resumePdfEnUrl": resumePdfEn.asset->url
   }
 `;
 
 export const getAvailableAboutLocalesQuery = /* groq */ `
   *[_type == "about" && defined(language)].language
+`;
+
+export const getSiteSettingsQuery = /* groq */ `
+  *[_type == "siteSettings"][0] {
+    "resumePdfTwUrl": resumePdfTw.asset->url,
+    "resumePdfEnUrl": resumePdfEn.asset->url,
+    "resumePdfJaUrl": resumePdfJa.asset->url
+  }
 `;
 
 export const getLlmsNotesQuery = /* groq */ `

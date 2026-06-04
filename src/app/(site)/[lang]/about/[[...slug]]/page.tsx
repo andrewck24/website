@@ -1,7 +1,7 @@
-import { PersonalInfo } from "@/components/about/personal-info";
+import { BusinessCard } from "@/components/about/business-card";
 import { portableTextComponents } from "@/components/mdx/portable-text";
 import { client } from "@/lib/sanity/client";
-import { getAboutQuery } from "@/lib/sanity/queries";
+import { getAboutQuery, getSiteSettingsQuery } from "@/lib/sanity/queries";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/types/article";
 import { PortableText } from "@portabletext/react";
@@ -14,7 +14,10 @@ interface PageProps {
 
 export default async function AboutPage({ params }: PageProps) {
   const { lang } = await params;
-  const about = await client.fetch(getAboutQuery, { locale: lang as Locale });
+  const [about, siteSettings] = await Promise.all([
+    client.fetch(getAboutQuery, { locale: lang as Locale }),
+    client.fetch(getSiteSettingsQuery),
+  ]);
 
   if (!about) notFound();
 
@@ -23,11 +26,18 @@ export default async function AboutPage({ params }: PageProps) {
       data-testid="about-page"
       className={cn(
         "relative backdrop-blur-lg",
-        "flex flex-col items-center justify-start gap-4 lg:flex-row lg:items-start lg:justify-center"
+        "flex flex-col items-center justify-start gap-4"
       )}
     >
-      <PersonalInfo />
-      <article className="prose border-border bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl border px-4 py-12 lg:px-8">
+      <BusinessCard
+        lang={lang as "zh-TW" | "en" | "ja"}
+        pdfUrls={{
+          tw: siteSettings?.resumePdfTwUrl ?? null,
+          en: siteSettings?.resumePdfEnUrl ?? null,
+          ja: siteSettings?.resumePdfJaUrl ?? null,
+        }}
+      />
+      <article className="prose bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl px-0 py-6">
         {about?.body && (
           <PortableText
             value={about.body}

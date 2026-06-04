@@ -13,6 +13,7 @@ const config: Config = {
   testMatch: [
     "<rootDir>/src/**/__tests__/**/*.{ts,tsx}",
     "<rootDir>/src/**/*.{test,spec}.{ts,tsx}",
+    "<rootDir>/schemas/**/__tests__/**/*.{ts,tsx}",
   ],
   collectCoverageFrom: [
     "src/**/*.{ts,tsx}",
@@ -22,7 +23,7 @@ const config: Config = {
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html"],
   // Allow ESM modules to be transformed by Jest
-  transformIgnorePatterns: ["/node_modules/(?!(@sanity)/)"],
+  transformIgnorePatterns: ["/node_modules/(?!(sanity|@sanity)/)"],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
