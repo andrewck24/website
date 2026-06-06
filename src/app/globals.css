@@ -67,6 +67,7 @@
 
   /* ── Mesh theme switching ── */
   --alt-mesh-blend: multiply; /* light: multiply preserves saturation on white */
+  --alt-mesh-bg: oklch(0.985 0 0); /* #fafafa — light hero background */
 }
 
 .dark {
@@ -105,6 +106,7 @@
 
   /* ── Mesh theme switching ── */
   --alt-mesh-blend: normal; /* dark: standard alpha compositing */
+  --alt-mesh-bg: oklch(0.051 0 0); /* #080808 — dark hero background */
 }
 
 @theme inline {
@@ -163,6 +165,13 @@
   --animate-nav-menu-out: nav-menu-out 200ms ease;
   --animate-blink: blink 1.2s infinite;
 
+  --animate-mesh-a: mesh-a 13s ease-in-out infinite alternate;
+  --animate-mesh-b: mesh-b 11s ease-in-out infinite alternate;
+  --animate-mesh-c: mesh-c 10s ease-in-out infinite alternate;
+  --animate-mesh-d: mesh-d 9s ease-in-out infinite alternate;
+  --animate-mesh-e: mesh-e 12s ease-in-out infinite alternate;
+  --animate-mesh-f: mesh-f 11s ease-in-out infinite alternate;
+
   @keyframes nav-menu-in {
     from {
       opacity: 0;
@@ -193,6 +202,55 @@
     51%,
     100% {
       opacity: 0;
+    }
+  }
+
+  @keyframes mesh-a {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(68px, -30px) scale(1.09);
+    }
+  }
+  @keyframes mesh-b {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(-40px, 68px) scale(0.93);
+    }
+  }
+  @keyframes mesh-c {
+    from {
+      transform: translate(0, 0) scale(1) rotate(-8deg);
+    }
+    to {
+      transform: translate(50px, 50px) scale(1.05) rotate(0deg);
+    }
+  }
+  @keyframes mesh-d {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(-68px, -20px) scale(1.07);
+    }
+  }
+  @keyframes mesh-e {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(30px, -68px) scale(0.95);
+    }
+  }
+  @keyframes mesh-f {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(-50px, 60px) scale(1.03);
     }
   }
 }
