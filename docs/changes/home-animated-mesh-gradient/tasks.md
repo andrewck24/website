@@ -64,9 +64,9 @@ Artifacts: `src/components/home/background-animation.tsx` (deleted), `src/compon
 
 > Extracts terminal content to typed data file. Prerequisite for Section 6.
 
-- [ ] Create `src/lib/data/terminal.ts`. Export type `TerminalLine` (discriminated union: `command | output | blank | ascii | final`) and constant `terminalLines: TerminalLine[]`.
-- [ ] Populate `terminalLines` with the terminal sequence: `~/projects $ npm install andrewck24@latest` → output `added andrewck24 in Taipei, Taiwan` → blank → `~/projects $ npm start` → ascii `andrewck24` → final `~/projects $`.
-- [ ] Run `pnpm type-check`. Verify exported types are correct.
+- [x] Create `src/lib/data/terminal.ts`. Export type `TerminalLine` (discriminated union: `command | output | blank | ascii | final`) and constant `terminalLines: TerminalLine[]`.
+- [x] Populate `terminalLines` with the terminal sequence: `~/projects $ npm install andrewck24@latest` → output `added andrewck24 in Taipei, Taiwan` → blank → `~/projects $ npm start` → ascii `andrewck24` → final `~/projects $`.
+- [x] Run `pnpm type-check`. Verify exported types are correct.
 
 Commit: `feat(data): add terminal.ts with typed TerminalLine data for home terminal animation`
 Artifacts: `src/lib/data/terminal.ts`, `docs/changes/home-animated-mesh-gradient/tasks.md`
@@ -77,14 +77,14 @@ Artifacts: `src/lib/data/terminal.ts`, `docs/changes/home-animated-mesh-gradient
 
 > Rewrites the static terminal as a sequential state-machine Client Component. Depends on Section 5.
 
-- [ ] In `src/components/home/hero/terminal-animation.tsx`, add `"use client"`. Replace static `<pre><code>` with a structured component that reads from `terminalLines`.
-- [ ] Implement `useEffect` on mount that sequences through `terminalLines`. Use a `stopped` ref + closure to prevent stale state updates after unmount. Return a cleanup function from `useEffect` that sets `stopped = true` and clears all pending `setTimeout` / `setInterval` IDs.
-- [ ] Implement path reveal: each path element (`type: 'command'` → `path` field) has a CSS class applied after a `setTimeout` that adds the `.is-shown` class, triggering the stagger CSS transition (opacity 0→1, translateY 12px→0, blur 3px→0, duration 600 ms, cubic-bezier(0.22, 1, 0.36, 1)). Stagger CSS rules are added to `globals.css` under `@layer base`.
-- [ ] Implement command typewriter: after path reveal delay (700 ms), set an interval at 40 ms/char. Build the displayed command string character by character via `useState`. Clear the interval when the full command is shown.
-- [ ] Implement output reveal: after typewriter finishes, reveal each output line with the same stagger CSS, with 40 ms stagger between lines.
-- [ ] Implement ASCII art fade-in: import `GeistPixelSquare` from `geist/font/pixel`. After the `npm start` typewriter finishes, add the ASCII art element with `opacity: 0 → 1` (500 ms transition) using a CSS class toggle. Font size: `clamp(24px, 4vw, 56px)`. Font family: `GeistPixelSquare`.
-- [ ] Implement cursor blink: after all lines and ASCII art are shown, display a cursor `<span>` using `animate-blink` (already in `globals.css`).
-- [ ] Verify `pnpm type-check` passes. Manually test: animation plays through without console errors, cursor blinks at the end, no "state update on unmounted component" warning when navigating away.
+- [x] In `src/components/home/hero/terminal-animation.tsx`, add `"use client"`. Replace static `<pre><code>` with a structured component that reads from `terminalLines`.
+- [x] Implement `useEffect` on mount that sequences through `terminalLines`. Use a `stopped` ref + closure to prevent stale state updates after unmount. Return a cleanup function from `useEffect` that sets `stopped = true` and clears all pending `setTimeout` / `setInterval` IDs.
+- [x] Implement path reveal: each path element (`type: 'command'` → `path` field) has a CSS class applied after a `setTimeout` that adds the `.is-shown` class, triggering the stagger CSS transition (opacity 0→1, translateY 12px→0, blur 3px→0, duration 600 ms, cubic-bezier(0.22, 1, 0.36, 1)). Stagger CSS rules are added to `globals.css` under `@layer base`.
+- [x] Implement command typewriter: after path reveal delay (700 ms), set an interval at 40 ms/char. Build the displayed command string character by character via `useState`. Clear the interval when the full command is shown.
+- [x] Implement output reveal: after typewriter finishes, reveal each output line with the same stagger CSS, with 40 ms stagger between lines.
+- [x] Implement ASCII art fade-in: import `GeistPixelSquare` from `geist/font/pixel`. After the `npm start` typewriter finishes, add the ASCII art element with `opacity: 0 → 1` (500 ms transition) using a CSS class toggle. Font size: `clamp(24px, 4vw, 56px)`. Font family: `GeistPixelSquare`.
+- [x] Implement cursor blink: after all lines and ASCII art are shown, display a cursor `<span>` using `animate-blink` (already in `globals.css`).
+- [x] Verify `pnpm type-check` passes. Manually test: animation plays through without console errors, cursor blinks at the end, no "state update on unmounted component" warning when navigating away.
 
 Commit: `feat(home): rewrite TerminalAnimation with sequential state machine and ASCII art`
 Artifacts: `src/components/home/hero/terminal-animation.tsx`, `src/app/globals.css`, `docs/changes/home-animated-mesh-gradient/tasks.md`
@@ -93,8 +93,8 @@ Artifacts: `src/components/home/hero/terminal-animation.tsx`, `src/app/globals.c
 
 ## Section 7: Final validation
 
-- [ ] Run `pnpm type-check` — must pass with zero errors.
-- [ ] Run `pnpm build` — must complete with zero errors.
+- [x] Run `pnpm type-check` — must pass with zero errors.
+- [x] Run `pnpm build` — must complete with zero errors.
 - [ ] Manually verify in browser (light + dark mode):
   - Mesh gradient animates on the home hero, shapes concentrated on the right.
   - Left text column is clearly readable with no colour bleed.
