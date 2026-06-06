@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Design Preview — Minimalism Redesign</title>
+  <style>
+    @font-face { font-family:'UbuntuMono'; src:url('./src/assets/fonts/ubuntu-mono-regular.ttf') format('truetype'); }
+
+    /* ══ DESIGN.md tokens ═══════════════════════════════════════════════ */
+    :root {
+      --ds-primary:        #171717;
+      --ds-on-primary:     #ffffff;
+      --ds-ink:            #171717;
+      --ds-body:           #4d4d4d;
+      --ds-mute:           #888888;
+      --ds-hairline:       #ebebeb;
+      --ds-hairline-strong:#a1a1a1;
+      --ds-canvas:         #ffffff;
+      --ds-canvas-soft:    #fafafa;
+      --ds-canvas-soft-2:  #f5f5f5;
+      --ds-link:           #0070f3;
+      --ds-grad-dev-s:     #007cf0;
+      --ds-grad-dev-e:     #00dfd8;
+      --ds-grad-prev-s:    #7928ca;
+      --ds-grad-prev-e:    #ff0080;
+      --ds-grad-ship-s:    #ff4d4d;
+      --ds-grad-ship-e:    #f9cb28;
+    }
+
+    /* ══ RESET + BASE ═══════════════════════════════════════════════════ */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    html{overflow-x:hidden}
+    body{font-family:'UbuntuMono','Courier New',monospace;background:#161616;color:#555;overflow-x:hidden}
+
+    /* ══ MAIN NAV ════════════════════════════════════════════════════════ */
+    .main-nav{
+      position:sticky;top:0;z-index:300;
+      background:#0a0a0a;border-bottom:1px solid #1e1e1e;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 24px;height:52px;
+    }
+    .main-nav-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#333}
+    .main-tabs{display:flex;gap:2px}
+    .main-tab{
+      background:transparent;border:none;cursor:pointer;
+      padding:8px 16px;font-family:'UbuntuMono',monospace;
+      font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+      color:#3a3a3a;border-bottom:2px solid transparent;
+      transition:color 150ms,border-color 150ms;
+    }
+    .main-tab:hover{color:#666}
+    .main-tab.active{color:#d4d4d4;border-bottom-color:#555}
+
+    /* ══ VERSION BAR ═════════════════════════════════════════════════════ */
+    .ver-bar{
+      position:sticky;top:52px;z-index:200;
+      background:#0d0d0d;border-bottom:1px solid #1e1e1e;
+      padding:10px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    }
+    .ver-bar label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#333;white-space:nowrap}
+    .ver-sel{
+      background:#111;border:1px solid #222;color:#888;
+      font-family:'UbuntuMono',monospace;font-size:11px;
+      padding:5px 10px;border-radius:4px;cursor:pointer;
+      flex:1;max-width:560px;
+    }
+    .ver-sel:focus{outline:1px solid #444}
+
+    /* ══ SECTION LABEL (variant header) ═════════════════════════════════ */
+    .slabel{
+      position:sticky;top:96px;z-index:100;
+      background:#0d0d0d;border-bottom:1px solid #1c1c1c;
+      padding:9px 40px;
+      font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#333;
+    }
+    .slabel.lb{background:#eee;color:#aaa;border-bottom-color:#ddd}
+
+    /* ══ PANE VISIBILITY ═════════════════════════════════════════════════ */
+    .sec{display:none}
+    .sec.active{display:block}
+    .ver-pane{display:none}
+    .ver-pane.active{display:block}
+
+    /* ══ OG IMAGE STYLES ═════════════════════════════════════════════════ */
+    .og-page{padding:40px 40px 60px;background:#161616}
+    .og-grid{display:flex;flex-direction:column;gap:56px}
+    .og-note{font-size:10px;color:#2c2c2c;margin-bottom:40px}
+    .og-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#2e2e2e;margin-bottom:12px}
+
+    /* 1200×630 shown at 50% */
+    .og-wrap{width:600px;height:315px;overflow:hidden;outline:1px solid #1e1e1e;position:relative}
+    .og-frame{
+      width:1200px;height:630px;
+      transform:scale(.5);transform-origin:top left;
+      position:relative;overflow:hidden;
+      background:var(--ds-primary);
+      font-family:'UbuntuMono','Courier New',monospace;
+    }
+    /* OG full grid: inset:30px → element 1140×570px (exactly 12×6 cells of 95px)
+       box-shadow extends 1px outside element → serves as the closing right+bottom edge lines.
+       Shadow right at og-frame x=1171 (adjacent to corner mark at x=1170) ✓
+       Gap from last bg line (x=1075) to shadow (x=1170) = 95px = one cell ✓            */
+    /* og-mesh-svg: sits below the grid (z-index:0), grid ::before elevated to z-index:2 */
+    .og-mesh-svg{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+    .og-grid-full::before{
+      content:'';position:absolute;inset:30px;z-index:2;
+      background-image:
+        linear-gradient(rgba(255,255,255,var(--gop,.055)) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,var(--gop,.055)) 1px,transparent 1px);
+      background-size:95px 95px;background-position:0 0;
+      box-shadow:0 0 0 1px rgba(255,255,255,var(--gop,.055));
+    }
+    /* OG partial grid: height=285=3×95, same box-shadow logic for right+bottom edges */
+    .og-grid-partial::before{
+      content:'';position:absolute;left:30px;right:30px;bottom:30px;height:285px;z-index:2;
+      background-image:
+        linear-gradient(rgba(255,255,255,var(--gop,.055)) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,var(--gop,.055)) 1px,transparent 1px);
+      background-size:95px 95px;background-position:0 0;
+      box-shadow:0 0 0 1px rgba(255,255,255,var(--gop,.055));
+      -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 20%,black 100%);
+      mask-image:linear-gradient(to bottom,transparent 0%,black 20%,black 100%);
+    }
+    /* Corner marks at 30px — exactly at grid-line intersections (1 cell from each edge) */
+    .og-corner{position:absolute;width:20px;height:20px;z-index:3}
+    .og-corner.tl{top:30px;left:30px;border-top:1px solid rgba(255,255,255,.16);border-left:1px solid rgba(255,255,255,.16)}
+    .og-corner.tr{top:30px;right:30px;border-top:1px solid rgba(255,255,255,.16);border-right:1px solid rgba(255,255,255,.16)}
+    .og-corner.bl{bottom:30px;left:30px;border-bottom:1px solid rgba(255,255,255,.16);border-left:1px solid rgba(255,255,255,.16)}
+    .og-corner.br{bottom:30px;right:30px;border-bottom:1px solid rgba(255,255,255,.16);border-right:1px solid rgba(255,255,255,.16)}
+    /* Gradient blob in OG */
+    .og-blob{position:absolute;z-index:1}
+    .og-blob-a{width:580px;height:500px;bottom:-130px;left:-90px;clip-path:polygon(12% 8%,58% 0%,100% 28%,94% 72%,62% 100%,6% 88%);background:radial-gradient(ellipse at 60% 60%,rgba(200,202,205,.10),rgba(180,182,185,.04) 45%,transparent 70%);filter:blur(72px)}
+    /* Text layout: bottom-left (all v3 variants) */
+    .og-content{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:0 80px 72px}
+    /* No eyebrow variant: first child hidden */
+    /* display-sm: 20px / 28px / -0.6px for "large eyebrow" in OG */
+    .og-eyebrow-large{font-size:20px;line-height:28px;letter-spacing:-.6px;color:var(--ds-hairline-strong);margin-bottom:20px}
+    /* 80px name */
+    .og-name{font-size:80px;line-height:1;letter-spacing:-3px;color:var(--ds-on-primary);margin-bottom:28px}
+    .og-sep{width:32px;height:1px;background:#2a2a2a;margin-bottom:24px}
+    /* display-lg: 32px / 40px / -1.28px */
+    .og-desc{font-size:32px;line-height:40px;letter-spacing:-1.28px;color:var(--ds-mute)}
+    /* Notes: title as hero */
+    /* display-lg adjusted: 36px / 46px for OG notes title */
+    .og-title{font-size:36px;line-height:46px;letter-spacing:-1.28px;color:var(--ds-on-primary);margin-bottom:36px}
+    /* body-sm: 14px / 20px / -0.28px */
+    .og-byline{font-size:14px;line-height:20px;letter-spacing:-.28px;color:var(--ds-mute)}
+
+    /* ══ HOME STYLES ═════════════════════════════════════════════════════ */
+    /* Nav: DESIGN.md height 64px */
+    .hnav{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px}
+    .hnav-dark{border-bottom:1px solid rgba(255,255,255,.04)}
+    .hnav-light{border-bottom:1px solid rgba(0,0,0,.06)}
+    .hnav-logo{font-size:14px;letter-spacing:-.28px}
+    .hnav-dark .hnav-logo{color:var(--ds-on-primary)}
+    .hnav-light .hnav-logo{color:var(--ds-ink)}
+    .hnav-links{display:flex;gap:4px}
+    .hnav-link{font-size:14px;line-height:20px;letter-spacing:-.28px;color:var(--ds-mute);text-decoration:none;padding:4px 8px;border-radius:6px}
+    .hnav-light .hnav-link{color:var(--ds-hairline-strong)}
+
+    .hero{position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:center;padding:64px 0 0}
+    .hero-dark{background:var(--ds-primary)}
+    .hero-light{background:var(--ds-canvas-soft)}
+
+    .hero-inner{position:relative;z-index:10;width:100%;max-width:1400px;margin:0 auto;padding:0 80px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+
+    /* Hero typography — DS scale */
+    .h-eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:24px}
+    /* display-xl equiv for hero name: clamp hero */
+    .h-name{font-size:clamp(48px,5.5vw,80px);letter-spacing:-.035em;line-height:1.02;margin-bottom:16px}
+    /* body-lg: 18px / 28px */
+    .h-title{font-size:18px;line-height:28px;margin-bottom:16px}
+    .h-bio{font-size:18px;line-height:28px;max-width:440px;margin-bottom:40px}
+
+    /* Dark hero text — DS on-primary surface */
+    .hero-dark .h-eyebrow{color:var(--ds-mute)}
+    .hero-dark .h-name{color:var(--ds-on-primary)}
+    .hero-dark .h-title{color:var(--ds-mute)}
+    .hero-dark .h-bio{color:var(--ds-hairline-strong)}  /* #a1a1a1 — was #404040 (fixed) */
+
+    /* Light hero text — DS ink surface */
+    .hero-light .h-eyebrow{color:var(--ds-hairline-strong)}
+    .hero-light .h-name{color:var(--ds-ink)}
+    .hero-light .h-title{color:var(--ds-mute)}
+    .hero-light .h-bio{color:var(--ds-body)}
+
+    .cta-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:28px}
+    .btn-p{padding:9px 22px;font-family:'UbuntuMono',monospace;font-size:14px;line-height:20px;border:none;cursor:pointer;border-radius:6px;text-decoration:none;display:inline-block;letter-spacing:-.28px}
+    .btn-s{padding:9px 22px;font-family:'UbuntuMono',monospace;font-size:14px;line-height:20px;cursor:pointer;border-radius:6px;text-decoration:none;display:inline-block;letter-spacing:-.28px;background:transparent}
+    /* Dark CTA — DS on-primary surface */
+    .hero-dark .btn-p{background:var(--ds-on-primary);color:var(--ds-primary)}
+    .hero-dark .btn-s{border:1px solid rgba(255,255,255,.18);color:var(--ds-hairline-strong)}  /* was border #222, text #555 (fixed) */
+    /* Light CTA — DS ink surface */
+    .hero-light .btn-p{background:var(--ds-ink);color:var(--ds-on-primary)}
+    .hero-light .btn-s{border:1px solid var(--ds-hairline);color:var(--ds-body)}
+
+    .social-row{display:flex;gap:20px}
+    .social-a{font-size:12px;text-decoration:none;letter-spacing:.05em;border-bottom:1px solid;padding-bottom:2px}
+    .hero-dark .social-a{color:var(--ds-mute);border-color:rgba(255,255,255,.12)}  /* was #3a3a3a (fixed) */
+    .hero-light .social-a{color:var(--ds-hairline-strong);border-color:var(--ds-hairline)}
+
+    /* Terminal — floating panel with backdrop blur */
+    .term{border-radius:8px;padding:20px 24px}
+    .hero-dark .term{
+      background:rgba(10,10,10,.68);border:1px solid rgba(255,255,255,.07);
+      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      box-shadow:0 0 0 1px rgba(255,255,255,.04),0 8px 28px rgba(0,0,0,.55),0 20px 48px rgba(0,0,0,.22)}
+    .hero-light .term{
+      background:rgba(255,255,255,.78);border:1px solid rgba(0,0,0,.06);
+      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      box-shadow:0 0 0 1px rgba(255,255,255,.9),0 4px 16px rgba(0,0,0,.10),0 16px 40px rgba(0,0,0,.07)}
+    .term-bar{display:flex;gap:6px;margin-bottom:16px}
+    .term-dot{width:10px;height:10px;border-radius:50%}
+    .hero-dark .term-dot{background:rgba(255,255,255,.07)}
+    .hero-light .term-dot{background:rgba(0,0,0,.1)}
+    /* code: 13px / 20px */
+    .tl{font-family:'UbuntuMono',monospace;font-size:13px;line-height:20px}
+    .hero-dark .tl{color:#6b7280}
+    .hero-light .tl{color:#aaa}
+    .tp{color:#4ade80}.tc{color:#d4d4d4}.tok{color:#86efac}.ti{color:#93c5fd}
+    .hero-light .tp{color:#16a34a}.hero-light .tc{color:#333}.hero-light .tok{color:#15803d}.hero-light .ti{color:#2563eb}
+    .term-cur{display:inline-block;width:7px;height:13px;vertical-align:middle}
+    .hero-dark .term-cur{background:#d4d4d4}.hero-light .term-cur{background:#666}
+
+    /* Grid panels */
+    .grid-panel{position:absolute;bottom:0;left:0;right:0;z-index:1;overflow:hidden}
+    .gp-dot{height:58%;border-top:1px solid rgba(255,255,255,.04);background-image:radial-gradient(circle,rgba(255,255,255,.055) 1px,transparent 1px);background-size:28px 28px}
+    .hero-light .gp-dot{border-top-color:rgba(0,0,0,.05);background-image:radial-gradient(circle,rgba(0,0,0,.08) 1px,transparent 1px)}
+    .gp-line{height:54%;left:64px;right:64px;border:1px solid rgba(255,255,255,.045);border-bottom:none;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:64px 64px}
+    .hero-light .gp-line{border-color:rgba(0,0,0,.07);background-image:linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px)}
+    .gc-tl{position:absolute;top:-1px;left:-1px;width:14px;height:14px;border-top:1px solid rgba(255,255,255,.14);border-left:1px solid rgba(255,255,255,.14)}
+    .gc-tr{position:absolute;top:-1px;right:-1px;width:14px;height:14px;border-top:1px solid rgba(255,255,255,.14);border-right:1px solid rgba(255,255,255,.14)}
+    .hero-light .gc-tl,.hero-light .gc-tr{border-color:rgba(0,0,0,.12)}
+    .dots-cv{position:absolute;inset:0;width:100%;height:100%}
+
+    /* ── Dynamic grid Method 1: JS sets --gc per viewport ─────────────────
+       box-shadow replaces border → bgW = outerW (not outerW-2), no border bias.
+       Shadow extends 1px outside: closing right+bottom lines with exact 64px gap.
+       Height set by JS (bgH = rows×size, no border to add). */
+    .gp-m1{left:64px;right:64px;overflow:hidden;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:var(--gc,64px) var(--gc,64px);box-shadow:0 0 0 1px rgba(255,255,255,.045)}
+    .hero-light .gp-m1{box-shadow:0 0 0 1px rgba(0,0,0,.07);background-image:linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px)}
+
+    /* ── Dynamic grid Method 2: CSS media queries at Tailwind breakpoints ─
+       box-shadow replaces border → bgW = outerW (not outerW-2), 64px aligns ✓
+       sm 640: 512÷64=8✓  md 768: 640÷64=10✓  lg 1024: 896÷64=14✓
+       xl 1280: 1152÷64=18✓  2xl 1536: 1408÷64=22✓
+       Height: 7×48=336px (below 640px) / 7×64=448px (640px+) = exact 7 rows  */
+    /* Method 2-1: calc((100vw - 128px) / N) per breakpoint RANGE.
+       background-size uses 100vw so BOTH dimensions = same cell size = square at ANY width.
+       height = 7 rows × cell_size → no partial row at bottom.
+       N chosen so cell stays ≈ 60-90px across each range:
+         [0,640)   → 48px fixed (approx)
+         [640,768) → N=8   : cell 64→80px
+         [768,1024)→ N=10  : cell 64→90px
+         [1024,1280)→N=14  : cell 64→82px
+         [1280,1536)→N=18  : cell 64→78px
+         [1536+)   → N=22  : cell 64→81px                              */
+    .gp-m2{height:336px;left:64px;right:64px;overflow:hidden;
+      background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+      background-size:48px 48px;box-shadow:0 0 0 1px rgba(255,255,255,.045)}
+    .hero-light .gp-m2{box-shadow:0 0 0 1px rgba(0,0,0,.07);
+      background-image:linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px)}
+    @media(min-width:640px){.gp-m2{
+      background-size:calc((100vw - 128px) / 8) calc((100vw - 128px) / 8);
+      height:calc(7 * (100vw - 128px) / 8)}}
+    @media(min-width:768px){.gp-m2{
+      background-size:calc((100vw - 128px) / 10) calc((100vw - 128px) / 10);
+      height:calc(7 * (100vw - 128px) / 10)}}
+    @media(min-width:1024px){.gp-m2{
+      background-size:calc((100vw - 128px) / 14) calc((100vw - 128px) / 14);
+      height:calc(7 * (100vw - 128px) / 14)}}
+    @media(min-width:1280px){.gp-m2{
+      background-size:calc((100vw - 128px) / 18) calc((100vw - 128px) / 18);
+      height:calc(7 * (100vw - 128px) / 18)}}
+    @media(min-width:1536px){.gp-m2{
+      background-size:calc((100vw - 128px) / 22) calc((100vw - 128px) / 22);
+      height:calc(7 * (100vw - 128px) / 22)}}
+
+    /* Annotation overlay inside grid panel */
+    .grid-note{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-family:'UbuntuMono',monospace;font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.32);pointer-events:none;z-index:20;white-space:nowrap;background:rgba(0,0,0,.45);padding:3px 10px;border-radius:3px}
+
+    /* Gradient zones (B direction) */
+    .gz{position:absolute;inset:0;pointer-events:none;z-index:1}
+    .gz.mk-dark{-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 18%,black 82%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,black 18%,black 82%,transparent 100%)}
+    .gz.mk-light{-webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 15%,black 85%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0%,black 15%,black 85%,transparent 100%)}
+    .blob{position:absolute}
+    /* B-1 dark */
+    .b1d-1{width:68%;height:82%;left:-6%;top:9%;clip-path:polygon(8% 12%,52% 0%,88% 18%,100% 58%,78% 96%,32% 100%,2% 68%);background:radial-gradient(ellipse at 55% 48%,rgba(0,223,216,.38),rgba(0,124,240,.22),transparent 62%);filter:blur(82px)}
+    .b1d-2{width:60%;height:72%;right:-4%;top:14%;clip-path:polygon(32% 0%,92% 6%,100% 52%,72% 98%,12% 88%,4% 42%);background:radial-gradient(ellipse at 48% 50%,rgba(121,40,202,.32),rgba(255,0,128,.16),transparent 62%);filter:blur(75px)}
+    .b1d-3{width:32%;height:44%;left:34%;top:28%;clip-path:polygon(18% 0%,100% 0%,82% 100%,0% 100%);background:radial-gradient(ellipse at 50% 50%,rgba(0,124,240,.20),transparent 62%);filter:blur(60px)}
+    /* B-2 dark */
+    .b2d-1{width:65%;height:78%;right:-5%;top:11%;clip-path:polygon(18% 0%,96% 12%,100% 68%,60% 100%,8% 92%,0% 40%);background:radial-gradient(ellipse at 48% 44%,rgba(249,203,40,.42),rgba(255,77,77,.22),transparent 60%);filter:blur(78px)}
+    .b2d-2{width:52%;height:70%;left:-4%;top:16%;clip-path:polygon(4% 6%,58% 0%,95% 38%,80% 96%,28% 100%,0% 58%);background:radial-gradient(ellipse at 52% 52%,rgba(121,40,202,.30),rgba(255,77,77,.14),transparent 62%);filter:blur(72px)}
+    /* B-1/B-2 light (pastel) */
+    .b1l-1{width:68%;height:82%;left:-6%;top:9%;clip-path:polygon(8% 12%,52% 0%,88% 18%,100% 58%,78% 96%,32% 100%,2% 68%);background:radial-gradient(ellipse at 55% 48%,rgba(0,223,216,.16),rgba(0,124,240,.09),transparent 62%);filter:blur(90px)}
+    .b1l-2{width:60%;height:72%;right:-4%;top:14%;clip-path:polygon(32% 0%,92% 6%,100% 52%,72% 98%,12% 88%,4% 42%);background:radial-gradient(ellipse at 48% 50%,rgba(121,40,202,.12),rgba(255,0,128,.07),transparent 62%);filter:blur(85px)}
+    .b2l-1{width:65%;height:78%;right:-5%;top:11%;clip-path:polygon(18% 0%,96% 12%,100% 68%,60% 100%,8% 92%,0% 40%);background:radial-gradient(ellipse at 48% 44%,rgba(249,203,40,.20),rgba(255,77,77,.10),transparent 60%);filter:blur(90px)}
+    .b2l-2{width:52%;height:70%;left:-4%;top:16%;clip-path:polygon(4% 6%,58% 0%,95% 38%,80% 96%,28% 100%,0% 58%);background:radial-gradient(ellipse at 52% 52%,rgba(121,40,202,.13),rgba(255,77,77,.07),transparent 62%);filter:blur(85px)}
+
+    /* ══ ABOUT STYLES ════════════════════════════════════════════════════ */
+    .dark-page{background:var(--ds-primary)}
+    .light-page{background:var(--ds-canvas-soft)}
+
+    /* Shared nav — position:relative + abs links avoids circular flex-basis */
+    .anav{position:relative;display:flex;align-items:center;padding:0 24px;height:64px;width:100%}
+    .anav-logo{font-size:14px;letter-spacing:-.28px;text-decoration:none}
+    /* abs positioning removes links from flex layout → no circular sizing */
+    .anav-links{position:absolute;right:24px;top:50%;transform:translateY(-50%);display:flex;gap:4px;align-items:center}
+    .anav-link{font-size:14px;line-height:20px;letter-spacing:-.28px;text-decoration:none;padding:4px 8px;border-radius:6px;white-space:nowrap}
+    /* Dark nav */
+    .anav-dark{background:var(--ds-primary);border-bottom:1px solid rgba(255,255,255,.06)}
+    .anav-dark .anav-logo{color:var(--ds-on-primary)}
+    .anav-dark .anav-link{color:var(--ds-mute)}
+    .anav-dark .anav-link.cur{color:var(--ds-on-primary)}
+    /* Light nav */
+    .anav-light{background:var(--ds-canvas-soft);border-bottom:1px solid var(--ds-hairline)}
+    .anav-light .anav-logo{color:var(--ds-ink)}
+    .anav-light .anav-link{color:var(--ds-hairline-strong)}
+    .anav-light .anav-link.cur{color:var(--ds-body)}
+
+    /* Shared content wrap */
+    .acw{max-width:860px;margin:0 auto;padding:0 48px}
+
+    /* Skill tags */
+    .skill-row{display:flex;flex-wrap:wrap;gap:8px;padding:40px 0 0}
+    /* caption: 12px / 16px */
+    .skill{font-size:12px;line-height:16px;letter-spacing:.04em;padding:4px 10px;border-radius:4px}
+    .dark-page .skill{color:var(--ds-mute);background:rgba(255,255,255,.05)}
+    .light-page .skill{color:var(--ds-hairline-strong);background:var(--ds-canvas-soft-2)}
+
+    /* Prose */
+    .prose-area{padding:32px 0 80px}
+    .prose-sep{height:1px;margin:32px 0}
+    .dark-page .prose-sep{background:rgba(255,255,255,.08)}
+    .light-page .prose-sep{background:var(--ds-hairline)}
+    /* body-lg: 18px / 28px */
+    .prose-area p{font-size:18px;line-height:28px;margin-bottom:20px;max-width:660px}
+    .dark-page .prose-area p{color:var(--ds-mute)}
+    .light-page .prose-area p{color:var(--ds-body)}
+    /* display-md: 24px / 32px / -0.96px */
+    .prose-area h2{font-size:24px;line-height:32px;letter-spacing:-.96px;font-weight:400;margin:36px 0 12px}
+    .dark-page .prose-area h2{color:var(--ds-on-primary)}
+    .light-page .prose-area h2{color:var(--ds-ink)}
+
+    /* Banner shared base */
+    .bn-name{font-size:48px;line-height:48px;letter-spacing:-2.4px;margin-bottom:12px}  /* display-xl */
+    .bn-role{font-size:18px;line-height:28px;margin-bottom:28px}  /* body-lg */
+    .bn-links{display:flex;gap:10px;flex-wrap:wrap}
+    .bn-link{font-size:12px;text-decoration:none;letter-spacing:.06em;padding:6px 14px;border-radius:4px}
+    .bn-eyebrow{font-size:12px;line-height:16px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px}  /* caption */
+    /* display-lg: 32px / 40px / -1.28px for D3 compact name */
+    .bn-name-lg{font-size:32px;line-height:40px;letter-spacing:-1.28px}
+
+    /* Dark banner tokens */
+    .bn-dark .bn-eyebrow{color:var(--ds-mute)}
+    .bn-dark .bn-name{color:var(--ds-on-primary)}
+    .bn-dark .bn-role{color:var(--ds-mute)}  /* #888 — hairline-strong on dark */
+    .bn-dark .bn-link{color:var(--ds-mute);border:1px solid rgba(255,255,255,.09)}
+
+    /* Light banner tokens */
+    .bn-light .bn-eyebrow{color:var(--ds-hairline-strong)}
+    .bn-light .bn-name{color:var(--ds-ink)}
+    .bn-light .bn-role{color:var(--ds-mute)}
+    .bn-light .bn-link{color:var(--ds-hairline-strong);border:1px solid var(--ds-hairline)}
+
+    /* D1/D3: full-width dark banner */
+    .b-dark-full{background:var(--ds-primary);border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden}
+    .b-dark-full .bi{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:56px 48px 48px}
+    /* D2: content-width dark card */
+    .b-dark-card-outer{padding:32px 48px 0;max-width:860px;margin:0 auto}
+    .b-dark-card{background:#111;border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden;position:relative;padding:40px 48px}
+    .b-dark-card .card-blob{position:absolute;width:360px;height:260px;bottom:-60px;right:-40px;clip-path:polygon(25% 0%,100% 15%,92% 82%,55% 100%,0% 55%);background:radial-gradient(ellipse at 50% 50%,rgba(121,40,202,.12),rgba(0,124,240,.05) 50%,transparent 70%);filter:blur(60px)}
+    /* D4/L4: grid banner */
+    .b-grid-banner{position:relative;overflow:hidden}
+    .b-dark-grid{background:var(--ds-primary);border-bottom:1px solid rgba(255,255,255,.06);background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:48px 48px}
+    .b-light-grid{background:var(--ds-canvas-soft);border-bottom:1px solid var(--ds-hairline);background-image:linear-gradient(rgba(0,0,0,.038) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.038) 1px,transparent 1px);background-size:48px 48px}
+    .b-grid-banner .bi{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:56px 48px 48px}
+    .b-grid-corner{position:absolute;width:14px;height:14px;z-index:2}
+    .b-grid-corner.tl{top:48px;left:48px}
+    .b-grid-corner.tr{top:48px;right:48px}
+    .b-dark-grid .b-grid-corner{border-color:rgba(255,255,255,.15)}
+    .b-dark-grid .b-grid-corner.tl{border-top:1px solid rgba(255,255,255,.15);border-left:1px solid rgba(255,255,255,.15)}
+    .b-dark-grid .b-grid-corner.tr{border-top:1px solid rgba(255,255,255,.15);border-right:1px solid rgba(255,255,255,.15)}
+    .b-light-grid .b-grid-corner.tl{border-top:1px solid rgba(0,0,0,.12);border-left:1px solid rgba(0,0,0,.12)}
+    .b-light-grid .b-grid-corner.tr{border-top:1px solid rgba(0,0,0,.12);border-right:1px solid rgba(0,0,0,.12)}
+    /* L1/L3: full-width light banner */
+    .b-light-full{border-bottom:1px solid var(--ds-hairline);position:relative;overflow:hidden}
+    .b-light-full .bi{max-width:860px;margin:0 auto;padding:64px 48px 48px}
+    /* L2: content-width light card */
+    .b-light-card-outer{padding:32px 48px 0;max-width:860px;margin:0 auto}
+    .b-light-card{background:var(--ds-canvas);border-radius:12px;box-shadow:0 0 0 1px rgba(0,0,0,.06),0px 1px 1px rgba(0,0,0,.03),0px 2px 2px rgba(0,0,0,.05);padding:40px 48px}
+    /* Gradient blob helpers */
+    .acc-blob{position:absolute;pointer-events:none}
+    /* acc-blobs: no negative offsets — filter:blur creates a new render layer
+       that bypasses overflow:hidden on the parent, causing horizontal overflow.
+       Inset the blobs to stay fully within the banner bounds. */
+    .acc-ur{width:420px;height:300px;top:0;right:0;clip-path:polygon(38% 0%,100% 8%,100% 78%,68% 100%,4% 62%);background:radial-gradient(ellipse at 55% 48%,rgba(0,124,240,.09),rgba(0,200,180,.04) 50%,transparent 68%);filter:blur(65px)}
+    .acc-ll{width:300px;height:220px;bottom:0;left:0;clip-path:polygon(0% 20%,55% 0%,100% 45%,80% 100%,0% 80%);background:radial-gradient(ellipse at 50% 50%,rgba(121,40,202,.07),transparent 65%);filter:blur(50px)}
+    .acc-ur-light{width:600px;height:260px;top:0;right:0;clip-path:polygon(35% 0%,100% 5%,100% 70%,65% 100%,0% 60%);background:radial-gradient(ellipse at 60% 40%,rgba(0,124,240,.07),rgba(0,223,216,.03) 50%,transparent 68%);filter:blur(55px)}
+    .acc-ll-light{width:300px;height:200px;bottom:0;left:0;clip-path:polygon(0% 20%,55% 0%,100% 45%,80% 100%,0% 80%);background:radial-gradient(ellipse at 50% 50%,rgba(121,40,202,.05),transparent 68%);filter:blur(50px)}
+
+    /* v4 mesh: brighter text + lighter shadow for readability over gradient */
+    .og-mesh .og-eyebrow-large{color:var(--ds-hairline-strong)}
+    .og-mesh .og-desc{color:var(--ds-mute)}
+    /* Shared mesh controls in ver-bar (visible only for v4) */
+    .shared-mesh-ctrl{display:none;align-items:center;gap:8px;flex-wrap:wrap;
+      font-family:'UbuntuMono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#444}
+    .shared-mesh-ctrl.visible{display:flex}
+    .mc-label{color:#444;white-space:nowrap}.mc-sep{color:#2a2a2a;margin:0 2px}
+    .mc-num{color:#666;min-width:28px;text-align:right;display:inline-block}
+    .shared-mesh-ctrl input[type=range]{width:70px;accent-color:#4ade80;cursor:pointer}
+    .shared-mesh-ctrl select{background:#0d0d0d;border:1px solid #1e1e1e;color:#666;
+      font-family:'UbuntuMono',monospace;font-size:10px;padding:2px 5px;cursor:pointer}
+
+    /* ══ HOME/ABOUT v4 — MESH GRADIENT ANIMATION ════════════════════════ */
+    /* Hero mesh background layer */
+    .gp-mesh{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+    .gp-mesh-fade{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;
+      -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 20%,black 80%,transparent 100%);
+      mask-image:linear-gradient(to bottom,transparent 0%,black 20%,black 80%,transparent 100%)}
+    .mesh-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+    /* Shape transform primitives */
+    .ms{transform-box:fill-box;transform-origin:center;will-change:transform}
+    /* BusinessCard: paused by default → hover/touch triggers animation
+       !important required: inline animation shorthand implicitly sets play-state:running (specificity 1000) */
+    .bcard-mesh .ms{animation-play-state:paused !important}
+    .bcard-mesh:hover .ms{animation-play-state:running !important}
+    @media(hover:none){.bcard-mesh .ms{animation-play-state:running !important}}
+    /* Keyframes — contained blob drift (large displacement: clearly visible at hero scale) */
+    @keyframes msha{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(68px,-50px) scale(1.07)}66%{transform:translate(-42px,38px) scale(0.94)}}
+    @keyframes mshb{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-58px,64px) scale(1.09)}70%{transform:translate(48px,-32px) scale(0.93)}}
+    @keyframes mshc{0%,100%{transform:translate(0,0) rotate(0deg)}35%{transform:translate(44px,52px) rotate(8deg)}70%{transform:translate(-54px,-38px) rotate(-7deg)}}
+    @keyframes mshd{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-56px,50px) scale(1.06)}}
+    @keyframes mshe{0%,100%{transform:translate(0,0) scale(1)}45%{transform:translate(52px,-60px) scale(1.08)}80%{transform:translate(-36px,32px) scale(0.94)}}
+    /* Keyframes — aurora ribbon vertical sway */
+    @keyframes mshra{0%,100%{transform:translateY(0)}50%{transform:translateY(-28px)}}
+    @keyframes mshrb{0%,100%{transform:translateY(0)}50%{transform:translateY(34px)}}
+    @keyframes mshrc{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+    /* ── next-themes implementation note ───────────────────────────────
+       DO NOT toggle dark/light via useTheme() + inline props — this causes
+       hydration flash (resolvedTheme is undefined on first render).
+       CORRECT approach: CSS custom properties switched by the .dark class:
+
+         :root  { --mesh-blend: multiply; --mesh-op-blue: .62; ... }
+         .dark  { --mesh-blend: normal;   --mesh-op-blue: .88; ... }
+
+         <g style="mix-blend-mode: var(--mesh-blend)">
+           <polygon style="opacity: var(--mesh-op-blue)" fill="#007cf0"/>
+
+       next-themes applies `class="dark"` to <html> synchronously before paint,
+       so CSS vars switch flash-free. useTheme() is only needed for non-CSS logic.
+    ─────────────────────────────────────────────────────────────────── */
+    /* Mesh-context text contrast: --ds-mute (#888) is unreadable over bright mesh gradient.
+       Upgrade to --ds-hairline-strong (#a1a1a1) for secondary text, on-primary for bio. */
+    .hero-mesh.hero-dark .h-eyebrow{color:var(--ds-hairline-strong)}
+    .hero-mesh.hero-dark .h-title{color:var(--ds-hairline-strong)}
+    .hero-mesh.hero-dark .h-bio{color:var(--ds-on-primary)}
+    .hero-mesh.hero-dark .social-a{color:var(--ds-hairline-strong);border-color:rgba(255,255,255,.22)}
+    /* OG mesh: upgrade desc from mute to hairline-strong */
+    .og-mesh .og-desc{color:var(--ds-hairline-strong)}
+    /* About v4: full-width dark mesh banner */
+    .b-mesh-dark{background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,.06);position:relative;overflow:hidden;min-height:260px}
+    .b-mesh-dark .bi{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:56px 48px 48px}
+    /* About v4: full-width light mesh banner */
+    .b-mesh-light{background:#fafafa;border-bottom:1px solid var(--ds-hairline);position:relative;overflow:hidden;min-height:260px}
+    .b-mesh-light .bi{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:56px 48px 48px}
+    /* About v4: content-width dark/light mesh card */
+    .b-mesh-card-outer{padding:32px 48px 0;max-width:860px;margin:0 auto}
+    .b-mesh-card-dk{background:#0d0d0d;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;position:relative;padding:48px 48px 20px;min-height:240px;
+      clip-path:inset(0 round 16px)} /* clip-path reliably cuts filter overflow regardless of compositing */
+    .b-mesh-card-lt{background:var(--ds-canvas);border:1px solid var(--ds-hairline);border-radius:16px;overflow:hidden;position:relative;padding:48px 48px 20px;min-height:240px;
+      clip-path:inset(0 round 16px)}
+    .b-mesh-card-dk .bi-card,.b-mesh-card-lt .bi-card{position:relative;z-index:2}
+    /* Card text: on-primary (#fff) for all dark-card text — mesh bg can be very bright */
+    .b-mesh-card-dk .bn-name{color:var(--ds-on-primary)}
+    .b-mesh-card-dk .bn-role{color:rgba(255,255,255,.82)}
+    .b-mesh-card-dk .bn-links{justify-content:flex-end}
+    .b-mesh-card-dk .bn-link{color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.22)}
+    /* Light card: ink/body tokens — mesh is pastel so #4d4d4d is readable */
+    .b-mesh-card-lt .bn-name{color:var(--ds-ink)}
+    .b-mesh-card-lt .bn-role{color:var(--ds-body)}
+    .b-mesh-card-lt .bn-links{justify-content:flex-end}
+    .b-mesh-card-lt .bn-link{color:var(--ds-body);border:1px solid var(--ds-hairline-strong)}
+    /* Card-scale animation — much larger travel distance so motion is clearly visible */
+    @keyframes msck-a{0%,100%{transform:translate(0,0) scale(1)}35%{transform:translate(72px,-52px) scale(1.14)}70%{transform:translate(-46px,42px) scale(0.87)}}
+    @keyframes msck-b{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-62px,56px) scale(1.12)}75%{transform:translate(52px,-36px) scale(0.91)}}
+    @keyframes msck-c{0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}35%{transform:translate(46px,52px) rotate(9deg) scale(1.08)}70%{transform:translate(-56px,-42px) rotate(-7deg) scale(0.93)}}
+    @keyframes msck-d{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-52px,46px) scale(1.10)}}
+    /* Aurora card drift */
+    @keyframes msck-ra{0%,100%{transform:translateY(0)}50%{transform:translateY(-24px)}}
+    @keyframes msck-rb{0%,100%{transform:translateY(0)}50%{transform:translateY(28px)}}
+    @keyframes msck-rc{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+    /* Hero RWD: md breakpoint → single column, terminal hidden */
+    @media(max-width:768px){
+      .hero-inner{grid-template-columns:1fr;padding:0 24px;gap:32px}
+      .term{display:none}
+      .h-name{font-size:clamp(36px,10vw,56px)}
+      .h-bio{margin-bottom:28px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ MAIN NAV ═══════════════════════════════════════════════════════ -->
+  <nav class="main-nav">
+    <span class="main-nav-title">Design Preview · Minimalism Redesign</span>
+    <div class="main-tabs">
+      <button class="main-tab" data-sec="og">OG Image</button>
+      <button class="main-tab" data-sec="home">Home</button>
+      <button class="main-tab" data-sec="about">About</button>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       OG IMAGE SECTION
+  ═════════════════════════════════════════════════════════════════════ -->
+  <section class="sec" id="sec-og">
+    <div class="ver-bar">
+      <label>Version</label>
+      <select class="ver-sel" id="og-ver">
+        <option value="v1">v1 — Centered text · Simple grayscale blobs · No grid</option>
+        <option value="v2">v2 — Left-aligned · 32px description · Vertical positions A/B/C</option>
+        <option value="v3">v3 — Line-grid all · Grid range (full/partial) × Eyebrow (none/large) · Notes 2-line</option>
+        <option value="v4" selected>v4 — Mesh gradient · DESIGN.md tokens · Grid on top · 6 variants</option>
+      </select>
+      <div id="og-mesh-ctrl" class="shared-mesh-ctrl">
+        <span class="mc-sep">·</span>
+        <span class="mc-label">Blur</span>
+        <input type="range" min="20" max="300" value="130" class="mc-blur">
+        <span class="mc-num">130</span>
+        <span class="mc-sep">·</span>
+        <span class="mc-label">Noise</span>
+        <input type="range" min="0" max="25" value="7" class="mc-noise">
+        <span class="mc-num">0.07</span>
+        <span class="mc-sep">·</span>
+        <span class="mc-label">Blend</span>
+        <select class="mc-blend">
+          <option>overlay</option><option>soft-light</option><option>screen</option>
+          <option>multiply</option><option>color-dodge</option><option>luminosity</option><option>hard-light</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- OG v1 -->
+    <div class="ver-pane og-page" id="og-v1">
+      <p class="og-note">v1 — Centered text · No grid · Simple blobs</p>
+      <div class="og-grid">
+        <div><p class="og-label">A — Centered · Single angular blob</p>
+          <div class="og-wrap"><div class="og-frame">
+            <div class="og-blob og-blob-a"></div>
+            <div style="position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <div style="font-size:80px;line-height:1;letter-spacing:-3px;color:#fff">Andrew Tseng</div>
+              <div style="width:32px;height:1px;background:#2a2a2a;margin:24px auto"></div>
+              <div style="font-size:24px;letter-spacing:.06em;color:#888">Software Engineer</div>
+            </div>
+          </div></div>
+        </div>
+        <div><p class="og-label">B — Centered · Two corner patches</p>
+          <div class="og-wrap"><div class="og-frame">
+            <div class="og-blob" style="width:400px;height:340px;bottom:-60px;left:-70px;clip-path:polygon(8% 18%,52% 0%,88% 26%,72% 88%,22% 100%,0% 65%);background:radial-gradient(ellipse at 55% 55%,rgba(180,188,200,.09),transparent 70%);filter:blur(60px)"></div>
+            <div class="og-blob" style="width:320px;height:280px;bottom:-50px;right:-60px;clip-path:polygon(22% 0%,100% 8%,100% 82%,72% 100%,8% 78%,0% 28%);background:radial-gradient(ellipse at 45% 52%,rgba(200,192,180,.08),transparent 70%);filter:blur(55px)"></div>
+            <div style="position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <div style="font-size:80px;line-height:1;letter-spacing:-3px;color:#fff">Andrew Tseng</div>
+              <div style="width:32px;height:1px;background:#2a2a2a;margin:24px auto"></div>
+              <div style="font-size:24px;letter-spacing:.06em;color:#888">Software Engineer</div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OG v2 -->
+    <div class="ver-pane og-page" id="og-v2">
+      <p class="og-note">v2 — Left-aligned · 32px description · A=bottom / B=center / C=top</p>
+      <div class="og-grid">
+        <div><p class="og-label">B — Center-left · Two corner patches</p>
+          <div class="og-wrap"><div class="og-frame">
+            <div class="og-blob" style="width:400px;height:340px;bottom:-60px;left:-70px;clip-path:polygon(8% 18%,52% 0%,88% 26%,72% 88%,22% 100%,0% 65%);background:radial-gradient(ellipse at 55% 55%,rgba(180,188,200,.09),transparent 70%);filter:blur(60px)"></div>
+            <div class="og-blob" style="width:320px;height:280px;bottom:-50px;right:-60px;clip-path:polygon(22% 0%,100% 8%,100% 82%,72% 100%,8% 78%,0% 28%);background:radial-gradient(ellipse at 45% 52%,rgba(200,192,180,.08),transparent 70%);filter:blur(55px)"></div>
+            <div class="og-content" style="justify-content:center">
+              <div class="og-eyebrow-large" style="font-size:12px;letter-spacing:.14em;color:#3c3c3c">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+        <div><p class="og-label">C — Top-left · Triangular patch + dot-grid</p>
+          <div class="og-wrap"><div class="og-frame" style="background-image:radial-gradient(circle,rgba(255,255,255,.028) 1px,transparent 1px);background-size:42px 42px">
+            <div class="og-blob" style="width:660px;height:380px;bottom:-80px;left:50%;transform:translateX(-50%);clip-path:polygon(50% 0%,94% 100%,6% 100%);background:radial-gradient(ellipse at 50% 78%,rgba(175,180,190,.11),transparent 65%);filter:blur(52px)"></div>
+            <div class="og-content">
+              <div class="og-eyebrow-large" style="font-size:12px;letter-spacing:.14em;color:#3c3c3c">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OG v3 -->
+    <div class="ver-pane og-page" id="og-v3">
+      <p class="og-note">v3 — All: top-left text (position C) · Variables: grid range × eyebrow size · Home + Notes layouts</p>
+      <div class="og-grid">
+
+        <!-- HOME variants -->
+        <div><p class="og-label">Home H-A · Full grid · Light opacity (--gop:.035) · No eyebrow</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full" style="--gop:.035">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div><div class="og-corner bl"></div><div class="og-corner br"></div>
+            <div class="og-blob og-blob-a"></div>
+            <div class="og-content">
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div><p class="og-label">Home H-B · Full grid · Medium opacity (--gop:.06) · Large eyebrow (display-sm 20px)</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full" style="--gop:.06">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div><div class="og-corner bl"></div><div class="og-corner br"></div>
+            <div class="og-blob og-blob-a"></div>
+            <div class="og-content">
+              <div class="og-eyebrow-large">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div><p class="og-label">Home H-C · Partial grid bottom 44% + fade · Medium opacity · No eyebrow</p>
+          <div class="og-wrap"><div class="og-frame og-grid-partial" style="--gop:.065">
+            <div class="og-corner bl"></div><div class="og-corner br"></div>
+            <div class="og-blob og-blob-a"></div>
+            <div class="og-content">
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div><p class="og-label">Home H-D · Partial grid + fade · Dark opacity (--gop:.09) · Large eyebrow</p>
+          <div class="og-wrap"><div class="og-frame og-grid-partial" style="--gop:.09">
+            <div class="og-corner bl"></div><div class="og-corner br"></div>
+            <div class="og-blob og-blob-a"></div>
+            <div class="og-content">
+              <div class="og-eyebrow-large">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- NOTES variants -->
+        <div><p class="og-label">Notes N-A · Full grid · Light opacity · No eyebrow · 2-line title</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full" style="--gop:.035">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div><div class="og-corner bl"></div><div class="og-corner br"></div>
+            <div class="og-blob" style="width:480px;height:420px;bottom:-100px;left:-80px;clip-path:polygon(12% 8%,58% 0%,100% 28%,94% 72%,62% 100%,6% 88%);background:radial-gradient(ellipse at 60% 60%,rgba(180,188,200,.09),transparent 65%);filter:blur(68px)"></div>
+            <div class="og-content">
+              <div class="og-title">Building a Real-Time Dashboard<br>with React, WebSockets, and Redis</div>
+              <div class="og-sep"></div>
+              <div class="og-byline">Andrew Tseng &nbsp;·&nbsp; 2026-05-31</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div><p class="og-label">Notes N-B · Full grid · Medium opacity · Large eyebrow (category) · 2-line title</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full" style="--gop:.06">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div><div class="og-corner bl"></div><div class="og-corner br"></div>
+            <div class="og-blob" style="width:480px;height:420px;bottom:-100px;left:-80px;clip-path:polygon(12% 8%,58% 0%,100% 28%,94% 72%,62% 100%,6% 88%);background:radial-gradient(ellipse at 60% 60%,rgba(180,188,200,.09),transparent 65%);filter:blur(68px)"></div>
+            <div class="og-content">
+              <div class="og-eyebrow-large">Notes · Software Engineering</div>
+              <div class="og-title">Building a Real-Time Dashboard<br>with React, WebSockets, and Redis</div>
+              <div class="og-sep"></div>
+              <div class="og-byline">Andrew Tseng &nbsp;·&nbsp; 2026-05-31</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div><p class="og-label">Notes N-C · Partial grid + fade · No eyebrow · 2-line title</p>
+          <div class="og-wrap"><div class="og-frame og-grid-partial" style="--gop:.065">
+            <div class="og-corner bl"></div><div class="og-corner br"></div>
+            <div class="og-blob" style="width:480px;height:420px;bottom:-100px;left:-80px;clip-path:polygon(12% 8%,58% 0%,100% 28%,94% 72%,62% 100%,6% 88%);background:radial-gradient(ellipse at 60% 60%,rgba(180,188,200,.09),transparent 65%);filter:blur(68px)"></div>
+            <div class="og-content">
+              <div class="og-title">Building a Real-Time Dashboard<br>with React, WebSockets, and Redis</div>
+              <div class="og-sep"></div>
+              <div class="og-byline">Andrew Tseng &nbsp;·&nbsp; 2026-05-31</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div><p class="og-label">Notes N-D · Partial grid · Dark opacity · Large eyebrow · Short 1-line title (comparison)</p>
+          <div class="og-wrap"><div class="og-frame og-grid-partial" style="--gop:.09">
+            <div class="og-corner bl"></div><div class="og-corner br"></div>
+            <div class="og-blob" style="width:480px;height:420px;bottom:-100px;left:-80px;clip-path:polygon(12% 8%,58% 0%,100% 28%,94% 72%,62% 100%,6% 88%);background:radial-gradient(ellipse at 60% 60%,rgba(180,188,200,.09),transparent 65%);filter:blur(68px)"></div>
+            <div class="og-content">
+              <div class="og-eyebrow-large">Notes · TypeScript</div>
+              <div class="og-title">TypeScript Generic Types</div>
+              <div class="og-sep"></div>
+              <div class="og-byline">Andrew Tseng &nbsp;·&nbsp; 2026-05-31</div>
+            </div>
+          </div></div>
+        </div>
+
+      </div><!-- og-grid -->
+    </div><!-- og-v3 -->
+
+    <!-- ══ OG v4 — Mesh gradient ══════════════════════════════════════════ -->
+    <div class="ver-pane og-page" id="og-v4">
+      <p class="og-note">v4 · H-B layout (center-left) · SVG mesh gradient · DESIGN.md gradient tokens · Grid z-index above mesh · Interactive blur/noise/blend controls</p>
+      <div class="og-grid">
+
+        <!-- M-A: 滿版 Full bleed ─────────────────────────────────────────── -->
+        <div>
+          <p class="og-label">M-A — 滿版 Full bleed · All 6 gradient tokens · stdDev=180</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full og-mesh" style="--gop:.038">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div><div class="og-corner bl"></div><div class="og-corner br"></div>
+            <svg class="og-mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+              <defs>
+                <filter id="ma-b" filterUnits="userSpaceOnUse" x="-900" y="-900" width="3000" height="2430"><feGaussianBlur class="mesh-blur" stdDeviation="180"/></filter>
+                <filter id="ma-n"><feTurbulence type="fractalNoise" baseFrequency="0.7" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="1200" height="630" fill="#0a0a0a"/>
+              <g filter="url(#ma-b)">
+                <rect x="-180" y="-80" width="750" height="500" fill="#007cf0" opacity="0.88"/>
+                <rect x="350" y="-140" width="800" height="560" fill="#ff0080" opacity="0.72"/>
+                <rect x="-120" y="200" width="620" height="560" fill="#7928ca" opacity="0.78"/>
+                <rect x="580" y="60" width="800" height="500" fill="#00dfd8" opacity="0.65"/>
+                <rect x="150" y="320" width="550" height="420" fill="#f9cb28" opacity="0.42"/>
+              </g>
+              <rect class="mesh-noise-rect" width="1200" height="630" fill="#888" style="mix-blend-mode:overlay;opacity:0.07" filter="url(#ma-n)"/>
+            </svg>
+            <div class="og-content pos-center">
+              <div class="og-eyebrow-large">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- M-B: 顏色不延伸到邊界 Contained ────────────────────────────────── -->
+        <div>
+          <p class="og-label">M-B — Topographic contour · Center contained · σ=80 · nested islands + cross-sweep · shapes ≥200px from all edges</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full og-mesh" style="--gop:.045">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div>
+            <div class="og-corner bl"></div><div class="og-corner br"></div>
+            <svg class="og-mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+              <defs>
+                <!-- σ=80: shapes stay ≥200px from all edges; topographic style: nested organic loops + diagonal sweep -->
+                <filter id="mb-b" filterUnits="userSpaceOnUse" x="-900" y="-900" width="3000" height="2430">
+                  <feGaussianBlur class="mesh-blur" stdDeviation="80"/>
+                </filter>
+                <filter id="mb-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="1200" height="630" fill="#0a0a0a"/>
+              <g filter="url(#mb-b)">
+                <!-- Outer topo island — blue, large organic loop centered at (598,314) -->
+                <path d="M212,304 C270,200 462,192 624,218 C776,240 836,316 898,330 C972,348 982,278 948,322 C890,398 782,432 622,422 C448,408 366,354 272,374 C208,390 206,386 212,304 Z" fill="#007cf0" opacity="0.68"/>
+                <!-- Inner topo island — violet, nested inside outer -->
+                <path d="M358,268 C424,196 604,188 726,228 C818,262 800,344 884,368 C940,386 936,354 902,382 C850,422 736,444 594,428 C472,414 428,352 358,362 C314,368 314,320 358,268 Z" fill="#7928ca" opacity="0.86"/>
+                <!-- Cross-sweep diagonal — cyan, spans center diagonally -->
+                <path d="M192,422 L848,202 L1010,256 L352,474 Z" fill="#00dfd8" opacity="0.44"/>
+                <!-- Inner focal core — magenta -->
+                <path d="M490,248 C546,200 652,204 712,252 C766,294 740,348 662,360 C590,370 528,326 490,248 Z" fill="#ff0080" opacity="0.66"/>
+                <!-- Amber accent polygon -->
+                <polygon points="562,208 748,200 804,316 728,402 538,374 482,278" fill="#f9cb28" opacity="0.36"/>
+                <!-- Small coral ellipse -->
+                <ellipse cx="418" cy="294" rx="150" ry="66" transform="rotate(-30 418 294)" fill="#ff4d4d" opacity="0.40"/>
+              </g>
+              <rect class="mesh-noise-rect" width="1200" height="630" fill="#888" style="mix-blend-mode:overlay;opacity:0.055" filter="url(#mb-n)"/>
+            </svg>
+            <div class="og-content pos-center">
+              <div class="og-eyebrow-large">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- M-C: 只觸及左下部分邊界 Partial edges ────────────────────────── -->
+        <div>
+          <p class="og-label">M-C — 只觸及部分邊界 · Bleeds left+bottom only, dark top+right · stdDev=145</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full og-mesh" style="--gop:.04">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div><div class="og-corner bl"></div><div class="og-corner br"></div>
+            <svg class="og-mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+              <defs>
+                <filter id="mc-b" filterUnits="userSpaceOnUse" x="-900" y="-900" width="3000" height="2430"><feGaussianBlur class="mesh-blur" stdDeviation="145"/></filter>
+                <filter id="mc-n"><feTurbulence type="fractalNoise" baseFrequency="0.65" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="1200" height="630" fill="#0a0a0a"/>
+              <g filter="url(#mc-b)">
+                <rect x="-250" y="120" width="700" height="700" fill="#007cf0" opacity="0.86"/>
+                <rect x="-180" y="320" width="560" height="500" fill="#7928ca" opacity="0.76"/>
+                <rect x="120" y="200" width="620" height="550" fill="#ff0080" opacity="0.64"/>
+                <rect x="60" y="420" width="440" height="400" fill="#00dfd8" opacity="0.54"/>
+              </g>
+              <rect class="mesh-noise-rect" width="1200" height="630" fill="#888" style="mix-blend-mode:overlay;opacity:0.07" filter="url(#mc-n)"/>
+            </svg>
+            <div class="og-content pos-center">
+              <div class="og-eyebrow-large">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- M-D: 流線 Wavy ribbons (aurora-style horizontal bands) ─────────── -->
+        <div>
+          <p class="og-label">M-D — 流線 Wavy · Horizontal wave ribbons (aurora-style) · Thin bands full-width · stdDev=70</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full og-mesh" style="--gop:.04">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div><div class="og-corner bl"></div><div class="og-corner br"></div>
+            <svg class="og-mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+              <defs>
+                <!-- Low blur to preserve wave ribbon shape -->
+                <filter id="md-b" filterUnits="userSpaceOnUse" x="-900" y="-900" width="3000" height="2430"><feGaussianBlur class="mesh-blur" stdDeviation="70"/></filter>
+                <filter id="md-n"><feTurbulence type="fractalNoise" baseFrequency="0.7" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="1200" height="630" fill="#080808"/>
+              <g filter="url(#md-b)">
+                <!-- Wave ribbon 1: violet — upper band, undulating -->
+                <path d="M-100,280 C200,235 420,305 660,255 C900,205 1080,280 1400,245 L1400,355 C1080,390 900,315 660,365 C420,415 200,345 -100,390 Z" fill="#7928ca" opacity="0.92"/>
+                <!-- Wave ribbon 2: cyan — lower band, parallel undulation -->
+                <path d="M-100,365 C220,330 480,395 720,345 C960,295 1140,370 1400,330 L1400,440 C1140,480 960,405 720,455 C480,505 220,440 -100,475 Z" fill="#00dfd8" opacity="0.86"/>
+                <!-- Wave ribbon 3: blue accent — thinner, sits between waves -->
+                <path d="M-100,200 C180,170 420,235 680,190 C940,145 1140,215 1400,175 L1400,255 C1140,295 940,225 680,270 C420,315 180,250 -100,280 Z" fill="#007cf0" opacity="0.74"/>
+                <!-- Wave ribbon 4: magenta accent — subtle, lower area -->
+                <path d="M-100,430 C200,400 500,460 750,415 C1000,370 1200,440 1400,405 L1400,470 C1200,505 1000,435 750,480 C500,525 200,465 -100,495 Z" fill="#ff0080" opacity="0.58"/>
+              </g>
+              <rect class="mesh-noise-rect" width="1200" height="630" fill="#888" style="mix-blend-mode:overlay;opacity:0.08" filter="url(#md-n)"/>
+            </svg>
+            <div class="og-content pos-center">
+              <div class="og-eyebrow-large">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- M-E: 右側空白主視覺 Right focal ────────────────────────────────── -->
+        <div>
+          <p class="og-label">M-E — Topographic contour · Right focal · σ=90 · nested islands in x≥560 · left pure black (6.2σ away)</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full og-mesh" style="--gop:.04">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div>
+            <div class="og-corner bl"></div><div class="og-corner br"></div>
+            <svg class="og-mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+              <defs>
+                <!-- σ=90: topographic style, shapes centered at x≈900; at x=0 distance≥560=6.2σ → 0% -->
+                <filter id="me-b" filterUnits="userSpaceOnUse" x="-900" y="-900" width="3000" height="2430">
+                  <feGaussianBlur class="mesh-blur" stdDeviation="90"/>
+                </filter>
+                <filter id="me-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="1200" height="630" fill="#0a0a0a"/>
+              <g filter="url(#me-b)">
+                <!-- Outer topo island — blue, right-biased loop centered at (900,314) -->
+                <path d="M562,304 C620,168 808,110 956,170 C1076,218 1100,316 1098,340 C1098,416 1038,474 868,462 C678,448 598,382 594,318 C592,278 562,304 562,304 Z" fill="#007cf0" opacity="0.68"/>
+                <!-- Inner topo island — violet -->
+                <path d="M702,268 C762,172 914,166 1008,234 C1070,280 1054,358 1026,378 C974,408 898,436 780,420 C664,406 638,336 698,284 C700,276 702,268 702,268 Z" fill="#7928ca" opacity="0.86"/>
+                <!-- Cross-sweep diagonal — cyan, from left-center to far right -->
+                <path d="M418,454 L1012,140 L1178,222 L584,536 Z" fill="#00dfd8" opacity="0.44"/>
+                <!-- Inner focal core — magenta -->
+                <path d="M788,268 C854,198 976,220 1034,286 C1086,344 1042,410 946,416 C854,422 776,358 788,268 Z" fill="#ff0080" opacity="0.66"/>
+                <!-- Amber accent polygon -->
+                <polygon points="832,196 1046,192 1112,306 1034,406 814,366 756,258" fill="#f9cb28" opacity="0.36"/>
+                <!-- Small coral ellipse -->
+                <ellipse cx="678" cy="234" rx="162" ry="72" transform="rotate(-34 678 234)" fill="#ff4d4d" opacity="0.40"/>
+              </g>
+              <rect class="mesh-noise-rect" width="1200" height="630" fill="#888" style="mix-blend-mode:overlay;opacity:0.055" filter="url(#me-n)"/>
+            </svg>
+            <div class="og-content pos-center">
+              <div class="og-eyebrow-large">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- M-F bonus: 暗系環境光 Dark ambient ──────────────────────────────── -->
+        <div>
+          <p class="og-label">M-F (bonus) — 暗系環境光 Dark ambient · Very muted opacity · Barely-there glow · stdDev=220</p>
+          <div class="og-wrap"><div class="og-frame og-grid-full" style="--gop:.055">
+            <div class="og-corner tl"></div><div class="og-corner tr"></div><div class="og-corner bl"></div><div class="og-corner br"></div>
+            <svg class="og-mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+              <defs>
+                <filter id="mf-b" filterUnits="userSpaceOnUse" x="-900" y="-900" width="3000" height="2430"><feGaussianBlur class="mesh-blur" stdDeviation="220"/></filter>
+                <filter id="mf-n"><feTurbulence type="fractalNoise" baseFrequency="0.6" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="1200" height="630" fill="#080808"/>
+              <g filter="url(#mf-b)">
+                <rect x="-100" y="-50" width="650" height="400" fill="#007cf0" opacity="0.35"/>
+                <rect x="350" y="-80" width="700" height="450" fill="#7928ca" opacity="0.28"/>
+                <rect x="600" y="150" width="700" height="500" fill="#ff0080" opacity="0.22"/>
+                <rect x="-50" y="250" width="500" height="450" fill="#00dfd8" opacity="0.25"/>
+              </g>
+              <rect class="mesh-noise-rect" width="1200" height="630" fill="#888" style="mix-blend-mode:overlay;opacity:0.05" filter="url(#mf-n)"/>
+            </svg>
+            <div class="og-content pos-center">
+              <div class="og-eyebrow-large">Software Engineer · Taipei, Taiwan</div>
+              <div class="og-name">Andrew Tseng</div>
+              <div class="og-sep"></div>
+              <div class="og-desc">Building things that matter.</div>
+            </div>
+          </div></div>
+        </div>
+
+      </div><!-- og-grid v4 -->
+    </div><!-- og-v4 -->
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       HOME SECTION
+  ═════════════════════════════════════════════════════════════════════ -->
+  <section class="sec" id="sec-home">
+    <div class="ver-bar">
+      <label>Version</label>
+      <select class="ver-sel" id="home-ver">
+        <option value="v1">v1 — Polygon gradient shapes · Dark terminal (very dark text)</option>
+        <option value="v2">v2 — Polygon shapes · Bright terminal · DESIGN.md nav 64px</option>
+        <option value="v3">v3 — Animated dots A-1/A-2 · Light mode added · Fixed dark contrast</option>
+        <option value="v4" selected>v4 — SVG mesh gradient · CSS @keyframes · Dark + Light · D1-5 / L1-5</option>
+      </select>
+    </div>
+
+    <!-- Home v1 -->
+    <div class="ver-pane" id="home-v1">
+      <div class="slabel">v1 · A-1 Dark · Dot-grid panel · Polygon shapes · Dark terminal</div>
+      <div class="hero hero-dark">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="grid-panel gp-dot">
+          <div style="position:absolute;width:55%;height:130%;left:18%;top:-25%;clip-path:polygon(50% 0%,95% 100%,5% 100%);background:radial-gradient(ellipse at 50% 65%,rgba(0,223,216,.28),rgba(0,124,240,.14),transparent 65%);filter:blur(44px);mix-blend-mode:screen"></div>
+          <div style="position:absolute;width:38%;height:100%;right:8%;top:0;clip-path:polygon(50% 0%,100% 30%,80% 100%,20% 100%,0% 30%);background:radial-gradient(ellipse at 50% 50%,rgba(255,0,128,.22),rgba(121,40,202,.14),transparent 65%);filter:blur(50px);mix-blend-mode:screen"></div>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio" style="color:#404040">Specialized in React and Node.js (bio was #404040 — very low contrast)</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s" style="border:1px solid #222;color:#555">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a" style="color:#3a3a3a;border-color:#1a1a1a">GitHub</a><a href="#" class="social-a" style="color:#3a3a3a;border-color:#1a1a1a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span style="color:#2a4a32">~/projects</span> <span style="color:#404040">$ pnpm build</span></div>
+            <div class="tl" style="color:#2a3a4a">  ▸ Compiling...</div>
+            <div class="tl" style="color:#2a4a36">  ✓ Done</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span style="color:#2a4a32">~</span> <span style="color:#404040">$ </span><span class="term-cur" style="background:#3a3a3a"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home v2 -->
+    <div class="ver-pane" id="home-v2">
+      <div class="slabel">v2 · A-1 Dark · Bright terminal · DESIGN.md nav 64px · Polygon shapes still</div>
+      <div class="hero hero-dark">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="grid-panel gp-dot">
+          <div style="position:absolute;width:55%;height:130%;left:18%;top:-25%;clip-path:polygon(50% 0%,95% 100%,5% 100%);background:radial-gradient(ellipse at 50% 65%,rgba(0,223,216,.28),rgba(0,124,240,.14),transparent 65%);filter:blur(44px);mix-blend-mode:screen"></div>
+          <div style="position:absolute;width:38%;height:100%;right:8%;top:0;clip-path:polygon(50% 0%,100% 30%,80% 100%,20% 100%,0% 30%);background:radial-gradient(ellipse at 50% 50%,rgba(255,0,128,.22),rgba(121,40,202,.14),transparent 65%);filter:blur(50px);mix-blend-mode:screen"></div>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio" style="color:#404040">Bio still #404040 — not fixed in v2</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s" style="border:1px solid #222;color:#555">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a" style="color:#3a3a3a;border-color:#1a1a1a">GitHub</a><a href="#" class="social-a" style="color:#3a3a3a;border-color:#1a1a1a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home v3 -->
+    <div class="ver-pane" id="home-v3">
+
+      <!-- A-1 Dark — Method 1 (JS dynamic grid) -->
+      <div class="slabel">v3 · A-1 Dark · Grid Method 1 · JS dynamic · Cyan/Magenta dots</div>
+      <div class="hero hero-dark" id="hero-a1d">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="grid-panel gp-m1"><div class="gc-tl"></div><div class="gc-tr"></div><div class="grid-note" id="gi-a1d">…</div><canvas id="c-a1d" class="dots-cv"></canvas></div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ git push</span></div>
+            <div class="tl ti">  → Deploying to Vercel...</div>
+            <div class="tl tok">  ✓ Production ready</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A-2 Dark — Method 2 (CSS breakpoints) -->
+      <div class="slabel">v3 · A-2 Dark · Grid Method 2 · CSS breakpoints 640/768/1024/1280/1536 · Blue/Amber dots</div>
+      <div class="hero hero-dark">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="grid-panel gp-m2">
+          <div class="gc-tl"></div><div class="gc-tr"></div>
+          <div class="grid-note">64px · Method 2</div>
+          <canvas id="c-a2d" class="dots-cv"></canvas>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B-1 Dark blobs -->
+      <div class="slabel">v3 · B-1 Dark · Fused irregular blobs · Cyan/Blue/Violet · Top+bottom masked</div>
+      <div class="hero hero-dark">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gz mk-dark"><div class="blob b1d-1"></div><div class="blob b1d-2"></div><div class="blob b1d-3"></div></div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Specialized in React and Node.js development.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term"><div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div><div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div><div class="tl tok">  ✓ Compiled</div><div class="tl">&nbsp;</div><div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div></div>
+        </div>
+      </div>
+
+      <!-- B-2 Dark blobs -->
+      <div class="slabel">v3 · B-2 Dark · Fused blobs · Amber/Coral/Violet · Top+bottom masked</div>
+      <div class="hero hero-dark">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gz mk-dark"><div class="blob b2d-1"></div><div class="blob b2d-2"></div></div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Specialized in React and Node.js development.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term"><div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div><div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div><div class="tl tok">  ✓ Compiled</div><div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div></div>
+        </div>
+      </div>
+
+      <!-- A-1 Light — Method 1 -->
+      <div class="slabel lb">v3 · A-1 Light · Grid Method 1 · JS dynamic · Muted blue/teal dots</div>
+      <div class="hero hero-light" id="hero-a1l">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="grid-panel gp-m1"><div class="gc-tl"></div><div class="gc-tr"></div><div class="grid-note" id="gi-a1l">…</div><canvas id="c-a1l" class="dots-cv"></canvas></div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term"><div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div><div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div><div class="tl ti">  ▸ Compiling...</div><div class="tl tok">  ✓ Compiled in 3.2s</div><div class="tl">&nbsp;</div><div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div></div>
+        </div>
+      </div>
+
+      <!-- A-2 Light — Method 2 -->
+      <div class="slabel lb">v3 · A-2 Light · Grid Method 2 · CSS breakpoints · Steel blue dots</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="grid-panel gp-m2">
+          <div class="gc-tl"></div><div class="gc-tr"></div>
+          <div class="grid-note">64px · Method 2</div>
+          <canvas id="c-a2l" class="dots-cv"></canvas>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term"><div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div><div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div><div class="tl tok">  ✓ Compiled</div><div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div></div>
+        </div>
+      </div>
+
+      <!-- B-1 Light blobs -->
+      <div class="slabel lb">v3 · B-1 Light · Pastel blobs · Cool cyan/violet · Masked edges</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gz mk-light"><div class="blob b1l-1"></div><div class="blob b1l-2"></div></div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Specialized in React and Node.js development.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term"><div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div><div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div><div class="tl tok">  ✓ Compiled</div><div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div></div>
+        </div>
+      </div>
+
+      <!-- B-2 Light blobs -->
+      <div class="slabel lb">v3 · B-2 Light · Pastel blobs · Warm amber/coral/violet · Masked edges</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gz mk-light"><div class="blob b2l-1"></div><div class="blob b2l-2"></div></div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Specialized in React and Node.js development.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term"><div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div><div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div><div class="tl tok">  ✓ Compiled</div><div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div></div>
+        </div>
+      </div>
+
+
+    </div><!-- home-v3 -->
+
+    <!-- Home v4 — SVG mesh gradient with CSS animation -->
+    <div class="ver-pane" id="home-v4">
+
+      <!-- D1: Contained pools — polygon + path + ellipse + rotated rect (M-B style) -->
+      <div class="slabel">v4 · D1 Dark · Contained mesh · polygon + path + ellipse + rotated rect · always-on @keyframes</div>
+      <div class="hero hero-dark hero-mesh">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <!-- σ=80: 3σ=240 → shapes ≥240px from all edges → contained pool, no edge bleed -->
+              <filter id="hd1-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="80"/></filter>
+              <filter id="hd1-n"><feTurbulence type="fractalNoise" baseFrequency="0.70" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#0a0a0a"/>
+            <g filter="url(#hd1-b)">
+              <!-- large diagonal slab — blue, center-left pool -->
+              <polygon class="ms" style="animation:msha 9s ease-in-out infinite" points="298,178 758,170 868,312 808,436 292,434 243,282" fill="#007cf0" opacity="0.90"/>
+              <!-- organic blob — magenta, center-right -->
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M558,176 C798,141 1118,194 1158,370 C1176,434 1008,440 803,414 C598,388 526,292 538,222 Z" fill="#ff0080" opacity="0.74"/>
+              <!-- rotated rect — violet, diagonal band -->
+              <rect class="ms" style="animation:mshc 12s ease-in-out infinite" x="448" y="180" width="478" height="252" rx="4" transform="rotate(-13 687 306)" fill="#7928ca" opacity="0.84"/>
+              <!-- ellipse — cyan broad glow -->
+              <ellipse class="ms" style="animation:mshd 8s ease-in-out infinite" cx="738" cy="308" rx="358" ry="128" fill="#00dfd8" opacity="0.68"/>
+              <!-- small accent polygon — amber -->
+              <polygon class="ms" style="animation:mshe 9s ease-in-out infinite" points="568,190 873,182 933,390 866,434 536,430 480,294" fill="#f9cb28" opacity="0.40"/>
+            </g>
+            <rect width="1400" height="600" fill="#888" style="mix-blend-mode:overlay;opacity:.05" filter="url(#hd1-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ git push</span></div>
+            <div class="tl ti">  → Deploying to Vercel...</div>
+            <div class="tl tok">  ✓ Production ready</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D2: Aurora ribbons — horizontal wave paths (M-D style) -->
+      <div class="slabel">v4 · D2 Dark · Aurora ribbons · Horizontal wave paths · σ=62 · vertical sway animation</div>
+      <div class="hero hero-dark hero-mesh">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <!-- Lower σ to preserve ribbon band shape -->
+              <filter id="hd2-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="62"/></filter>
+              <filter id="hd2-n"><feTurbulence type="fractalNoise" baseFrequency="0.65" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#080808"/>
+            <g filter="url(#hd2-b)">
+              <!-- thin blue upper ribbon -->
+              <path class="ms" style="animation:mshra 9s ease-in-out infinite" d="M-100,192 C240,165 520,215 800,175 C1080,135 1282,200 1500,165 L1500,242 C1282,277 1080,212 800,252 C520,292 240,242 -100,269 Z" fill="#007cf0" opacity="0.76"/>
+              <!-- violet main ribbon -->
+              <path class="ms" style="animation:mshb 12s ease-in-out infinite" d="M-100,248 C282,216 562,276 842,230 C1122,184 1302,256 1500,222 L1500,340 C1302,374 1122,302 842,348 C562,394 282,334 -100,366 Z" fill="#7928ca" opacity="0.92"/>
+              <!-- cyan lower ribbon -->
+              <path class="ms" style="animation:mshrb 10s ease-in-out infinite" d="M-100,334 C262,304 582,360 862,316 C1142,272 1322,344 1500,310 L1500,426 C1322,460 1142,388 862,432 C582,476 262,420 -100,450 Z" fill="#00dfd8" opacity="0.84"/>
+              <!-- magenta accent ribbon -->
+              <path class="ms" style="animation:mshrc 9s ease-in-out infinite" d="M-100,400 C222,372 522,426 782,384 C1042,342 1262,408 1500,376 L1500,444 C1262,476 1042,410 782,452 C522,494 222,440 -100,468 Z" fill="#ff0080" opacity="0.60"/>
+            </g>
+            <rect width="1400" height="600" fill="#888" style="mix-blend-mode:overlay;opacity:.07" filter="url(#hd2-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D3: Right-focal — shapes behind terminal column, left text area stays dark -->
+      <div class="slabel">v4 · D3 Dark · Topographic contour (right-focal) · Nested islands + cross-sweep behind terminal col</div>
+      <div class="hero hero-dark hero-mesh">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <!-- D5 topo style, shapes shifted to x≈[600,1150] (behind terminal col) -->
+              <filter id="hd3-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="66"/></filter>
+              <filter id="hd3-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#080808"/>
+            <g filter="url(#hd3-b)">
+              <!-- Outer topo island — blue, right-biased loop -->
+              <path class="ms" style="animation:msha 10s ease-in-out infinite" d="M654,290 C718,158 898,114 1028,172 C1126,216 1152,316 1152,346 C1152,428 1088,494 898,476 C692,454 604,382 664,316 C724,258 654,290 654,290 Z" fill="#007cf0" opacity="0.66"/>
+              <!-- Inner topo island — violet -->
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M798,254 C870,160 1034,150 1124,226 C1188,280 1172,366 1106,394 C1028,420 966,376 922,320 C888,282 798,254 798,254 Z" fill="#7928ca" opacity="0.84"/>
+              <!-- Cross-sweep diagonal band — cyan, spans full width -->
+              <path class="ms" style="animation:mshc 13s ease-in-out infinite" d="M460,432 L1024,132 L1168,232 L604,532 Z" fill="#00dfd8" opacity="0.44"/>
+              <!-- Inner core — magenta -->
+              <path class="ms" style="animation:mshd 9s ease-in-out infinite" d="M858,278 C922,210 1044,228 1100,292 C1160,360 1096,426 988,416 C888,408 804,336 858,278 Z" fill="#ff0080" opacity="0.64"/>
+              <!-- Amber accent polygon -->
+              <polygon class="ms" style="animation:mshe 8s ease-in-out infinite" points="916,186 1110,190 1150,308 1070,406 898,360 844,254" fill="#f9cb28" opacity="0.36"/>
+              <!-- Small coral ellipse -->
+              <ellipse class="ms" style="animation:mshra 9s ease-in-out infinite" cx="758" cy="238" rx="178" ry="76" transform="rotate(-34 758 238)" fill="#ff4d4d" opacity="0.40"/>
+            </g>
+            <rect width="1400" height="600" fill="#888" style="mix-blend-mode:overlay;opacity:.055" filter="url(#hd3-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ git push</span></div>
+            <div class="tl ti">  → Deploying to Vercel...</div>
+            <div class="tl tok">  ✓ Production ready</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D4: Orbital shards — arcs + rings + wedges, asymmetric but contained -->
+      <div class="slabel">v4 · D4 Dark · Orbital shards · arcs + rings + wedges · asymmetric contained mesh</div>
+      <div class="hero hero-dark hero-mesh">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hd4-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="72"/></filter>
+              <filter id="hd4-n"><feTurbulence type="fractalNoise" baseFrequency="0.58" octaves="4" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#090909"/>
+            <g filter="url(#hd4-b)">
+              <path class="ms" style="animation:msha 10s ease-in-out infinite" d="M274,366 C370,150 585,92 788,146 C930,184 1018,286 1112,360 L1028,446 C930,378 842,312 704,286 C520,250 388,306 320,454 Z" fill="#007cf0" opacity="0.72"/>
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M538,184 C684,64 940,96 1090,242 C1182,332 1186,426 1080,456 C946,494 842,370 730,318 C628,270 524,282 450,356 Z" fill="#ff0080" opacity="0.64"/>
+              <ellipse class="ms" style="animation:mshc 13s ease-in-out infinite" cx="760" cy="312" rx="380" ry="88" transform="rotate(-24 760 312)" fill="none" stroke="#00dfd8" stroke-width="150" opacity="0.58"/>
+              <polygon class="ms" style="animation:mshd 8s ease-in-out infinite" points="430,214 640,158 735,262 560,408 374,368" fill="#7928ca" opacity="0.74"/>
+              <path class="ms" style="animation:mshe 9s ease-in-out infinite" d="M842,180 L1060,242 L1126,390 L964,436 L836,332 Z" fill="#f9cb28" opacity="0.36"/>
+              <ellipse class="ms" style="animation:mshra 8s ease-in-out infinite" cx="624" cy="386" rx="210" ry="64" transform="rotate(18 624 386)" fill="#ff4d4d" opacity="0.42"/>
+            </g>
+            <rect width="1400" height="600" fill="#888" style="mix-blend-mode:overlay;opacity:.06" filter="url(#hd4-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ git push</span></div>
+            <div class="tl ti">  → Deploying to Vercel...</div>
+            <div class="tl tok">  ✓ Production ready</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D5: Topographic contour — nested islands + diagonal sweep -->
+      <div class="slabel">v4 · D5 Dark · Topographic contour · nested organic islands + diagonal sweep</div>
+      <div class="hero hero-dark hero-mesh">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hd5-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="66"/></filter>
+              <filter id="hd5-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#080808"/>
+            <g filter="url(#hd5-b)">
+              <path class="ms" style="animation:msha 10s ease-in-out infinite" d="M294,292 C358,160 538,116 668,174 C766,218 792,320 898,344 C1018,370 1108,282 1162,350 C1228,432 1092,500 902,480 C696,458 608,386 468,420 C334,452 236,410 294,292 Z" fill="#007cf0" opacity="0.64"/>
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M440,254 C512,160 676,150 766,226 C836,286 820,370 914,398 C992,422 1054,376 1098,424 C1046,484 906,512 740,466 C614,432 558,360 440,384 C356,402 342,326 440,254 Z" fill="#7928ca" opacity="0.82"/>
+              <path class="ms" style="animation:mshc 13s ease-in-out infinite" d="M210,422 L1024,132 L1168,232 L352,520 Z" fill="#00dfd8" opacity="0.42"/>
+              <path class="ms" style="animation:mshd 9s ease-in-out infinite" d="M560,278 C624,210 746,228 802,292 C862,360 798,426 690,416 C590,408 506,336 560,278 Z" fill="#ff0080" opacity="0.62"/>
+              <polygon class="ms" style="animation:mshe 8s ease-in-out infinite" points="820,184 1018,188 1086,306 988,404 802,358 748,252" fill="#f9cb28" opacity="0.34"/>
+              <ellipse class="ms" style="animation:mshrb 9s ease-in-out infinite" cx="458" cy="240" rx="180" ry="78" transform="rotate(-34 458 240)" fill="#ff4d4d" opacity="0.38"/>
+            </g>
+            <rect width="1400" height="600" fill="#888" style="mix-blend-mode:overlay;opacity:.055" filter="url(#hd5-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ git push</span></div>
+            <div class="tl ti">  → Deploying to Vercel...</div>
+            <div class="tl tok">  ✓ Production ready</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D6: Topographic contour (desaturated) — D5 shapes at ~55% opacity for subdued tone -->
+      <div class="slabel">v4 · D6 Dark · Topographic contour (desaturated) · D5 shapes · opacity ×0.55 · muted ambient tone</div>
+      <div class="hero hero-dark hero-mesh">
+        <nav class="hnav hnav-dark"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hd6-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="66"/></filter>
+              <filter id="hd6-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#080808"/>
+            <g filter="url(#hd6-b)">
+              <path class="ms" style="animation:msha 10s ease-in-out infinite" d="M294,292 C358,160 538,116 668,174 C766,218 792,320 898,344 C1018,370 1108,282 1162,350 C1228,432 1092,500 902,480 C696,458 608,386 468,420 C334,452 236,410 294,292 Z" fill="#007cf0" opacity="0.36"/>
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M440,254 C512,160 676,150 766,226 C836,286 820,370 914,398 C992,422 1054,376 1098,424 C1046,484 906,512 740,466 C614,432 558,360 440,384 C356,402 342,326 440,254 Z" fill="#7928ca" opacity="0.46"/>
+              <path class="ms" style="animation:mshc 13s ease-in-out infinite" d="M210,422 L1024,132 L1168,232 L352,520 Z" fill="#00dfd8" opacity="0.24"/>
+              <path class="ms" style="animation:mshd 9s ease-in-out infinite" d="M560,278 C624,210 746,228 802,292 C862,360 798,426 690,416 C590,408 506,336 560,278 Z" fill="#ff0080" opacity="0.34"/>
+              <polygon class="ms" style="animation:mshe 8s ease-in-out infinite" points="820,184 1018,188 1086,306 988,404 802,358 748,252" fill="#f9cb28" opacity="0.20"/>
+              <ellipse class="ms" style="animation:mshrb 9s ease-in-out infinite" cx="458" cy="240" rx="180" ry="78" transform="rotate(-34 458 240)" fill="#ff4d4d" opacity="0.22"/>
+            </g>
+            <rect width="1400" height="600" fill="#888" style="mix-blend-mode:overlay;opacity:.04" filter="url(#hd6-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ git push</span></div>
+            <div class="tl ti">  → Deploying to Vercel...</div>
+            <div class="tl tok">  ✓ Production ready</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L1: Light — contained pools, muted opacity on canvas -->
+      <div class="slabel lb">v4 · L1 Light · Contained mesh · Pastel opacity · Same shape structure as D1</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hl1-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="88"/></filter>
+              <filter id="hl1-n"><feTurbulence type="fractalNoise" baseFrequency="0.70" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#fafafa"/>
+            <g filter="url(#hl1-b)">
+              <polygon class="ms" style="animation:msha 9s ease-in-out infinite" points="298,178 758,170 868,312 808,436 292,434 243,282" fill="#007cf0" opacity="0.19"/>
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M558,176 C798,141 1118,194 1158,370 C1176,434 1008,440 803,414 C598,388 526,292 538,222 Z" fill="#ff0080" opacity="0.15"/>
+              <rect class="ms" style="animation:mshc 12s ease-in-out infinite" x="448" y="180" width="478" height="252" rx="4" transform="rotate(-13 687 306)" fill="#7928ca" opacity="0.17"/>
+              <ellipse class="ms" style="animation:mshd 8s ease-in-out infinite" cx="738" cy="308" rx="358" ry="128" fill="#00dfd8" opacity="0.13"/>
+              <polygon class="ms" style="animation:mshe 9s ease-in-out infinite" points="568,190 873,182 933,390 866,434 536,430 480,294" fill="#f9cb28" opacity="0.20"/>
+            </g>
+            <rect width="1400" height="600" fill="#aaa" style="mix-blend-mode:multiply;opacity:.04" filter="url(#hl1-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L2: Light — aurora ribbons (pairs with D2) -->
+      <div class="slabel lb">v4 · L2 Light · Aurora ribbons · Pairs with D2 Dark</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hl2-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="62"/></filter>
+              <filter id="hl2-n"><feTurbulence type="fractalNoise" baseFrequency="0.65" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#fafafa"/>
+            <g filter="url(#hl2-b)">
+              <path class="ms" style="animation:mshra 9s ease-in-out infinite" d="M-100,192 C240,165 520,215 800,175 C1080,135 1282,200 1500,165 L1500,242 C1282,277 1080,212 800,252 C520,292 240,242 -100,269 Z" fill="#007cf0" opacity="0.16"/>
+              <path class="ms" style="animation:mshb 12s ease-in-out infinite" d="M-100,248 C282,216 562,276 842,230 C1122,184 1302,256 1500,222 L1500,340 C1302,374 1122,302 842,348 C562,394 282,334 -100,366 Z" fill="#7928ca" opacity="0.20"/>
+              <path class="ms" style="animation:mshrb 10s ease-in-out infinite" d="M-100,334 C262,304 582,360 862,316 C1142,272 1322,344 1500,310 L1500,426 C1322,460 1142,388 862,432 C582,476 262,420 -100,450 Z" fill="#00dfd8" opacity="0.18"/>
+              <path class="ms" style="animation:mshrc 9s ease-in-out infinite" d="M-100,400 C222,372 522,426 782,384 C1042,342 1262,408 1500,376 L1500,444 C1262,476 1042,410 782,452 C522,494 222,440 -100,468 Z" fill="#ff0080" opacity="0.13"/>
+            </g>
+            <rect width="1400" height="600" fill="#aaa" style="mix-blend-mode:multiply;opacity:.04" filter="url(#hl2-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L3: Light — right-focal (pairs with D3) -->
+      <div class="slabel lb">v4 · L3 Light · Topographic contour (right-focal) · Pastel opacity · Pairs with D3</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hl3-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="66"/></filter>
+              <filter id="hl3-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#fafafa"/>
+            <g filter="url(#hl3-b)">
+              <path class="ms" style="animation:msha 10s ease-in-out infinite" d="M654,290 C718,158 898,114 1028,172 C1126,216 1152,316 1152,346 C1152,428 1088,494 898,476 C692,454 604,382 664,316 C724,258 654,290 654,290 Z" fill="#007cf0" opacity="0.17"/>
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M798,254 C870,160 1034,150 1124,226 C1188,280 1172,366 1106,394 C1028,420 966,376 922,320 C888,282 798,254 798,254 Z" fill="#7928ca" opacity="0.21"/>
+              <path class="ms" style="animation:mshc 13s ease-in-out infinite" d="M460,432 L1024,132 L1168,232 L604,532 Z" fill="#00dfd8" opacity="0.14"/>
+              <path class="ms" style="animation:mshd 9s ease-in-out infinite" d="M858,278 C922,210 1044,228 1100,292 C1160,360 1096,426 988,416 C888,408 804,336 858,278 Z" fill="#ff0080" opacity="0.19"/>
+              <polygon class="ms" style="animation:mshe 8s ease-in-out infinite" points="916,186 1110,190 1150,308 1070,406 898,360 844,254" fill="#f9cb28" opacity="0.17"/>
+              <ellipse class="ms" style="animation:mshra 9s ease-in-out infinite" cx="758" cy="238" rx="178" ry="76" transform="rotate(-34 758 238)" fill="#ff4d4d" opacity="0.12"/>
+            </g>
+            <rect width="1400" height="600" fill="#aaa" style="mix-blend-mode:multiply;opacity:.04" filter="url(#hl3-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L4: Orbital shards — light version (pairs with D4) -->
+      <div class="slabel lb">v4 · L4 Light · Orbital shards · arcs + ring + wedges · Pastel opacity</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hl4-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="72"/></filter>
+              <filter id="hl4-n"><feTurbulence type="fractalNoise" baseFrequency="0.58" octaves="4" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#fafafa"/>
+            <g filter="url(#hl4-b)">
+              <path class="ms" style="animation:msha 10s ease-in-out infinite" d="M274,366 C370,150 585,92 788,146 C930,184 1018,286 1112,360 L1028,446 C930,378 842,312 704,286 C520,250 388,306 320,454 Z" fill="#007cf0" opacity="0.18"/>
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M538,184 C684,64 940,96 1090,242 C1182,332 1186,426 1080,456 C946,494 842,370 730,318 C628,270 524,282 450,356 Z" fill="#ff0080" opacity="0.15"/>
+              <ellipse class="ms" style="animation:mshc 13s ease-in-out infinite" cx="760" cy="312" rx="380" ry="88" transform="rotate(-24 760 312)" fill="none" stroke="#00dfd8" stroke-width="150" opacity="0.14"/>
+              <polygon class="ms" style="animation:mshd 8s ease-in-out infinite" points="430,214 640,158 735,262 560,408 374,368" fill="#7928ca" opacity="0.18"/>
+              <path class="ms" style="animation:mshe 9s ease-in-out infinite" d="M842,180 L1060,242 L1126,390 L964,436 L836,332 Z" fill="#f9cb28" opacity="0.15"/>
+              <ellipse class="ms" style="animation:mshra 9s ease-in-out infinite" cx="624" cy="386" rx="210" ry="64" transform="rotate(18 624 386)" fill="#ff4d4d" opacity="0.12"/>
+            </g>
+            <rect width="1400" height="600" fill="#aaa" style="mix-blend-mode:multiply;opacity:.04" filter="url(#hl4-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L5: Topographic contour — light version (pairs with D5) -->
+      <div class="slabel lb">v4 · L5 Light · Topographic contour · nested organic islands + diagonal sweep · Pastel opacity</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hl5-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="66"/></filter>
+              <filter id="hl5-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#fafafa"/>
+            <g filter="url(#hl5-b)">
+              <path class="ms" style="animation:msha 10s ease-in-out infinite" d="M294,292 C358,160 538,116 668,174 C766,218 792,320 898,344 C1018,370 1108,282 1162,350 C1228,432 1092,500 902,480 C696,458 608,386 468,420 C334,452 236,410 294,292 Z" fill="#007cf0" opacity="0.16"/>
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M440,254 C512,160 676,150 766,226 C836,286 820,370 914,398 C992,422 1054,376 1098,424 C1046,484 906,512 740,466 C614,432 558,360 440,384 C356,402 342,326 440,254 Z" fill="#7928ca" opacity="0.20"/>
+              <path class="ms" style="animation:mshc 13s ease-in-out infinite" d="M210,422 L1024,132 L1168,232 L352,520 Z" fill="#00dfd8" opacity="0.13"/>
+              <path class="ms" style="animation:mshd 9s ease-in-out infinite" d="M560,278 C624,210 746,228 802,292 C862,360 798,426 690,416 C590,408 506,336 560,278 Z" fill="#ff0080" opacity="0.18"/>
+              <polygon class="ms" style="animation:mshe 8s ease-in-out infinite" points="820,184 1018,188 1086,306 988,404 802,358 748,252" fill="#f9cb28" opacity="0.16"/>
+              <ellipse class="ms" style="animation:mshrb 9s ease-in-out infinite" cx="458" cy="240" rx="180" ry="78" transform="rotate(-34 458 240)" fill="#ff4d4d" opacity="0.12"/>
+            </g>
+            <rect width="1400" height="600" fill="#aaa" style="mix-blend-mode:multiply;opacity:.04" filter="url(#hl5-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling Next.js app...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L6: Topographic contour (saturated) — L5 shapes + mix-blend-mode:multiply → vivid on white -->
+      <div class="slabel lb">v4 · L6 Light · Topographic contour (saturated) · mix-blend-mode:multiply on &lt;g&gt; · opacity ×4 vs L5</div>
+      <div class="hero hero-light">
+        <nav class="hnav hnav-light"><span class="hnav-logo">Andrew Tseng</span><div class="hnav-links"><a href="#" class="hnav-link">Notes</a><a href="#" class="hnav-link">Projects</a><a href="#" class="hnav-link">About</a></div></nav>
+        <div class="gp-mesh">
+          <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <filter id="hl6-b" filterUnits="userSpaceOnUse" x="-1200" y="-1200" width="3800" height="3000"><feGaussianBlur stdDeviation="66"/></filter>
+              <filter id="hl6-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+            </defs>
+            <rect width="1400" height="600" fill="#fafafa"/>
+            <!-- mix-blend-mode:multiply: white bg is neutral → colors render at near-full saturation -->
+            <g filter="url(#hl6-b)" style="mix-blend-mode:multiply">
+              <path class="ms" style="animation:msha 10s ease-in-out infinite" d="M294,292 C358,160 538,116 668,174 C766,218 792,320 898,344 C1018,370 1108,282 1162,350 C1228,432 1092,500 902,480 C696,458 608,386 468,420 C334,452 236,410 294,292 Z" fill="#007cf0" opacity="0.62"/>
+              <path class="ms" style="animation:mshb 11s ease-in-out infinite" d="M440,254 C512,160 676,150 766,226 C836,286 820,370 914,398 C992,422 1054,376 1098,424 C1046,484 906,512 740,466 C614,432 558,360 440,384 C356,402 342,326 440,254 Z" fill="#7928ca" opacity="0.72"/>
+              <path class="ms" style="animation:mshc 13s ease-in-out infinite" d="M210,422 L1024,132 L1168,232 L352,520 Z" fill="#00dfd8" opacity="0.40"/>
+              <path class="ms" style="animation:mshd 9s ease-in-out infinite" d="M560,278 C624,210 746,228 802,292 C862,360 798,426 690,416 C590,408 506,336 560,278 Z" fill="#ff0080" opacity="0.58"/>
+              <polygon class="ms" style="animation:mshe 8s ease-in-out infinite" points="820,184 1018,188 1086,306 988,404 802,358 748,252" fill="#f9cb28" opacity="0.32"/>
+              <ellipse class="ms" style="animation:mshrb 9s ease-in-out infinite" cx="458" cy="240" rx="180" ry="78" transform="rotate(-34 458 240)" fill="#ff4d4d" opacity="0.36"/>
+            </g>
+            <rect width="1400" height="600" fill="#aaa" style="mix-blend-mode:multiply;opacity:.05" filter="url(#hl6-n)"/>
+          </svg>
+        </div>
+        <div class="hero-inner">
+          <div>
+            <div class="h-eyebrow">Portfolio · Taipei, Taiwan</div>
+            <h1 class="h-name">Andrew<br>Tseng</h1>
+            <p class="h-title">Software Engineer</p>
+            <p class="h-bio">Building things that matter.</p>
+            <div class="cta-row"><a href="#" class="btn-p">View Portfolio</a><a href="#" class="btn-s">About Me</a></div>
+            <div class="social-row"><a href="#" class="social-a">GitHub</a><a href="#" class="social-a">LinkedIn</a></div>
+          </div>
+          <div class="term">
+            <div class="term-bar"><div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div></div>
+            <div class="tl"><span class="tp">~/projects</span> <span class="tc">$ pnpm build</span></div>
+            <div class="tl ti">  ▸ Compiling...</div>
+            <div class="tl tok">  ✓ Compiled in 3.2s</div>
+            <div class="tl">&nbsp;</div>
+            <div class="tl"><span class="tp">~</span> <span class="tc">$ </span><span class="term-cur"></span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- home-v4 -->
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       ABOUT SECTION
+  ═════════════════════════════════════════════════════════════════════ -->
+  <section class="sec" id="sec-about">
+    <div class="ver-bar">
+      <label>Version</label>
+      <select class="ver-sel" id="about-ver">
+        <option value="v1">v1 — 2 variants · Dark hero + light editorial (content bg was white in dark)</option>
+        <option value="v2">v2 — 6 variants D1-3/L1-3 · Bug: dark mode content has light background</option>
+        <option value="v3">v3 — 8 variants · Dark fixed (content=#171717) · D3 full-height · D4/L4 grid</option>
+        <option value="v4" selected>v4 — BusinessCard mesh gradient · Hover trigger · D full-width / D card / L full-width</option>
+      </select>
+    </div>
+
+    <!-- About v1 simplified -->
+    <div class="ver-pane" id="about-v1">
+      <div class="slabel">v1 · Dark hero + light content (⚠ content bg was #f9f9f9 in dark mode)</div>
+      <div class="dark-page">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-dark-full bn-dark"><div class="acc-blob acc-ur"></div><div class="bi"><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a></div></div></div>
+        <div class="acw" style="background:#f9f9f9;padding:40px 48px;color:#3c3c3c;font-size:14px">⚠ Content area background was #f9f9f9 here — wrong for dark mode.</div>
+      </div>
+      <div class="slabel lb">v1 · Light editorial (all-white) — correct</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-light-full bn-light"><div class="bi"><div class="bn-eyebrow">About</div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a></div></div></div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Specialized in React and Node.js development.</p></div></div>
+      </div>
+    </div>
+
+    <!-- About v2 simplified (showing the bug) -->
+    <div class="ver-pane" id="about-v2">
+      <div class="slabel">v2 · D1 — Dark full-width banner · ⚠ Bug: page background #f9f9f9 in dark mode</div>
+      <div style="background:#f9f9f9">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-dark-full bn-dark"><div class="acc-blob acc-ur"></div><div class="bi"><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a></div></div></div>
+        <div class="acw" style="padding:40px 48px"><div style="color:#aaa;font-size:14px;margin-bottom:16px">⚠ Content area has background #f9f9f9 — light color used in a "dark mode" page variant</div><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span></div><div class="prose-area"><div class="prose-sep" style="background:#e0e0e0"></div><p style="color:#3c3c3c">The banner is dark but everything below has a light page background. The two dark-content variants (D2/D3) had the same issue.</p></div></div>
+      </div>
+      <div class="slabel lb">v2 · L1 — Light full-width · (Light mode was correct in v2)</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-light-full bn-light"><div class="bi"><div class="bn-eyebrow">About</div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a></div></div></div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span></div><div class="prose-area"><div class="prose-sep"></div><p>Light mode content — correctly #fafafa background throughout.</p></div></div>
+      </div>
+    </div>
+
+    <!-- About v3 — COMPLETE: 8 variants, dark mode fixed, D3 full-height, D4/L4 grid -->
+    <div class="ver-pane" id="about-v3">
+
+      <!-- D1: dark full-width, single accent, fixed dark bg -->
+      <div class="slabel">v3 · D1 — Dark · Full-width · Single gradient accent (upper-right) · ✓ Content bg #171717</div>
+      <div class="dark-page">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link">Notes</a><a href="#" class="anav-link">Projects</a><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-dark-full bn-dark"><div class="acc-blob acc-ur"></div><div class="bi"><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div></div></div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span><span class="skill">PostgreSQL</span><span class="skill">Docker</span><span class="skill">AWS</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- D2: dark content-width card -->
+      <div class="slabel">v3 · D2 — Dark · Content-width card (860px, rounded 12px) · ✓ Dark page bg</div>
+      <div class="dark-page">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link">Notes</a><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-dark-card-outer"><div class="b-dark-card bn-dark"><div class="card-blob"></div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div></div></div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span><span class="skill">PostgreSQL</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- D3: dark full-width, DUAL accents (matching L3) — was compact single-row in v2 -->
+      <div class="slabel">v3 · D3 — Dark · Full-width · Dual gradient accents (upper-right + lower-left) · ✓ Full height (was compact single-row)</div>
+      <div class="dark-page">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link">Notes</a><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-dark-full bn-dark"><div class="acc-blob acc-ur"></div><div class="acc-blob acc-ll"></div><div class="bi"><div class="bn-eyebrow">About</div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div></div></div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span><span class="skill">PostgreSQL</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- D4 (NEW): dark grid banner -->
+      <div class="slabel">v3 · D4 — Dark · Full-width · Line-grid background · Corner marks · NEW</div>
+      <div class="dark-page">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link">Notes</a><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-grid-banner b-dark-grid bn-dark">
+          <div class="b-grid-corner tl"></div><div class="b-grid-corner tr"></div>
+          <div class="bi"><div class="bn-eyebrow">About</div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div></div>
+        </div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span><span class="skill">PostgreSQL</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- L1: light full-width typographic -->
+      <div class="slabel lb">v3 · L1 — Light · Full-width · Large typographic hero · Hairline divider</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link">Notes</a><a href="#" class="anav-link">Projects</a><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-light-full bn-light"><div class="bi"><div class="bn-eyebrow">About</div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div></div></div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span><span class="skill">PostgreSQL</span><span class="skill">Docker</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- L2: light content-width card -->
+      <div class="slabel lb">v3 · L2 — Light · Content-width card (860px) · Level-2 elevation</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-light-card-outer"><div class="acw"><div class="b-light-card bn-light"><div class="bn-eyebrow">About</div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div></div></div></div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- L3: light full-width, dual gradient accents -->
+      <div class="slabel lb">v3 · L3 — Light · Full-width · Dual gradient accents (upper-right + lower-left)</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-light-full bn-light"><div class="acc-blob acc-ur-light"></div><div class="acc-blob acc-ll-light"></div><div class="bi"><div class="bn-eyebrow">About</div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div></div></div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- L4 (NEW): light grid banner -->
+      <div class="slabel lb">v3 · L4 — Light · Full-width · Line-grid background · Corner marks · NEW</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link">Notes</a><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-grid-banner b-light-grid bn-light">
+          <div class="b-grid-corner tl"></div><div class="b-grid-corner tr"></div>
+          <div class="bi"><div class="bn-eyebrow">About</div><div class="bn-name">Andrew Tseng</div><div class="bn-role">Software Engineer · Taipei, Taiwan</div><div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div></div>
+        </div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+    </div><!-- about-v3 -->
+
+    <!-- About v4 — BusinessCard mesh gradient · card-only (no full-width banner) -->
+    <div class="ver-pane" id="about-v4">
+
+      <!-- ─── Style 1: Right-focal ──────────────────────────────────────────── -->
+      <div class="slabel">v4 · C1-Dark · Right-focal · clip-path fixes corner bleed · Hover → animate</div>
+      <div class="dark-page">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link">Notes</a><a href="#" class="anav-link">Projects</a><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-mesh-card-outer">
+          <div class="b-mesh-card-dk bcard-mesh">
+            <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" preserveAspectRatio="xMidYMid slice" overflow="hidden">
+              <defs>
+                <filter id="c1d-b" filterUnits="userSpaceOnUse" x="-500" y="-500" width="1860" height="1240"><feGaussianBlur stdDeviation="55"/></filter>
+                <filter id="c1d-n"><feTurbulence type="fractalNoise" baseFrequency="0.75" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="860" height="240" fill="#0d0d0d"/>
+              <g filter="url(#c1d-b)">
+                <polygon class="ms" style="animation:msck-a 7s ease-in-out infinite" points="448,22 758,16 838,102 796,218 424,220 375,106" fill="#007cf0" opacity="0.92"/>
+                <path class="ms" style="animation:msck-b 9s ease-in-out infinite" d="M498,24 C672,4 838,38 856,120 C866,184 764,218 608,205 C452,192 436,112 448,50 Z" fill="#7928ca" opacity="0.88"/>
+                <ellipse class="ms" style="animation:msck-d 7s ease-in-out infinite" cx="672" cy="118" rx="224" ry="92" fill="#00dfd8" opacity="0.72"/>
+                <path class="ms" style="animation:msck-c 10s ease-in-out infinite" d="M528,30 C692,8 852,52 856,138 C858,200 724,218 568,206 C412,194 498,82 528,30 Z" fill="#ff0080" opacity="0.64"/>
+              </g>
+              <rect width="860" height="240" fill="#888" style="mix-blend-mode:overlay;opacity:.05" filter="url(#c1d-n)"/>
+            </svg>
+            <div class="bi-card">
+              <div class="bn-name" style="font-size:32px;line-height:40px;letter-spacing:-1.28px;margin-bottom:10px">Andrew Tseng</div>
+              <div class="bn-role" style="margin-bottom:40px">Software Engineer · Taipei, Taiwan</div>
+              <div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span><span class="skill">PostgreSQL</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <div class="slabel lb">v4 · C1-Light · Right-focal · Pastel opacity</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link">Notes</a><a href="#" class="anav-link">Projects</a><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-mesh-card-outer">
+          <div class="b-mesh-card-lt bcard-mesh">
+            <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" preserveAspectRatio="xMidYMid slice" overflow="hidden">
+              <defs>
+                <filter id="c1l-b" filterUnits="userSpaceOnUse" x="-500" y="-500" width="1860" height="1240"><feGaussianBlur stdDeviation="60"/></filter>
+                <filter id="c1l-n"><feTurbulence type="fractalNoise" baseFrequency="0.75" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+              </defs>
+              <rect width="860" height="240" fill="#fafafa"/>
+              <g filter="url(#c1l-b)">
+                <polygon class="ms" style="animation:msck-a 7s ease-in-out infinite" points="448,22 758,16 838,102 796,218 424,220 375,106" fill="#007cf0" opacity="0.20"/>
+                <path class="ms" style="animation:msck-b 9s ease-in-out infinite" d="M498,24 C672,4 838,38 856,120 C866,184 764,218 608,205 C452,192 436,112 448,50 Z" fill="#7928ca" opacity="0.18"/>
+                <ellipse class="ms" style="animation:msck-d 7s ease-in-out infinite" cx="672" cy="118" rx="224" ry="92" fill="#00dfd8" opacity="0.14"/>
+                <path class="ms" style="animation:msck-c 10s ease-in-out infinite" d="M528,30 C692,8 852,52 856,138 C858,200 724,218 568,206 C412,194 498,82 528,30 Z" fill="#ff0080" opacity="0.16"/>
+              </g>
+              <rect width="860" height="240" fill="#bbb" style="mix-blend-mode:multiply;opacity:.04" filter="url(#c1l-n)"/>
+            </svg>
+            <div class="bi-card">
+              <div class="bn-name" style="font-size:32px;line-height:40px;letter-spacing:-1.28px;margin-bottom:10px">Andrew Tseng</div>
+              <div class="bn-role" style="margin-bottom:40px">Software Engineer · Taipei, Taiwan</div>
+              <div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- ─── Style 2: Aurora ribbons ───────────────────────────────────────── -->
+      <div class="slabel">v4 · C2-Dark · Aurora ribbons · Horizontal wave bands · Hover → animate</div>
+      <div class="dark-page">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-mesh-card-outer">
+          <div class="b-mesh-card-dk bcard-mesh">
+            <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" preserveAspectRatio="xMidYMid slice" overflow="hidden">
+              <defs>
+                <filter id="c2d-b" filterUnits="userSpaceOnUse" x="-500" y="-500" width="1860" height="1240"><feGaussianBlur stdDeviation="42"/></filter>
+                <filter id="c2d-n"><feTurbulence type="fractalNoise" baseFrequency="0.70" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="860" height="240" fill="#080808"/>
+              <g filter="url(#c2d-b)">
+                <path class="ms" style="animation:msck-ra 8s ease-in-out infinite" d="M-50,62 C140,42 310,80 500,56 C690,32 780,66 910,48 L910,108 C780,126 690,92 500,116 C310,140 140,102 -50,122 Z" fill="#007cf0" opacity="0.78"/>
+                <path class="ms" style="animation:msck-rb 9s ease-in-out infinite" d="M-50,98 C150,75 340,112 540,88 C740,64 830,100 910,82 L910,158 C830,176 740,140 540,164 C340,188 150,151 -50,174 Z" fill="#7928ca" opacity="0.88"/>
+                <path class="ms" style="animation:msck-rc 7s ease-in-out infinite" d="M-50,148 C160,126 380,160 580,138 C780,116 860,150 910,134 L910,198 C860,214 780,180 580,202 C380,224 160,190 -50,212 Z" fill="#00dfd8" opacity="0.80"/>
+                <path class="ms" style="animation:msck-ra 8s ease-in-out infinite 2s" d="M-50,35 C120,18 300,50 490,30 C680,10 790,42 910,22 L910,72 C790,92 680,60 490,80 C300,100 120,68 -50,85 Z" fill="#ff0080" opacity="0.58"/>
+              </g>
+              <rect width="860" height="240" fill="#888" style="mix-blend-mode:overlay;opacity:.07" filter="url(#c2d-n)"/>
+            </svg>
+            <div class="bi-card">
+              <div class="bn-name" style="font-size:32px;line-height:40px;letter-spacing:-1.28px;margin-bottom:10px">Andrew Tseng</div>
+              <div class="bn-role" style="margin-bottom:40px">Software Engineer · Taipei, Taiwan</div>
+              <div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <div class="slabel lb">v4 · C2-Light · Aurora ribbons · Pastel opacity</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-mesh-card-outer">
+          <div class="b-mesh-card-lt bcard-mesh">
+            <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" preserveAspectRatio="xMidYMid slice" overflow="hidden">
+              <defs>
+                <filter id="c2l-b" filterUnits="userSpaceOnUse" x="-500" y="-500" width="1860" height="1240"><feGaussianBlur stdDeviation="46"/></filter>
+                <filter id="c2l-n"><feTurbulence type="fractalNoise" baseFrequency="0.70" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+              </defs>
+              <rect width="860" height="240" fill="#fafafa"/>
+              <g filter="url(#c2l-b)">
+                <path class="ms" style="animation:msck-ra 8s ease-in-out infinite" d="M-50,62 C140,42 310,80 500,56 C690,32 780,66 910,48 L910,108 C780,126 690,92 500,116 C310,140 140,102 -50,122 Z" fill="#007cf0" opacity="0.18"/>
+                <path class="ms" style="animation:msck-rb 9s ease-in-out infinite" d="M-50,98 C150,75 340,112 540,88 C740,64 830,100 910,82 L910,158 C830,176 740,140 540,164 C340,188 150,151 -50,174 Z" fill="#7928ca" opacity="0.22"/>
+                <path class="ms" style="animation:msck-rc 7s ease-in-out infinite" d="M-50,148 C160,126 380,160 580,138 C780,116 860,150 910,134 L910,198 C860,214 780,180 580,202 C380,224 160,190 -50,212 Z" fill="#00dfd8" opacity="0.18"/>
+                <path class="ms" style="animation:msck-ra 8s ease-in-out infinite 2s" d="M-50,35 C120,18 300,50 490,30 C680,10 790,42 910,22 L910,72 C790,92 680,60 490,80 C300,100 120,68 -50,85 Z" fill="#ff0080" opacity="0.14"/>
+              </g>
+              <rect width="860" height="240" fill="#bbb" style="mix-blend-mode:multiply;opacity:.04" filter="url(#c2l-n)"/>
+            </svg>
+            <div class="bi-card">
+              <div class="bn-name" style="font-size:32px;line-height:40px;letter-spacing:-1.28px;margin-bottom:10px">Andrew Tseng</div>
+              <div class="bn-role" style="margin-bottom:40px">Software Engineer · Taipei, Taiwan</div>
+              <div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <!-- ─── Style 3: Contained centered pool ──────────────────────────────── -->
+      <div class="slabel">v4 · C3-Dark · Topographic contour (card scale) · Nested islands + cross-sweep · D5 style · Hover → animate</div>
+      <div class="dark-page">
+        <nav class="anav anav-dark"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-mesh-card-outer">
+          <div class="b-mesh-card-dk bcard-mesh">
+            <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" preserveAspectRatio="xMidYMid slice" overflow="hidden">
+              <defs>
+                <filter id="c3d-b" filterUnits="userSpaceOnUse" x="-500" y="-500" width="1860" height="1240"><feGaussianBlur stdDeviation="48"/></filter>
+                <filter id="c3d-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="overlay"/></filter>
+              </defs>
+              <rect width="860" height="240" fill="#080808"/>
+              <g filter="url(#c3d-b)">
+                <!-- Outer topo island — blue -->
+                <path class="ms" style="animation:msck-a 8s ease-in-out infinite" d="M30,44 C130,8 350,2 530,46 C670,80 730,148 840,164 L900,80 C800,24 590,-8 340,8 C160,22 40,44 30,44 Z" fill="#007cf0" opacity="0.68"/>
+                <!-- Inner topo island — violet -->
+                <path class="ms" style="animation:msck-b 9s ease-in-out infinite" d="M155,56 C265,20 475,16 630,58 C745,92 800,154 900,170 L900,210 C780,226 680,186 555,176 C405,164 288,116 168,120 C90,124 155,56 155,56 Z" fill="#7928ca" opacity="0.86"/>
+                <!-- Cross-sweep diagonal band — cyan -->
+                <path class="ms" style="animation:msck-c 11s ease-in-out infinite" d="M-40,175 L575,8 L715,52 L55,218 Z" fill="#00dfd8" opacity="0.46"/>
+                <!-- Inner core — magenta -->
+                <path class="ms" style="animation:msck-d 7s ease-in-out infinite" d="M320,60 C415,22 595,36 672,94 C732,140 698,198 588,207 C478,214 372,162 320,60 Z" fill="#ff0080" opacity="0.66"/>
+                <!-- Amber accent -->
+                <polygon class="ms" style="animation:msck-a 9s ease-in-out infinite 2s" points="475,20 715,16 798,115 714,205 450,196 388,94" fill="#f9cb28" opacity="0.36"/>
+                <!-- Small coral ellipse -->
+                <ellipse class="ms" style="animation:msck-ra 8s ease-in-out infinite" cx="270" cy="52" rx="138" ry="52" transform="rotate(-30 270 52)" fill="#ff4d4d" opacity="0.40"/>
+              </g>
+              <rect width="860" height="240" fill="#888" style="mix-blend-mode:overlay;opacity:.055" filter="url(#c3d-n)"/>
+            </svg>
+            <div class="bi-card">
+              <div class="bn-name" style="font-size:32px;line-height:40px;letter-spacing:-1.28px;margin-bottom:10px">Andrew Tseng</div>
+              <div class="bn-role" style="margin-bottom:40px">Software Engineer · Taipei, Taiwan</div>
+              <div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+      <div class="slabel lb">v4 · C3-Light · Topographic contour (card scale) · Pastel opacity · Pairs with C3-Dark</div>
+      <div class="light-page">
+        <nav class="anav anav-light"><a href="#" class="anav-logo">Andrew Tseng</a><div class="anav-links"><a href="#" class="anav-link cur">About</a></div></nav>
+        <div class="b-mesh-card-outer">
+          <div class="b-mesh-card-lt bcard-mesh">
+            <svg class="mesh-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 240" preserveAspectRatio="xMidYMid slice" overflow="hidden">
+              <defs>
+                <filter id="c3l-b" filterUnits="userSpaceOnUse" x="-500" y="-500" width="1860" height="1240"><feGaussianBlur stdDeviation="52"/></filter>
+                <filter id="c3l-n"><feTurbulence type="fractalNoise" baseFrequency="0.74" octaves="3" stitchTiles="stitch" result="t"/><feBlend in="SourceGraphic" in2="t" mode="multiply"/></filter>
+              </defs>
+              <rect width="860" height="240" fill="#fafafa"/>
+              <g filter="url(#c3l-b)">
+                <path class="ms" style="animation:msck-a 8s ease-in-out infinite" d="M30,44 C130,8 350,2 530,46 C670,80 730,148 840,164 L900,80 C800,24 590,-8 340,8 C160,22 40,44 30,44 Z" fill="#007cf0" opacity="0.18"/>
+                <path class="ms" style="animation:msck-b 9s ease-in-out infinite" d="M155,56 C265,20 475,16 630,58 C745,92 800,154 900,170 L900,210 C780,226 680,186 555,176 C405,164 288,116 168,120 C90,124 155,56 155,56 Z" fill="#7928ca" opacity="0.22"/>
+                <path class="ms" style="animation:msck-c 11s ease-in-out infinite" d="M-40,175 L575,8 L715,52 L55,218 Z" fill="#00dfd8" opacity="0.14"/>
+                <path class="ms" style="animation:msck-d 7s ease-in-out infinite" d="M320,60 C415,22 595,36 672,94 C732,140 698,198 588,207 C478,214 372,162 320,60 Z" fill="#ff0080" opacity="0.18"/>
+                <polygon class="ms" style="animation:msck-a 9s ease-in-out infinite 2s" points="475,20 715,16 798,115 714,205 450,196 388,94" fill="#f9cb28" opacity="0.17"/>
+                <ellipse class="ms" style="animation:msck-ra 8s ease-in-out infinite" cx="270" cy="52" rx="138" ry="52" transform="rotate(-30 270 52)" fill="#ff4d4d" opacity="0.13"/>
+              </g>
+              <rect width="860" height="240" fill="#bbb" style="mix-blend-mode:multiply;opacity:.04" filter="url(#c3l-n)"/>
+            </svg>
+            <div class="bi-card">
+              <div class="bn-name" style="font-size:32px;line-height:40px;letter-spacing:-1.28px;margin-bottom:10px">Andrew Tseng</div>
+              <div class="bn-role" style="margin-bottom:40px">Software Engineer · Taipei, Taiwan</div>
+              <div class="bn-links"><a href="#" class="bn-link">GitHub</a><a href="#" class="bn-link">LinkedIn</a><a href="#" class="bn-link">Cake</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="acw"><div class="skill-row"><span class="skill">TypeScript</span><span class="skill">React</span><span class="skill">Next.js</span><span class="skill">Node.js</span></div><div class="prose-area"><div class="prose-sep"></div><p>Building things that matter.</p><h2>Background</h2><p>Full-stack engineer focused on web performance and developer tooling. Based in Taipei, Taiwan.</p></div></div>
+      </div>
+
+    </div><!-- about-v4 -->
+
+  </section>
+
+  <script>
+    /* ── SECTION SWITCHING ──────────────────────── */
+    let dotsRunning = false, dotStops = [];
+
+    function killDots() {
+      dotStops.forEach(fn => fn && fn());
+      dotStops = [];
+      dotsRunning = false;
+    }
+
+    document.querySelectorAll('.main-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        killDots();
+        document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+        tab.classList.add('active');
+        const sec = document.getElementById('sec-' + tab.dataset.sec);
+        sec.classList.add('active');
+        // If switching to home, init dots for whichever version is selected
+        if (tab.dataset.sec === 'home') {
+          const sel = document.getElementById('home-ver');
+          if (sel.value === 'v3') setTimeout(() => { initDots(); initMethod1Grid(); }, 50);
+        }
+      });
+    });
+
+    /* ── VERSION SWITCHING ──────────────────────── */
+    ['og', 'home', 'about'].forEach(sec => {
+      const sel = document.getElementById(sec + '-ver');
+      sel.addEventListener('change', () => {
+        killDots();
+        document.querySelectorAll(`#sec-${sec} .ver-pane`).forEach(p => p.classList.remove('active'));
+        document.getElementById(`${sec}-${sel.value}`).classList.add('active');
+        if (sec === 'home' && sel.value === 'v3') setTimeout(() => { initDots(); initMethod1Grid(); }, 50);
+      });
+    });
+
+    /* ── ANIMATED DOTS ENGINE ───────────────────── */
+    function makeDots(canvas, cfg) {
+      const pr = canvas.parentElement;
+      const rect = pr.getBoundingClientRect();
+      canvas.width = Math.round(rect.width) || 900;
+      canvas.height = Math.round(rect.height) || 480;
+      const W = canvas.width, H = canvas.height;
+      const ctx = canvas.getContext('2d');
+      const sp = cfg.sp || 13;
+      const dots = [];
+
+      for (let gx = sp * 0.5; gx < W; gx += sp) {
+        for (let gy = sp * 0.5; gy < H; gy += sp) {
+          let sW = 0, sr = 0, sg = 0, sb = 0;
+          cfg.foci.forEach(f => {
+            const fx = f.x * W, fy = f.y * H;
+            const r = f.r * Math.sqrt(W * W + H * H);
+            const d = Math.hypot(gx - fx, gy - fy);
+            const w = Math.max(0, Math.pow(1 - d / r, f.p || 1.8)) * f.peak;
+            sr += f.c[0] * w; sg += f.c[1] * w; sb += f.c[2] * w; sW += w;
+          });
+          if (sW < 0.025) continue;
+          const inv = 1 / Math.max(sW, 1e-4);
+          dots.push({
+            x: gx, y: gy,
+            r: sr * inv, g: sg * inv, b: sb * inv,
+            base: Math.min(sW, cfg.max || 0.72),
+            ph: Math.random() * 6.28,
+            fr: 0.35 + Math.random() * 0.55,
+          });
+        }
+      }
+
+      let raf;
+      function frame(t) {
+        ctx.clearRect(0, 0, W, H);
+        dots.forEach(d => {
+          const a = d.base * (0.68 + 0.32 * Math.sin(t * 0.001 * d.fr + d.ph));
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, 1.9, 0, 6.28);
+          ctx.fillStyle = `rgba(${d.r|0},${d.g|0},${d.b|0},${a.toFixed(3)})`;
+          ctx.fill();
+        });
+        raf = requestAnimationFrame(frame);
+      }
+      raf = requestAnimationFrame(frame);
+      return () => cancelAnimationFrame(raf);
+    }
+
+    /* ── METHOD 1: JS dynamic grid (ResizeObserver) ───────────────────────
+       cells = Math.round(panelWidth / 64)  cell_size = panelWidth / cells
+       Sets CSS var --gc on the grid panel so background-size adapts exactly */
+    let m1Obs = null, m1DotsStop = null;
+    // Single panel update: box-shadow → bgW = outerW (no border reduction)
+    function updateM1Panel(hero) {
+      const gp = hero?.querySelector('.gp-m1');
+      const gi = hero?.querySelector('.grid-note');
+      if (!gp || !hero) return;
+      const w = hero.offsetWidth;
+      const outerW = w - 128;
+      if (outerW <= 0) return;
+      // box-shadow doesn't shrink background area (unlike border) → bgW = outerW
+      const cols = Math.max(4, Math.round(outerW / 64));
+      const size = outerW / cols;  // exact cols × size = outerW (no partial last col)
+      const rows = Math.max(3, Math.round(hero.offsetHeight * 0.54 / size));
+      const bgH  = rows * size;    // exact rows × size (no partial last row)
+      gp.style.height = `${bgH.toFixed(1)}px`;
+      gp.style.setProperty('--gc', `${size.toFixed(3)}px`);
+      if (gi) gi.textContent = `${cols}×${rows} · ${size.toFixed(1)}px`;
+    }
+
+    function initMethod1Grid() {
+      // Handle A-1 dark, A-1 light (gp-m1 panels)
+      const heroes = ['hero-a1d','hero-a1l']
+        .map(id => document.getElementById(id)).filter(Boolean);
+      if (!heroes.length) return;
+
+      if (m1Obs) { m1Obs.disconnect(); m1Obs = null; }
+      m1Obs = new ResizeObserver(() => heroes.forEach(updateM1Panel));
+      heroes.forEach(h => { m1Obs.observe(h); updateM1Panel(h); });
+    }
+
+    function initDots() {
+      if (dotsRunning) return;
+      dotsRunning = true;
+
+      const a1d = document.getElementById('c-a1d');
+      if (a1d) dotStops.push(makeDots(a1d, { sp:13, max:.72,
+        foci:[
+          {x:.32,y:.85,r:.65,p:1.9,peak:.58,c:[0,223,216]},
+          {x:.72,y:.42,r:.50,p:2.0,peak:.42,c:[255,0,128]},
+          {x:.52,y:.62,r:.38,p:2.2,peak:.26,c:[0,124,240]},
+        ]}));
+
+      const a2d = document.getElementById('c-a2d');
+      if (a2d) dotStops.push(makeDots(a2d, { sp:13, max:.68,
+        foci:[
+          {x:.28,y:.68,r:.62,p:1.8,peak:.54,c:[0,124,240]},
+          {x:.70,y:.44,r:.48,p:2.0,peak:.44,c:[249,203,40]},
+          {x:.50,y:.82,r:.32,p:2.2,peak:.22,c:[0,223,216]},
+        ]}));
+
+      const a1l = document.getElementById('c-a1l');
+      if (a1l) dotStops.push(makeDots(a1l, { sp:13, max:.42,
+        foci:[
+          {x:.60,y:.50,r:.72,p:1.5,peak:.40,c:[60,120,200]},
+          {x:.36,y:.72,r:.44,p:1.8,peak:.26,c:[40,170,160]},
+          {x:.78,y:.30,r:.36,p:2.0,peak:.20,c:[80,100,180]},
+        ]}));
+
+      const a2l = document.getElementById('c-a2l');
+      if (a2l) dotStops.push(makeDots(a2l, { sp:13, max:.38,
+        foci:[
+          {x:.64,y:.46,r:.68,p:1.5,peak:.36,c:[40,90,170]},
+          {x:.38,y:.72,r:.48,p:1.8,peak:.24,c:[0,150,140]},
+          {x:.80,y:.62,r:.34,p:2.0,peak:.18,c:[100,120,200]},
+        ]}));
+    }
+
+
+    /* ── Shared mesh controls (v4, affects all variants simultaneously) ──── */
+    (function() {
+      const ogVer = document.getElementById('og-ver');
+      const ogCtrl = document.getElementById('og-mesh-ctrl');
+      window._syncMeshCtrl = function() {
+        if (ogCtrl) ogCtrl.classList.toggle('visible', ogVer && ogVer.value === 'v4');
+      };
+      if (ogVer) ogVer.addEventListener('change', window._syncMeshCtrl);
+      // Initial call deferred to after DEFAULT STATE sets the version
+
+      function allMeshSvgs() { return document.querySelectorAll('#og-v4 .og-frame svg'); }
+
+      if (ogCtrl) {
+        ogCtrl.addEventListener('input', function(e) {
+          const t = e.target;
+          if (t.classList.contains('mc-blur')) {
+            allMeshSvgs().forEach(s => s.querySelectorAll('.mesh-blur').forEach(b => b.setAttribute('stdDeviation', t.value)));
+            t.nextElementSibling.textContent = t.value;
+          }
+          if (t.classList.contains('mc-noise')) {
+            const val = (t.value / 100).toFixed(2);
+            allMeshSvgs().forEach(s => { const n = s.querySelector('.mesh-noise-rect'); if (n) n.style.opacity = val; });
+            t.nextElementSibling.textContent = val;
+          }
+        });
+        ogCtrl.addEventListener('change', function(e) {
+          if (e.target.classList.contains('mc-blend'))
+            allMeshSvgs().forEach(s => { const n = s.querySelector('.mesh-noise-rect'); if (n) n.style.mixBlendMode = e.target.value; });
+        });
+      }
+    })();
+
+    /* ── DEFAULT STATE ──────────────────────────── */
+    // Show OG by default, v3 for all sections
+    document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.ver-pane').forEach(p => p.classList.remove('active'));
+
+    // Set default versions
+    ['og', 'home', 'about'].forEach(sec => {
+      const sel = document.getElementById(sec + '-ver');
+      const ver = 'v4';
+      sel.value = ver;
+      const pane = document.getElementById(sec + '-' + ver);
+      if (pane) pane.classList.add('active');
+    });
+
+    // Show OG tab
+    document.querySelector('[data-sec="og"]').classList.add('active');
+    document.getElementById('sec-og').classList.add('active');
+    // Initialize shared mesh controls visibility
+    if (window._syncMeshCtrl) window._syncMeshCtrl();
+  </script>
+</body>
+</html>
