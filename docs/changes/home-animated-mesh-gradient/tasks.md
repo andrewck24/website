@@ -95,7 +95,7 @@ Artifacts: `src/components/home/hero/terminal-animation.tsx`, `src/app/globals.c
 
 - [x] Run `pnpm type-check` — must pass with zero errors.
 - [x] Run `pnpm build` — must complete with zero errors.
-- [ ] Manually verify in browser (light + dark mode):
+- [x] Manually verify in browser (light + dark mode):
   - Mesh gradient animates on the home hero, shapes concentrated on the right.
   - Left text column is clearly readable with no colour bleed.
   - Terminal plays through full sequence, cursor blinks at the end.
