@@ -117,7 +117,7 @@ export function MeshGradientBackground(): JSX.Element;
 **Acceptance criteria**:
 
 - Component has no `"use client"` directive.
-- SVG has `position:absolute; inset:0; width:100%; height:100%`.
+- SVG has `position:fixed; inset:0; width:100%; height:100%; z-index:-10` so it spans the full viewport edge-to-edge (including behind the navbar) regardless of the hero section's containing `<main className="max-w-7xl ...">` width constraint.
 - `<g style={{ mixBlendMode: 'var(--alt-mesh-blend)' }}>` wraps all shapes.
 - Each shape fill is `var(--alt-grad-*)`, not a hardcoded hex value.
 - Shapes animate continuously without JS — verified by disabling JS in browser DevTools.
@@ -326,6 +326,12 @@ Noise overlay rect: `fill="#888"` `style={{ mixBlendMode: 'var(--alt-mesh-blend)
 
 - `min-h-[65vh]` → `min-h-screen` (matches reference 100vh hero)
 - Grid inner div: add `md:items-center` (was `md:items-start`)
+
+### Mesh Background Full-Bleed Fix
+
+**Problem**: `ProfileHero`'s `<section>` lives inside `NavLayout`'s `<main className="flex w-full max-w-7xl ... px-6 lg:px-12">`, which constrains it to a centered ~1184px column on wide viewports. With `MeshGradientBackground`'s SVG at `absolute inset-0`, the mesh was clipped to that column — leaving visible dark gaps on both sides and not extending behind the fixed navbar — instead of filling the viewport edge-to-edge like `preview.html`'s unconstrained `.hero{position:relative;min-height:100vh}` container.
+
+**Fix**: Change the SVG from `absolute inset-0` to `fixed inset-0` with `-z-10`. `position:fixed` positions relative to the viewport (the hero section has no `transform`/`filter`/`will-change` that would create an alternate containing block), so the mesh escapes `<main>`'s width constraint entirely and covers the full viewport — including the navbar area — without needing the classic (and here unusable, since `<main>` is also constrained) `left-1/2 -mx-[50vw] w-screen` breakout trick.
 
 ### Terminal Styling & Font Fix
 

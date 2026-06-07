@@ -1,7 +1,7 @@
 export function MeshGradientBackground() {
   return (
     <svg
-      className="absolute inset-0 size-full"
+      className="fixed inset-0 -z-10 size-full"
       preserveAspectRatio="xMidYMid slice"
       viewBox="0 0 1400 600"
       aria-hidden="true"
