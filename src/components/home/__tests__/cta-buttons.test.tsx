@@ -182,7 +182,7 @@ describe("CtaButtons", () => {
         "justify-center",
         "gap-4",
         "sm:flex-row",
-        "lg:justify-start"
+        "md:justify-start"
       );
 
       const buttonContainer = ctaContainer.firstElementChild;

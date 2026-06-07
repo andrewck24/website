@@ -49,7 +49,7 @@ export function CtaButtons({ locale, social }: CtaButtonsProps) {
 
   return (
     <div
-      className="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start"
+      className="flex flex-col items-center justify-center gap-4 sm:flex-row md:justify-start"
       data-testid="cta-buttons"
     >
       <div className="flex items-center justify-center gap-4 max-sm:w-full">

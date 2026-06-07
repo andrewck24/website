@@ -110,10 +110,8 @@ describe("ProfileHero", () => {
       render(<ProfileHero locale="zh-TW" />);
 
       const heroSection = screen.getByTestId("profile-hero-section");
-      expect(heroSection).toHaveClass(
-        "min-h-[calc(100vh-var(--navbar-scroll-offset))]"
-      );
-      expect(heroSection).toHaveClass("p-4", "md:p-6");
+      expect(heroSection).toHaveClass("my-auto", "size-full");
+      expect(heroSection).toHaveClass("px-4", "pb-(--navbar-scroll-offset)");
     });
   });
 });

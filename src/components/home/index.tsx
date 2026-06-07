@@ -1,6 +1,6 @@
 import { CtaButtons } from "@/components/home/cta-buttons";
-import { TerminalAnimation } from "@/components/home/terminal-animation";
 import { MeshGradientBackground } from "@/components/home/mesh-gradient";
+import { TerminalAnimation } from "@/components/home/terminal-animation";
 import { profileData } from "@/lib/data/profile";
 import { socialLinks } from "@/lib/data/social-links";
 
@@ -14,18 +14,18 @@ export function ProfileHero({ locale }: ProfileHeroProps) {
   return (
     <section
       data-testid="profile-hero-section"
-      className="relative z-10 flex size-full min-h-[calc(100vh-var(--navbar-scroll-offset))] flex-col items-center justify-start overflow-hidden p-4 pt-16 md:p-6"
+      className="relative z-10 my-auto size-full overflow-hidden px-4 pb-(--navbar-scroll-offset)"
     >
       <MeshGradientBackground />
-      <div className="relative flex h-full flex-1 flex-col items-center justify-start gap-8 md:grid md:grid-cols-2 md:items-center md:gap-12">
+      <div className="relative flex size-full flex-col items-center justify-start gap-8 md:flex-row md:items-center md:gap-12">
         {/* Main Content */}
-        <div className="flex flex-col justify-center gap-6 text-center md:h-full md:text-left">
+        <div className="flex grow-2 flex-col justify-center gap-6 text-center md:h-full md:text-left">
           <div className="space-y-4">
             <p className="font-mono text-xs tracking-widest text-(--alt-hairline-strong) uppercase">
-              Portfolio · Taipei, Taiwan
+              {profile.location}
             </p>
             <h1
-              className="text-foreground font-bold tracking-tight"
+              className="text-foreground font-medium tracking-tight"
               style={{
                 fontSize: "clamp(36px, 10vw, 56px)",
               }}
@@ -33,14 +33,14 @@ export function ProfileHero({ locale }: ProfileHeroProps) {
             >
               <span className="md:hidden">{profile.name}</span>
               <span
-                className="hidden md:inline"
+                className="hidden leading-none md:inline"
                 style={{ fontSize: "clamp(48px, 5.5vw, 80px)" }}
               >
                 {profile.name}
               </span>
             </h1>
             <h2
-              className="text-xl font-semibold text-(--alt-hairline-strong) md:text-2xl lg:text-3xl"
+              className="text-base text-(--alt-hairline-strong) md:text-lg lg:text-xl"
               data-testid="profile-title"
             >
               {profile.title}
@@ -48,7 +48,7 @@ export function ProfileHero({ locale }: ProfileHeroProps) {
           </div>
           <div className="mx-auto max-w-2xl md:mx-0 md:max-w-none">
             <p
-              className="text-foreground text-lg/relaxed md:text-xl"
+              className="text-foreground text-base/relaxed md:text-lg"
               data-testid="profile-bio"
             >
               {profile.bio}
@@ -56,9 +56,7 @@ export function ProfileHero({ locale }: ProfileHeroProps) {
           </div>
           <CtaButtons locale={locale} social={socialLinks} />
         </div>
-        <div className="hidden md:block">
-          <TerminalAnimation />
-        </div>
+        <TerminalAnimation className="min-h-75 w-full grow-3 md:h-full" />
       </div>
     </section>
   );
