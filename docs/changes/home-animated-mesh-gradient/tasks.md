@@ -128,12 +128,12 @@ Artifacts: `src/app/globals.css`, `docs/changes/home-animated-mesh-gradient/task
 
 ### 8b: mesh-gradient.tsx — D-3 bezier paths
 
-- [ ] Rewrite `src/components/home/mesh-gradient.tsx`: replace all 6 shapes with the exact D-3 bezier paths specified in design.md § "SVG Shape Contract". Use `<path>`, `<polygon>`, and `<ellipse>` per the table.
-- [ ] Remove `mixBlendMode` from `<g>` entirely. The group is `<g filter="url(#home-mesh-blur)">` only.
-- [ ] Each shape must use `style={{ opacity: 'var(--alt-mesh-op-N)' as any, transformBox: 'fill-box', transformOrigin: 'center', willChange: 'transform', animation: 'var(--animate-mesh-N)' }}`.
-- [ ] Fix the noise `<filter>`: add `result="t"` to `<feTurbulence>` and `in2="t"` to `<feBlend>`. `<feBlend mode="overlay"/>` is kept in the filter definition.
-- [ ] Noise overlay rect: `fill="#888"` with `style={{ mixBlendMode: 'var(--alt-mesh-blend)' as any, opacity: 'var(--alt-mesh-noise-opacity)' as any }}`.
-- [ ] Verify in browser: dark mode shapes match D-3 (saturated, right-biased blobs); light mode matches L-3 (pastel, same positions). Disable JS to confirm CSS animation still runs.
+- [x] Rewrite `src/components/home/mesh-gradient.tsx`: replace all 6 shapes with the exact D-3 bezier paths specified in design.md § "SVG Shape Contract". Use `<path>`, `<polygon>`, and `<ellipse>` per the table.
+- [x] Remove `mixBlendMode` from `<g>` entirely. The group is `<g filter="url(#home-mesh-blur)">` only.
+- [x] Each shape must use `style={{ opacity: 'var(--alt-mesh-op-N)' as any, transformBox: 'fill-box', transformOrigin: 'center', willChange: 'transform', animation: 'var(--animate-mesh-N)' }}`.
+- [x] Fix the noise `<filter>`: add `result="t"` to `<feTurbulence>` and `in2="t"` to `<feBlend>`. `<feBlend mode="overlay"/>` is kept in the filter definition.
+- [x] Noise overlay rect: `fill="#888"` with `style={{ mixBlendMode: 'var(--alt-mesh-blend)' as any, opacity: 'var(--alt-mesh-noise-opacity)' as any }}`.
+- [x] Verify in browser: dark mode shapes match D-3 (saturated, right-biased blobs); light mode matches L-3 (pastel, same positions). Disable JS to confirm CSS animation still runs.
 
 Commit: `fix(home): rewrite MeshGradientBackground with D-3 bezier paths and per-shape opacity vars`
 Artifacts: `src/components/home/mesh-gradient.tsx`, `docs/changes/home-animated-mesh-gradient/tasks.md`

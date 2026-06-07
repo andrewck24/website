@@ -24,91 +24,76 @@ export function MeshGradientBackground() {
             baseFrequency="0.74"
             numOctaves={3}
             stitchTiles="stitch"
+            result="t"
           />
-          <feBlend in="SourceGraphic" mode="overlay" />
+          <feBlend in="SourceGraphic" in2="t" mode="overlay" />
         </filter>
       </defs>
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      <g
-        filter="url(#home-mesh-blur)"
-        style={{ mixBlendMode: "var(--alt-mesh-blend)" as any }}
-      >
-        {/* outer loop — blue, 13 s */}
-        <ellipse
-          cx="980"
-          cy="320"
-          rx="440"
-          ry="300"
+      <g filter="url(#home-mesh-blur)">
+        <path
+          d="M654,290 C718,158 898,114 1028,172 C1126,216 1152,316 1152,346 C1152,428 1088,494 898,476 C692,454 604,382 664,316 C724,258 654,290 654,290 Z"
           fill="var(--alt-grad-dev-s)"
           style={{
+            opacity: "var(--alt-mesh-op-1)",
             transformBox: "fill-box",
             transformOrigin: "center",
             willChange: "transform",
             animation: "var(--animate-mesh-a)",
           }}
         />
-        {/* inner loop — violet, 11 s */}
-        <ellipse
-          cx="940"
-          cy="290"
-          rx="300"
-          ry="210"
+        <path
+          d="M798,254 C870,160 1034,150 1124,226 C1188,280 1172,366 1106,394 C1028,420 966,376 922,320 C888,282 798,254 798,254 Z"
           fill="var(--alt-grad-prev-s)"
           style={{
+            opacity: "var(--alt-mesh-op-2)",
             transformBox: "fill-box",
             transformOrigin: "center",
             willChange: "transform",
             animation: "var(--animate-mesh-b)",
           }}
         />
-        {/* cross-sweep — teal rotated rect, 10 s */}
-        <rect
-          x="660"
-          y="50"
-          width="640"
-          height="260"
-          rx="90"
+        <path
+          d="M460,432 L1024,132 L1168,232 L604,532 Z"
           fill="var(--alt-grad-dev-e)"
           style={{
+            opacity: "var(--alt-mesh-op-3)",
             transformBox: "fill-box",
             transformOrigin: "center",
             willChange: "transform",
             animation: "var(--animate-mesh-c)",
           }}
         />
-        {/* focal core — magenta, 9 s */}
-        <ellipse
-          cx="970"
-          cy="295"
-          rx="175"
-          ry="130"
+        <path
+          d="M858,278 C922,210 1044,228 1100,292 C1160,360 1096,426 988,416 C888,408 804,336 858,278 Z"
           fill="var(--alt-grad-prev-e)"
           style={{
+            opacity: "var(--alt-mesh-op-4)",
             transformBox: "fill-box",
             transformOrigin: "center",
             willChange: "transform",
             animation: "var(--animate-mesh-d)",
           }}
         />
-        {/* amber polygon — ship-e, 12 s */}
         <polygon
-          points="820,95 1260,75 1390,360 1120,520 730,450 700,220"
+          points="916,186 1110,190 1150,308 1070,406 898,360 844,254"
           fill="var(--alt-grad-ship-e)"
           style={{
+            opacity: "var(--alt-mesh-op-5)",
             transformBox: "fill-box",
             transformOrigin: "center",
             willChange: "transform",
             animation: "var(--animate-mesh-e)",
           }}
         />
-        {/* coral ellipse — ship-s, 11 s */}
         <ellipse
-          cx="860"
-          cy="470"
-          rx="320"
-          ry="170"
+          cx="758"
+          cy="238"
+          rx="178"
+          ry="76"
+          transform="rotate(-34 758 238)"
           fill="var(--alt-grad-ship-s)"
           style={{
+            opacity: "var(--alt-mesh-op-6)",
             transformBox: "fill-box",
             transformOrigin: "center",
             willChange: "transform",
@@ -121,7 +106,11 @@ export function MeshGradientBackground() {
         height="600"
         fill="#888"
         filter="url(#home-mesh-noise)"
-        style={{ mixBlendMode: "overlay", opacity: 0.055 }}
+        style={{
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          mixBlendMode: "var(--alt-mesh-blend)" as any,
+          opacity: "var(--alt-mesh-noise-opacity)",
+        }}
       />
     </svg>
   );
