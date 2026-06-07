@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { GeistPixelSquare } from "geist/font/pixel";
 import { terminalLines } from "@/lib/data/terminal";
+import { cn } from "@/lib/utils";
+import { GeistPixelSquare } from "geist/font/pixel";
+import { useEffect, useRef, useState } from "react";
 
 const steps = terminalLines;
 
-export function TerminalAnimation() {
+interface TerminalAnimationProps {
+  className?: string;
+}
+
+export function TerminalAnimation({ className }: TerminalAnimationProps) {
   const [cursor, setCursor] = useState(0);
   const [typingIndex, setTypingIndex] = useState(-1);
   const [typedText, setTypedText] = useState("");
@@ -93,7 +98,10 @@ export function TerminalAnimation() {
   return (
     <div
       data-testid="terminal-animation"
-      className="border-border bg-background/65 grid min-h-75 w-full overflow-hidden rounded-lg border p-4 shadow-lg backdrop-blur-md md:h-full"
+      className={cn(
+        "border-border bg-background/65 grid overflow-hidden rounded-lg border p-4 shadow-lg backdrop-blur-md",
+        className
+      )}
     >
       <pre className="overflow-x-auto font-mono text-sm">
         <div className="mb-3 flex gap-1.5">
@@ -115,6 +123,8 @@ export function TerminalAnimation() {
                     : typingIndex > i
                       ? step.cmd
                       : "";
+                const isTyping =
+                  typingIndex === i && text.length < step.cmd.length;
                 return (
                   <span
                     key={i}
@@ -125,6 +135,7 @@ export function TerminalAnimation() {
                       {step.path} ${" "}
                     </span>
                     <span>{text}</span>
+                    {isTyping && <span className="animate-blink">▋</span>}
                   </span>
                 );
               }
@@ -146,7 +157,7 @@ export function TerminalAnimation() {
                     key={i}
                     className={`${GeistPixelSquare.className} mt-1 block`}
                     style={{
-                      fontSize: "clamp(24px, 4vw, 56px)",
+                      fontSize: "clamp(40px, 4vw, 64px)",
                       opacity: shown ? 1 : 0,
                       transition: "opacity 500ms ease",
                       lineHeight: 1.1,
