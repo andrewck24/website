@@ -154,8 +154,8 @@ Artifacts: `src/components/home/hero/index.tsx`, `docs/changes/home-animated-mes
 
 ### 8d: add `geist` dependency
 
-- [ ] Run `pnpm add geist` to install the `geist` package (verified absent: `grep -n "geist" package.json` and `find node_modules -maxdepth 1 -iname "*geist*"` both return zero matches). `terminal.ts`'s `TerminalLine` type and `terminalLines` content stay exactly as originally implemented — no changes to that file.
-- [ ] Run `pnpm type-check`. Verify the `geist/font/pixel` import resolves with no type errors.
+- [x] Run `pnpm add geist` to install the `geist` package (verified absent: `grep -n "geist" package.json` and `find node_modules -maxdepth 1 -iname "*geist*"` both return zero matches). `terminal.ts`'s `TerminalLine` type and `terminalLines` content stay exactly as originally implemented — no changes to that file.
+- [x] Run `pnpm type-check`. Verify the `geist/font/pixel` import resolves with no type errors.
 
 Commit: `chore(deps): add geist dependency for GeistPixelSquare pixel font`
 Artifacts: `package.json`, `pnpm-lock.yaml`, `docs/changes/home-animated-mesh-gradient/tasks.md`
