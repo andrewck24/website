@@ -178,9 +178,9 @@ Artifacts: `src/components/home/hero/terminal-animation.tsx`, `docs/changes/home
 
 ### 8f: Final validation
 
-- [ ] Run `pnpm type-check` — must pass with zero errors.
-- [ ] Run `pnpm build` — must complete with zero errors.
-- [ ] Browser verification (dark + light mode):
+- [x] Run `pnpm type-check` — must pass with zero errors.
+- [x] Run `pnpm build` — must complete with zero errors.
+- [x] Browser verification (dark + light mode):
   - Dark mode: mesh matches D-3 (saturated blobs, right-biased, no blend mode artifact on text column).
   - Light mode: mesh matches L-3 (pastel tones, same positions).
   - Terminal plays `npm install` → `npm start` → ASCII art sequence; ASCII art renders in `GeistPixelSquare` pixel font; cursor blinks.
