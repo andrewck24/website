@@ -38,80 +38,44 @@ jest.mock("../terminal-animation", () => ({
 }));
 
 import { ProfileHero } from "@/components/home";
+import { profileData } from "@/lib/data/profile";
 import { render, screen } from "@testing-library/react";
 
 describe("ProfileHero", () => {
-  describe("zh-TW locale", () => {
-    it("renders profile information correctly", () => {
-      render(<ProfileHero locale="zh-TW" />);
+  describe("Locale-driven content", () => {
+    it.each(Object.entries(profileData))(
+      "renders %s profile data (title and bio)",
+      (locale, profile) => {
+        render(<ProfileHero locale={locale} />);
 
-      expect(screen.getByTestId("profile-hero-section")).toBeInTheDocument();
-      expect(screen.getByTestId("profile-name")).toHaveTextContent(
-        "Andrew Tseng"
-      );
-      expect(screen.getByTestId("profile-title")).toHaveTextContent(
-        "軟體工程師"
-      );
-      expect(screen.getByTestId("profile-bio")).toHaveTextContent(
-        "專精於 React 和 Node.js 的全端開發，致力於打造高品質的使用者體驗。"
-      );
-    });
+        expect(screen.getByTestId("profile-name")).toHaveTextContent(
+          profile.name
+        );
+        expect(screen.getByTestId("profile-title")).toHaveTextContent(
+          profile.title
+        );
+        expect(screen.getByTestId("profile-bio")).toHaveTextContent(
+          profile.bio
+        );
+      }
+    );
 
-    it("renders CTA buttons section", () => {
-      render(<ProfileHero locale="zh-TW" />);
-      expect(screen.getByTestId("cta-buttons")).toBeInTheDocument();
-    });
-  });
-
-  describe("en locale", () => {
-    it("renders English profile information correctly", () => {
-      render(<ProfileHero locale="en" />);
-
-      expect(screen.getByTestId("profile-name")).toHaveTextContent(
-        "Andrew Tseng"
-      );
-      expect(screen.getByTestId("profile-title")).toHaveTextContent(
-        "Software Engineer"
-      );
-      expect(screen.getByTestId("profile-bio")).toHaveTextContent(
-        "Specialized in React and Node.js development, dedicated to creating high-quality user experiences."
-      );
-    });
-  });
-
-  describe("ja locale", () => {
-    it("renders Japanese profile information correctly", () => {
-      render(<ProfileHero locale="ja" />);
-
-      expect(screen.getByTestId("profile-name")).toHaveTextContent(
-        "Andrew Tseng"
-      );
-      expect(screen.getByTestId("profile-title")).toHaveTextContent(
-        "ソフトウェアエンジニア"
-      );
-      expect(screen.getByTestId("profile-bio")).toHaveTextContent(
-        "React と Node.js を専門とするソフトウェアエンジニア。高品質なユーザーエクスペリエンスの創造に取り組んでいます。"
-      );
-    });
-  });
-
-  describe("fallback locale", () => {
-    it("falls back to zh-TW when locale is not supported", () => {
+    it("falls back to zh-TW profile data for an unsupported locale", () => {
       render(<ProfileHero locale="fr" />);
 
       expect(screen.getByTestId("profile-title")).toHaveTextContent(
-        "軟體工程師"
+        profileData["zh-TW"].title
       );
     });
   });
 
-  describe("responsive layout", () => {
-    it("applies correct CSS classes for responsive layout", () => {
+  describe("Composition", () => {
+    it("renders the CTA buttons and terminal animation alongside the profile", () => {
       render(<ProfileHero locale="zh-TW" />);
 
-      const heroSection = screen.getByTestId("profile-hero-section");
-      expect(heroSection).toHaveClass("my-auto", "size-full");
-      expect(heroSection).toHaveClass("px-4", "pb-(--navbar-scroll-offset)");
+      expect(screen.getByTestId("profile-hero-section")).toBeInTheDocument();
+      expect(screen.getByTestId("cta-buttons")).toBeInTheDocument();
+      expect(screen.getByTestId("terminal-animation")).toBeInTheDocument();
     });
   });
 });

@@ -135,7 +135,14 @@ export function TerminalAnimation({ className }: TerminalAnimationProps) {
                       {step.path} ${" "}
                     </span>
                     <span>{text}</span>
-                    {isTyping && <span className="animate-blink">▋</span>}
+                    {isTyping && (
+                      <span
+                        data-testid="terminal-cursor"
+                        className="animate-blink"
+                      >
+                        ▋
+                      </span>
+                    )}
                   </span>
                 );
               }
@@ -172,7 +179,14 @@ export function TerminalAnimation({ className }: TerminalAnimationProps) {
                     <span className="text-muted-foreground">
                       {step.path} ${" "}
                     </span>
-                    {cursorShown && <span className="animate-blink">▋</span>}
+                    {cursorShown && (
+                      <span
+                        data-testid="terminal-cursor"
+                        className="animate-blink"
+                      >
+                        ▋
+                      </span>
+                    )}
                   </span>
                 ) : null;
               default:

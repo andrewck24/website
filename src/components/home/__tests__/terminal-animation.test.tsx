@@ -26,4 +26,20 @@ describe("TerminalAnimation", () => {
 
     jest.useRealTimers();
   });
+
+  it("shows at most one cursor at any point in the sequence", () => {
+    jest.useFakeTimers();
+    render(<TerminalAnimation />);
+
+    for (let elapsed = 0; elapsed <= 6000; elapsed += 200) {
+      act(() => {
+        jest.advanceTimersByTime(200);
+      });
+      expect(
+        screen.queryAllByTestId("terminal-cursor").length
+      ).toBeLessThanOrEqual(1);
+    }
+
+    jest.useRealTimers();
+  });
 });
