@@ -14,10 +14,10 @@ export function ProfileHero({ locale }: ProfileHeroProps) {
   return (
     <section
       data-testid="profile-hero-section"
-      className="relative z-10 flex size-full min-h-[65vh] flex-col items-center justify-start overflow-hidden p-4 pt-16 md:p-6"
+      className="relative z-10 flex size-full min-h-screen flex-col items-center justify-start overflow-hidden p-4 pt-16 md:p-6"
     >
       <MeshGradientBackground />
-      <div className="flex h-full flex-1 flex-col items-center justify-start gap-8 md:grid md:grid-cols-2 md:items-start md:gap-12">
+      <div className="flex h-full flex-1 flex-col items-center justify-start gap-8 md:grid md:grid-cols-2 md:items-center md:gap-12">
         {/* Main Content */}
         <div className="flex flex-col justify-center gap-6 text-center md:h-full md:text-left">
           <div className="space-y-4">
@@ -25,7 +25,7 @@ export function ProfileHero({ locale }: ProfileHeroProps) {
               Portfolio · Taipei, Taiwan
             </p>
             <h1
-              className="font-bold tracking-tight text-(--alt-ink)"
+              className="text-foreground font-bold tracking-tight"
               style={{
                 fontSize: "clamp(36px, 10vw, 56px)",
               }}

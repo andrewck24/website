@@ -142,10 +142,10 @@ Artifacts: `src/components/home/mesh-gradient.tsx`, `docs/changes/home-animated-
 
 ### 8c: hero/index.tsx — layout and text color
 
-- [ ] In `src/components/home/hero/index.tsx`: change `min-h-[65vh]` to `min-h-screen` on the `<section>`.
-- [ ] On the inner grid `<div>`: add `md:items-center` (replace or add to existing `md:items-start` if present).
-- [ ] Change `text-(--alt-ink)` on `<h1>` to `text-foreground`. Verify `data-testid="profile-name"` text is white in dark mode, `#171717` in light mode.
-- [ ] Run `pnpm type-check`. Fix any errors.
+- [x] In `src/components/home/hero/index.tsx`: change `min-h-[65vh]` to `min-h-screen` on the `<section>`.
+- [x] On the inner grid `<div>`: add `md:items-center` (replace or add to existing `md:items-start` if present).
+- [x] Change `text-(--alt-ink)` on `<h1>` to `text-foreground`. Verify `data-testid="profile-name"` text is white in dark mode, `#171717` in light mode.
+- [x] Run `pnpm type-check`. Fix any errors.
 
 Commit: `fix(home): full-height section, centered grid, fix h1 text color for dark mesh`
 Artifacts: `src/components/home/hero/index.tsx`, `docs/changes/home-animated-mesh-gradient/tasks.md`
