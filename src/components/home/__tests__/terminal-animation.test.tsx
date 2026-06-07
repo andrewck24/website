@@ -1,4 +1,4 @@
-import { TerminalAnimation } from "@/components/home/hero/terminal-animation";
+import { TerminalAnimation } from "@/components/home/terminal-animation";
 import { act, render, screen } from "@testing-library/react";
 
 describe("TerminalAnimation", () => {

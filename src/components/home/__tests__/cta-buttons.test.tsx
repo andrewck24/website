@@ -1,4 +1,4 @@
-import { CtaButtons } from "@/components/home/hero/cta-buttons";
+import { CtaButtons } from "@/components/home/cta-buttons";
 import { render, screen } from "@testing-library/react";
 
 const mockSocialLinks = {

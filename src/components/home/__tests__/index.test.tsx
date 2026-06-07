@@ -1,5 +1,5 @@
 // Mock the data dependencies BEFORE imports
-jest.mock("../../../../lib/data/profile", () => ({
+jest.mock("../../../lib/data/profile", () => ({
   profileData: {
     "zh-TW": {
       name: "Andrew Tseng",
@@ -22,7 +22,7 @@ jest.mock("../../../../lib/data/profile", () => ({
   },
 }));
 
-jest.mock("../../../../lib/data/social-links", () => ({
+jest.mock("../../../lib/data/social-links", () => ({
   socialLinks: {
     github: "https://github.com/andrewck24",
     linkedin: "https://www.linkedin.com/in/li-wei-tseng-andrew/",
@@ -37,7 +37,7 @@ jest.mock("../terminal-animation", () => ({
   ),
 }));
 
-import { ProfileHero } from "@/components/home/hero";
+import { ProfileHero } from "@/components/home";
 import { render, screen } from "@testing-library/react";
 
 describe("ProfileHero", () => {
@@ -110,7 +110,9 @@ describe("ProfileHero", () => {
       render(<ProfileHero locale="zh-TW" />);
 
       const heroSection = screen.getByTestId("profile-hero-section");
-      expect(heroSection).toHaveClass("min-h-screen");
+      expect(heroSection).toHaveClass(
+        "min-h-[calc(100vh-var(--navbar-scroll-offset))]"
+      );
       expect(heroSection).toHaveClass("p-4", "md:p-6");
     });
   });
