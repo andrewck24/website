@@ -1,22 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { GeistPixelSquare } from "geist/font/pixel";
 import { terminalLines } from "@/lib/data/terminal";
 
-const cmd0 = terminalLines[0] as { type: "command"; path: string; cmd: string };
-const line1 = terminalLines[1] as { type: "output"; text: string };
-const cmd1 = terminalLines[3] as { type: "command"; path: string; cmd: string };
-const ascii = terminalLines[4] as { type: "ascii"; content: string };
-const final = terminalLines[5] as { type: "final"; path: string };
+const steps = terminalLines;
 
 export function TerminalAnimation() {
-  const [path0Shown, setPath0Shown] = useState(false);
-  const [cmd0Text, setCmd0Text] = useState("");
-  const [outputShown, setOutputShown] = useState(false);
-  const [path1Shown, setPath1Shown] = useState(false);
-  const [cmd1Text, setCmd1Text] = useState("");
-  const [asciiShown, setAsciiShown] = useState(false);
-  const [finalShown, setFinalShown] = useState(false);
+  const [cursor, setCursor] = useState(0);
+  const [typingIndex, setTypingIndex] = useState(-1);
+  const [typedText, setTypedText] = useState("");
   const [cursorShown, setCursorShown] = useState(false);
 
   const stopped = useRef(false);
@@ -34,20 +27,22 @@ export function TerminalAnimation() {
     };
 
     const typewrite = (
+      index: number,
       text: string,
-      onChar: (s: string) => void,
       onDone: () => void,
       startAt: number
     ) => {
       let i = 0;
       after(() => {
+        setTypingIndex(index);
+        setTypedText("");
         const id = setInterval(() => {
           if (stopped.current) {
             clearInterval(id);
             return;
           }
           i++;
-          onChar(text.slice(0, i));
+          setTypedText(text.slice(0, i));
           if (i >= text.length) {
             clearInterval(id);
             onDone();
@@ -57,33 +52,33 @@ export function TerminalAnimation() {
       }, startAt);
     };
 
-    let t = 0;
+    const cmd0 = steps[0] as { type: "command"; path: string; cmd: string };
+    const cmd1 = steps[3] as { type: "command"; path: string; cmd: string };
 
-    // 1. Reveal path for command 0
-    after(() => setPath0Shown(true), t);
-    t += 700;
+    // 1. Reveal command 0's line
+    after(() => setCursor(1), 0);
 
-    // 2. Typewriter for command 0; on done, reveal output
+    // 2. Typewriter for command 0; on done, reveal output+blank, then command 1's
+    //    line, then typewriter for command 1; on done, reveal ASCII art, final
+    //    prompt, and start the cursor blink
     typewrite(
+      0,
       cmd0.cmd,
-      (s) => setCmd0Text(s),
       () => {
-        after(() => setOutputShown(true), 40);
-        // 3. After output settles, reveal path for command 1
-        after(() => setPath1Shown(true), 280);
-        // 4. Typewriter for command 1; on done, fade-in ASCII + cursor
+        after(() => setCursor(3), 40);
+        after(() => setCursor(4), 280);
         typewrite(
+          3,
           cmd1.cmd,
-          (s) => setCmd1Text(s),
           () => {
-            after(() => setAsciiShown(true), 0);
-            after(() => setFinalShown(true), 500);
+            after(() => setCursor(5), 0);
+            after(() => setCursor(6), 500);
             after(() => setCursorShown(true), 700);
           },
           700
         );
       },
-      t
+      700
     );
 
     return () => {
@@ -98,45 +93,81 @@ export function TerminalAnimation() {
   return (
     <div
       data-testid="terminal-animation"
-      className="border-border from-alt-grad-dev-s/20 via-alt-grad-prev-s/20 to-alt-grad-ship-s/20 grid min-h-75 w-full overflow-hidden rounded-lg border bg-linear-to-r p-2 shadow-lg backdrop-blur-md md:h-full md:p-4"
+      className="border-border bg-background/65 grid min-h-75 w-full overflow-hidden rounded-lg border p-4 shadow-lg backdrop-blur-md md:h-full"
     >
-      <pre className="bg-background/65 overflow-x-auto rounded-md p-4 font-mono text-sm">
+      <pre className="overflow-x-auto font-mono text-sm">
+        <div className="mb-3 flex gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="bg-muted-foreground/40 size-2.5 rounded-full"
+            />
+          ))}
+        </div>
         <code className="flex flex-col gap-0.5">
-          {/* Command 0: npm install */}
-          <span data-terminal-line="" data-shown={path0Shown || undefined}>
-            <span className="text-muted-foreground">{cmd0.path} $</span>{" "}
-            <span>{cmd0Text}</span>
-          </span>
-          {/* Output line */}
-          <span data-terminal-line="" data-shown={outputShown || undefined}>
-            {line1.text}
-          </span>
-          {/* Blank line */}
-          {outputShown && <span>&nbsp;</span>}
-          {/* Command 1: npm start */}
-          <span data-terminal-line="" data-shown={path1Shown || undefined}>
-            <span className="text-muted-foreground">{cmd1.path} $</span>{" "}
-            <span>{cmd1Text}</span>
-          </span>
-          {/* ASCII art */}
-          <span
-            className="mt-1 block font-mono"
-            style={{
-              fontSize: "clamp(24px, 4vw, 56px)",
-              opacity: asciiShown ? 1 : 0,
-              transition: "opacity 500ms ease",
-              lineHeight: 1.1,
-            }}
-          >
-            {ascii.content}
-          </span>
-          {/* Final path + cursor */}
-          {finalShown && (
-            <span>
-              <span className="text-muted-foreground">{final.path} $</span>{" "}
-              {cursorShown && <span className="animate-blink">▋</span>}
-            </span>
-          )}
+          {steps.map((step, i) => {
+            const shown = cursor > i;
+            switch (step.type) {
+              case "command": {
+                const text =
+                  typingIndex === i
+                    ? typedText
+                    : typingIndex > i
+                      ? step.cmd
+                      : "";
+                return (
+                  <span
+                    key={i}
+                    data-terminal-line=""
+                    data-shown={shown || undefined}
+                  >
+                    <span className="text-muted-foreground">
+                      {step.path} ${" "}
+                    </span>
+                    <span>{text}</span>
+                  </span>
+                );
+              }
+              case "output":
+                return (
+                  <span
+                    key={i}
+                    data-terminal-line=""
+                    data-shown={shown || undefined}
+                  >
+                    {step.text}
+                  </span>
+                );
+              case "blank":
+                return shown ? <span key={i}>&nbsp;</span> : null;
+              case "ascii":
+                return (
+                  <span
+                    key={i}
+                    className={`${GeistPixelSquare.className} mt-1 block`}
+                    style={{
+                      fontSize: "clamp(24px, 4vw, 56px)",
+                      opacity: shown ? 1 : 0,
+                      transition: "opacity 500ms ease",
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {step.content}
+                  </span>
+                );
+              case "final":
+                return shown ? (
+                  <span key={i}>
+                    <span className="text-muted-foreground">
+                      {step.path} ${" "}
+                    </span>
+                    {cursorShown && <span className="animate-blink">▋</span>}
+                  </span>
+                ) : null;
+              default:
+                return step satisfies never;
+            }
+          })}
         </code>
       </pre>
     </div>

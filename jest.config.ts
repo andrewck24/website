@@ -23,7 +23,9 @@ const config: Config = {
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html"],
   // Allow ESM modules to be transformed by Jest
-  transformIgnorePatterns: ["/node_modules/(?!(sanity|@sanity)/)"],
+  transformIgnorePatterns: [
+    "/node_modules/(?!(\\.pnpm/(.+/)?)?(sanity|@sanity|geist)/)",
+  ],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

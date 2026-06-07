@@ -1,5 +1,5 @@
 import { TerminalAnimation } from "@/components/home/hero/terminal-animation";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 
 describe("TerminalAnimation", () => {
   it("renders terminal animation component", () => {
@@ -8,19 +8,22 @@ describe("TerminalAnimation", () => {
   });
 
   it("displays terminal code content", () => {
+    jest.useFakeTimers();
     render(<TerminalAnimation />);
 
-    const terminalCode = screen.getByText(/npm install andrewck24/);
-    expect(terminalCode).toBeInTheDocument();
-    expect(terminalCode.textContent).toContain("cd andrewck24");
-    expect(terminalCode.textContent).toContain("npm run build");
-    expect(terminalCode.textContent).toContain("npm start");
-    expect(terminalCode.textContent).toContain("Starting server...");
-    expect(terminalCode.textContent).toContain(
-      "Server started at http://localhost:3000"
+    // Advance past the full command-typing → output → ASCII sequence
+    act(() => {
+      jest.advanceTimersByTime(6000);
+    });
+
+    const terminal = screen.getByTestId("terminal-animation");
+    expect(terminal.textContent).toContain("npm install andrewck24@latest");
+    expect(terminal.textContent).toContain(
+      "added andrewck24 in Taipei, Taiwan"
     );
-    expect(terminalCode.textContent).toContain(
-      "AT runtime, where our ideas execute"
-    );
+    expect(terminal.textContent).toContain("npm start");
+    expect(terminal.textContent).toContain("andrewck24");
+
+    jest.useRealTimers();
   });
 });

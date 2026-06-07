@@ -174,8 +174,202 @@ Two new custom properties added to `:root` and `.dark`:
 
 - `pnpm type-check` and `pnpm build` pass with no errors.
 
+## Correction Pass — D-3 Reference Alignment
+
+### SVG Shape Contract (replaces original Section 2 shapes)
+
+**Exact bezier paths from D-3 (viewBox 0 0 1400 600):**
+
+| #   | Element     | d / points / attrs                                                                                                                              | Fill var            | Dark opacity | Light opacity | Animation    |
+| --- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------------ | ------------- | ------------ |
+| 1   | `<path>`    | `M654,290 C718,158 898,114 1028,172 C1126,216 1152,316 1152,346 C1152,428 1088,494 898,476 C692,454 604,382 664,316 C724,258 654,290 654,290 Z` | `--alt-grad-dev-s`  | 0.66         | 0.17          | `mesh-a 10s` |
+| 2   | `<path>`    | `M798,254 C870,160 1034,150 1124,226 C1188,280 1172,366 1106,394 C1028,420 966,376 922,320 C888,282 798,254 798,254 Z`                          | `--alt-grad-prev-s` | 0.84         | 0.21          | `mesh-b 11s` |
+| 3   | `<path>`    | `M460,432 L1024,132 L1168,232 L604,532 Z`                                                                                                       | `--alt-grad-dev-e`  | 0.44         | 0.14          | `mesh-c 13s` |
+| 4   | `<path>`    | `M858,278 C922,210 1044,228 1100,292 C1160,360 1096,426 988,416 C888,408 804,336 858,278 Z`                                                     | `--alt-grad-prev-e` | 0.64         | 0.19          | `mesh-d 9s`  |
+| 5   | `<polygon>` | `points="916,186 1110,190 1150,308 1070,406 898,360 844,254"`                                                                                   | `--alt-grad-ship-e` | 0.36         | 0.17          | `mesh-e 8s`  |
+| 6   | `<ellipse>` | `cx="758" cy="238" rx="178" ry="76" transform="rotate(-34 758 238)"`                                                                            | `--alt-grad-ship-s` | 0.40         | 0.12          | `mesh-f 9s`  |
+
+**Group rule**: `<g filter="url(#home-mesh-blur)">` — NO `mixBlendMode` on the group.
+
+**Per-shape opacity via CSS vars** (instead of static `opacity` attribute):
+
+```css
+/* :root (light mode) */
+--alt-mesh-op-1: 0.17;
+--alt-mesh-op-2: 0.21;
+--alt-mesh-op-3: 0.14;
+--alt-mesh-op-4: 0.19;
+--alt-mesh-op-5: 0.17;
+--alt-mesh-op-6: 0.12;
+--alt-mesh-blend: multiply;
+--alt-mesh-noise-opacity: 0.04;
+
+/* .dark */
+--alt-mesh-op-1: 0.66;
+--alt-mesh-op-2: 0.84;
+--alt-mesh-op-3: 0.44;
+--alt-mesh-op-4: 0.64;
+--alt-mesh-op-5: 0.36;
+--alt-mesh-op-6: 0.4;
+--alt-mesh-blend: overlay;
+--alt-mesh-noise-opacity: 0.055;
+```
+
+Each shape: `style={{ opacity: 'var(--alt-mesh-op-N)' as any, transformBox: 'fill-box', transformOrigin: 'center', willChange: 'transform', animation: 'var(--animate-mesh-N)' }}`
+
+**Noise filter** (corrected SVG):
+
+```html
+<filter id="home-mesh-noise">
+  <feTurbulence
+    type="fractalNoise"
+    baseFrequency="0.74"
+    numOctaves="{3}"
+    stitchTiles="stitch"
+    result="t"
+  />
+  <feBlend in="SourceGraphic" in2="t" mode="overlay" />
+</filter>
+```
+
+Noise overlay rect: `fill="#888"` `style={{ mixBlendMode: 'var(--alt-mesh-blend)' as any, opacity: 'var(--alt-mesh-noise-opacity)' as any }}`
+
+### Updated Keyframes (replaces 2-stop alternate animations)
+
+3-stop `infinite` keyframes matching reference motion (no `alternate`):
+
+```css
+@keyframes mesh-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(68px, -50px) scale(1.07);
+  }
+  66% {
+    transform: translate(-42px, 38px) scale(0.94);
+  }
+}
+@keyframes mesh-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40% {
+    transform: translate(-58px, 64px) scale(1.09);
+  }
+  70% {
+    transform: translate(48px, -32px) scale(0.93);
+  }
+}
+@keyframes mesh-c {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  35% {
+    transform: translate(44px, 52px) rotate(8deg);
+  }
+  70% {
+    transform: translate(-54px, -38px) rotate(-7deg);
+  }
+}
+@keyframes mesh-d {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-56px, 50px) scale(1.06);
+  }
+}
+@keyframes mesh-e {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  45% {
+    transform: translate(52px, -60px) scale(1.08);
+  }
+  80% {
+    transform: translate(-36px, 32px) scale(0.94);
+  }
+}
+@keyframes mesh-f {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-28px);
+  }
+}
+```
+
+`@theme inline` token updates:
+
+```css
+--animate-mesh-a: mesh-a 10s ease-in-out infinite;
+--animate-mesh-b: mesh-b 11s ease-in-out infinite;
+--animate-mesh-c: mesh-c 13s ease-in-out infinite;
+--animate-mesh-d: mesh-d 9s ease-in-out infinite;
+--animate-mesh-e: mesh-e 8s ease-in-out infinite;
+--animate-mesh-f: mesh-f 9s ease-in-out infinite;
+```
+
+### h1 Text Color Fix
+
+`text-(--alt-ink)` (`oklch(0.205 0 0)` = `#171717`, always dark) is invisible on the `#080808` dark hero background. Replace with `text-foreground` which resolves to `oklch(0.205 0 0)` in light mode and `oklch(1 0 0)` (white) in dark mode.
+
+### Section Layout Fix
+
+- `min-h-[65vh]` → `min-h-screen` (matches reference 100vh hero)
+- Grid inner div: add `md:items-center` (was `md:items-start`)
+
+### Terminal Styling & Font Fix
+
+**Content stays unchanged** — the original `npm install andrewck24@latest` → `npm start` → ASCII art sequence is an intentional feature added beyond the D-3 reference (D-3 shows a `pnpm build`/`git push` sequence, but the ASCII art was a deliberate addition the user layered on top of the reference design). `terminal.ts`'s `TerminalLine` type (including the `ascii` variant) and `terminalLines` data remain exactly as originally implemented — no content or type changes.
+
+**What's actually wrong**:
+
+1. **`GeistPixelSquare` font never applied**: the `geist` package is NOT installed (`grep -n "geist" package.json` → 0 matches; `find node_modules -maxdepth 1 -iname "*geist*"` → 0 results), so `ascii.content` renders with plain `font-mono` instead of the pixel font the design called for. Fix: add the `geist` dependency (`pnpm add geist`), import `GeistPixelSquare` from `geist/font/pixel`, and apply `className={GeistPixelSquare.className}` to the ASCII `<span>`.
+2. **Container styling diverges from D-3 frosted glass**: the current container uses a gradient-tinted card (`from-alt-grad-dev-s/20 via-alt-grad-prev-s/20 to-alt-grad-ship-s/20 ... bg-linear-to-r`). D-3 uses a neutral frosted-glass surface with a 3-dot `.term-bar` above the content — both are absent from the current implementation.
+
+**Color token resolution**: D-3's terminal mockup CSS (`preview.html` `.tp`/`.tc`/`.tok`/`.ti`/`.term-dot` rules) uses raw hex values (`#4ade80`, `#16a34a`, `#d4d4d4`, `#86efac`, `#93c5fd`, `rgba(0,0,0,.1)`, etc.) that exist in neither `globals.css`'s `--alt-*`/shadcn token set nor `DESIGN.md`'s color table. Introducing brand-new `--alt-term-*` vars would smuggle undocumented hex values into the token layer for a single component, violating "never use raw hex in component code". Because the _kept_ content has no `info`/`ok` semantic lines (those belonged to the discarded D-3 `pnpm build`/`git push` sequence), the existing token set already covers every role the kept terminal needs — reuse it directly instead of adding new tokens:
+
+| Element                | Token                                | Notes                                                                          |
+| ---------------------- | ------------------------------------ | ------------------------------------------------------------------------------ |
+| Path/prompt (`.tp`)    | `text-muted-foreground`              | Already applied in current code — unchanged                                    |
+| Command text (`.tc`)   | default `text-foreground`            | Already applied (implicit) — unchanged                                         |
+| Output text (`.tok`)   | default `text-foreground`            | Already applied (implicit); palette has no green equivalent and none is needed |
+| `.term-bar` background | `bg-muted`                           | Existing neutral inset-surface token                                           |
+| `.term-dot` (3 dots)   | `bg-muted-foreground/40`             | Existing mute token at reduced opacity                                         |
+| `.term-cur` (cursor)   | existing `animate-blink` + `▋` glyph | Already implemented — unchanged                                                |
+
+**Container styling fix** (replaces the gradient-tinted card with a neutral frosted-glass surface, reusing existing `bg-background`/`border-border` tokens):
+
+```tsx
+className =
+  "border-border bg-background/65 grid min-h-75 w-full overflow-hidden rounded-lg border p-4 shadow-lg backdrop-blur-md md:h-full";
+```
+
+**3-dot term-bar** (new — rendered above the terminal lines, inside the `<pre>`):
+
+```tsx
+<div className="mb-3 flex gap-1.5">
+  {[0, 1, 2].map((i) => (
+    <div key={i} className="bg-muted-foreground/40 size-2.5 rounded-full" />
+  ))}
+</div>
+```
+
+### Animation render pattern: data-driven `steps.map()`
+
+Replace the hardcoded positional indices (`terminalLines[0]`, `terminalLines[3]`, `terminalLines[4]`, … and per-line `useState` flags matched to those guessed positions) with a `steps` array derived directly from `terminalLines` and rendered via `steps.map((step, i) => ...)`, gated by a single `cursor: number` counter compared as `cursor > i`. The state machine advances `cursor` on a timer; the render loop and the sequencing loop both walk the same array by the same index, so reordering or extending `terminalLines` can never desynchronize them — there is no second hardcoded index to fall out of step. A `switch (step.type)` with exhaustiveness checking (`satisfies never` on the default branch) renders each `TerminalLine` variant (`command | output | blank | ascii | final`).
+
 ## Risks / Trade-offs
 
 - **`transform-box: fill-box` browser support**: All modern browsers support it; Safari 15.4+ is fine. No fallback needed for the target audience.
-- **GeistPixelSquare availability**: The `geist` package is already installed (`pnpm i geist`). The pixel font is at `geist/font/pixel`. If the import path changes in a future `geist` release, the ASCII art falls back to the terminal's default monospace.
+- **`geist` is a new dependency**: not currently installed (verified via `grep -n "geist" package.json` and `find node_modules -maxdepth 1 -iname "*geist*"`, both returning zero matches). Must be added with `pnpm add geist`; the pixel font is at `geist/font/pixel`. If the import path changes in a future `geist` release, the ASCII art falls back to the terminal's default monospace.
 - **Terminal `useEffect` + `setTimeout` cleanup**: The cleanup function in `useEffect` must clear all pending timeouts and intervals to prevent state updates on unmounted components. Implement with a `stopped` flag and collect all timeout IDs.

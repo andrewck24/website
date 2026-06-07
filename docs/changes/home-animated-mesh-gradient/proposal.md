@@ -4,6 +4,18 @@ The home hero background is a CSS radial-gradient animation fixed to the full vi
 
 The terminal mockup is currently static text with no animation, and its layout collapses at the wrong breakpoint (lg/1024 px instead of md/768 px). The terminal needs a sequential reveal animation and the grid must collapse earlier.
 
+### Correction Pass (post-initial implementation)
+
+After the initial 7-section implementation was complete, a visual comparison against the D-3 reference confirmed several deviations. These must be corrected:
+
+1. **SVG shapes wrong**: Implementation used simple ellipses/rects with `mixBlendMode` on `<g>`. D-3 reference uses 6 bezier `<path>` shapes with per-shape `opacity` attributes — NO blend mode on the group.
+2. **Per-shape opacity**: Dark mode opacities (0.36–0.84) vs light mode (0.12–0.21) must switch via CSS vars (`--alt-mesh-op-1..6`), not blend modes.
+3. **Noise filter**: D-3 uses `mode="overlay"` (dark) and L-3 uses `mode="multiply"` (light) in `feBlend`. The `--alt-mesh-blend` var is repurposed for the noise rect's `mixBlendMode`; filter `stdDeviation`, `baseFrequency`, and `result` attributes are also corrected.
+4. **h1 text invisible**: `text-(--alt-ink)` = `#171717` always dark — invisible on the `#080808` hero background in dark mode. Fix: `text-foreground` (inverts per theme).
+5. **Section height**: `min-h-[65vh]` → `min-h-screen`; inner grid vertical alignment to `items-center`.
+6. **Terminal styling and font wrong**: the original `npm install andrewck24@latest` → `npm start` → ASCII art content sequence stays — it is an intentional feature the user layered on top of the D-3 reference and must NOT be removed. What's actually broken: (a) the `geist` package was never installed (`grep -n "geist" package.json` → 0 matches), so `ascii.content` falls back to plain `font-mono` instead of `GeistPixelSquare`; (b) the container uses a gradient-tinted card instead of D-3's neutral frosted-glass surface with a 3-dot `.term-bar`. Fix: add the `geist` dependency and apply `GeistPixelSquare` to the ASCII art, restyle the container to neutral frosted glass reusing existing `bg-background`/`border-border`/`bg-muted-foreground` tokens (D-3's terminal hex values have no equivalent in `--alt-*`/DESIGN.md and must not be introduced as new raw-hex tokens), and adopt a data-driven `steps.map()` render keyed by a single `cursor` counter instead of hardcoded positional indices.
+7. **Animation keyframes**: Current 2-stop `infinite alternate` keyframes replaced with 3-stop `infinite` keyframes matching the reference `msha/b/c/d/e/mshra` motion.
+
 ## What Changes
 
 1. **`BackgroundAnimation` removed** — component + CSS file deleted; `Home` simplifies to a single `<ProfileHero>`.

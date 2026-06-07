@@ -110,7 +110,7 @@ describe("ProfileHero", () => {
       render(<ProfileHero locale="zh-TW" />);
 
       const heroSection = screen.getByTestId("profile-hero-section");
-      expect(heroSection).toHaveClass("min-h-[65vh]");
+      expect(heroSection).toHaveClass("min-h-screen");
       expect(heroSection).toHaveClass("p-4", "md:p-6");
     });
   });
