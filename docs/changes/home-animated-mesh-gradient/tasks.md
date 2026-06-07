@@ -105,3 +105,87 @@ Artifacts: `src/components/home/hero/terminal-animation.tsx`, `src/app/globals.c
 
 Commit: `feat(home): animated mesh gradient hero — all sections complete`
 Artifacts: `docs/changes/home-animated-mesh-gradient/tasks.md`
+
+---
+
+## Section 8: D-3 reference alignment corrections
+
+> Visual comparison confirmed the initial implementation deviates from the D-3/L-3 reference. This section corrects all deviations. See design.md § "Correction Pass" for the full implementation contract.
+
+### 8a: globals.css — CSS vars and keyframe corrections
+
+- [x] Add `--alt-mesh-op-1` through `--alt-mesh-op-6` to `:root` (light values: 0.17, 0.21, 0.14, 0.19, 0.17, 0.12) and `.dark` (dark values: 0.66, 0.84, 0.44, 0.64, 0.36, 0.40) in `src/app/globals.css`.
+- [x] Add `--alt-mesh-noise-opacity: 0.04` to `:root` and `--alt-mesh-noise-opacity: 0.055` to `.dark`.
+- [x] Change `.dark { --alt-mesh-blend }` from `normal` to `overlay` (`:root` stays `multiply`). This makes the noise rect use `overlay` blend in dark, `multiply` in light.
+- [x] In `@theme inline`: update `--animate-mesh-a..f` to remove `alternate` and set correct durations: `mesh-a 10s ease-in-out infinite`, `mesh-b 11s`, `mesh-c 13s`, `mesh-d 9s`, `mesh-e 8s`, `mesh-f 9s`.
+- [x] Replace `@keyframes mesh-a..f` content with 3-stop `infinite` keyframes matching the reference (see design.md § "Updated Keyframes"). `mesh-f` becomes a vertical-sway-only animation (`translateY` 0 → -28px → 0).
+- [x] Run `pnpm type-check`. Fix any errors.
+
+Commit: `fix(design-tokens): add mesh opacity vars, correct blend mode, add term color vars, update keyframes`
+Artifacts: `src/app/globals.css`, `docs/changes/home-animated-mesh-gradient/tasks.md`
+
+---
+
+### 8b: mesh-gradient.tsx — D-3 bezier paths
+
+- [ ] Rewrite `src/components/home/mesh-gradient.tsx`: replace all 6 shapes with the exact D-3 bezier paths specified in design.md § "SVG Shape Contract". Use `<path>`, `<polygon>`, and `<ellipse>` per the table.
+- [ ] Remove `mixBlendMode` from `<g>` entirely. The group is `<g filter="url(#home-mesh-blur)">` only.
+- [ ] Each shape must use `style={{ opacity: 'var(--alt-mesh-op-N)' as any, transformBox: 'fill-box', transformOrigin: 'center', willChange: 'transform', animation: 'var(--animate-mesh-N)' }}`.
+- [ ] Fix the noise `<filter>`: add `result="t"` to `<feTurbulence>` and `in2="t"` to `<feBlend>`. `<feBlend mode="overlay"/>` is kept in the filter definition.
+- [ ] Noise overlay rect: `fill="#888"` with `style={{ mixBlendMode: 'var(--alt-mesh-blend)' as any, opacity: 'var(--alt-mesh-noise-opacity)' as any }}`.
+- [ ] Verify in browser: dark mode shapes match D-3 (saturated, right-biased blobs); light mode matches L-3 (pastel, same positions). Disable JS to confirm CSS animation still runs.
+
+Commit: `fix(home): rewrite MeshGradientBackground with D-3 bezier paths and per-shape opacity vars`
+Artifacts: `src/components/home/mesh-gradient.tsx`, `docs/changes/home-animated-mesh-gradient/tasks.md`
+
+---
+
+### 8c: hero/index.tsx — layout and text color
+
+- [ ] In `src/components/home/hero/index.tsx`: change `min-h-[65vh]` to `min-h-screen` on the `<section>`.
+- [ ] On the inner grid `<div>`: add `md:items-center` (replace or add to existing `md:items-start` if present).
+- [ ] Change `text-(--alt-ink)` on `<h1>` to `text-foreground`. Verify `data-testid="profile-name"` text is white in dark mode, `#171717` in light mode.
+- [ ] Run `pnpm type-check`. Fix any errors.
+
+Commit: `fix(home): full-height section, centered grid, fix h1 text color for dark mesh`
+Artifacts: `src/components/home/hero/index.tsx`, `docs/changes/home-animated-mesh-gradient/tasks.md`
+
+---
+
+### 8d: add `geist` dependency
+
+- [ ] Run `pnpm add geist` to install the `geist` package (verified absent: `grep -n "geist" package.json` and `find node_modules -maxdepth 1 -iname "*geist*"` both return zero matches). `terminal.ts`'s `TerminalLine` type and `terminalLines` content stay exactly as originally implemented — no changes to that file.
+- [ ] Run `pnpm type-check`. Verify the `geist/font/pixel` import resolves with no type errors.
+
+Commit: `chore(deps): add geist dependency for GeistPixelSquare pixel font`
+Artifacts: `package.json`, `pnpm-lock.yaml`, `docs/changes/home-animated-mesh-gradient/tasks.md`
+
+---
+
+### 8e: terminal-animation.tsx — styling fix and data-driven rewrite
+
+- [ ] In `src/components/home/hero/terminal-animation.tsx`: import `GeistPixelSquare` from `geist/font/pixel` and apply `className={GeistPixelSquare.className}` to the ASCII art `<span>` (replacing the plain `font-mono`), per design.md § "Terminal Styling & Font Fix".
+- [ ] Replace the terminal container className — remove the gradient border / colored backdrop (`from-alt-grad-dev-s/20 via-alt-grad-prev-s/20 to-alt-grad-ship-s/20 ... bg-linear-to-r`) and apply the neutral frosted-glass styling from design.md: `border-border bg-background/65 grid min-h-75 w-full overflow-hidden rounded-lg border p-4 shadow-lg backdrop-blur-md md:h-full`.
+- [ ] Add a 3-dot `.term-bar` above the terminal lines: `<div className="mb-3 flex gap-1.5">` wrapping three `<div className="bg-muted-foreground/40 size-2.5 rounded-full" />` elements — reusing existing `bg-muted-foreground` token (no new `--alt-term-*` vars; see design.md § "Color token resolution" for why the existing token set already covers every role).
+- [ ] Rewrite the render to be data-driven: derive a `steps` array directly from `terminalLines` (in the same order/shape) and render via `steps.map((step, i) => ...)` gated by a single `cursor: number` counter compared as `cursor > i`, replacing the current hardcoded `terminalLines[0]`/`terminalLines[3]`/`terminalLines[4]`/`terminalLines[5]` index lookups and their matching per-line `useState` flags. Use `switch (step.type)` with exhaustiveness checking to render each `TerminalLine` variant (`command | output | blank | ascii | final`).
+- [ ] Keep the existing animation timing/sequence (path reveal → command typewriter → output reveal → ASCII fade-in → cursor blink) — only the index-lookup mechanism changes to `cursor`-driven iteration over `steps`; the sequence content and durations are unchanged.
+- [ ] Verify: animation plays through the full `npm install` → `npm start` → ASCII art → cursor sequence without console errors; cursor blinks at the end; no "state update on unmounted component" warnings when navigating away; ASCII art renders in the `GeistPixelSquare` pixel font (visually distinct from `font-mono`).
+
+Commit: `fix(home): apply GeistPixelSquare font, frosted-glass styling, and data-driven steps render to TerminalAnimation`
+Artifacts: `src/components/home/hero/terminal-animation.tsx`, `docs/changes/home-animated-mesh-gradient/tasks.md`
+
+---
+
+### 8f: Final validation
+
+- [ ] Run `pnpm type-check` — must pass with zero errors.
+- [ ] Run `pnpm build` — must complete with zero errors.
+- [ ] Browser verification (dark + light mode):
+  - Dark mode: mesh matches D-3 (saturated blobs, right-biased, no blend mode artifact on text column).
+  - Light mode: mesh matches L-3 (pastel tones, same positions).
+  - Terminal plays `npm install` → `npm start` → ASCII art sequence; ASCII art renders in `GeistPixelSquare` pixel font; cursor blinks.
+  - h1 text is white in dark, `#171717` in light.
+  - Section is full viewport height.
+
+Commit: `fix(home): D-3 reference alignment complete`
+Artifacts: `docs/changes/home-animated-mesh-gradient/tasks.md`

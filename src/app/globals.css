@@ -68,6 +68,13 @@
   /* ── Mesh theme switching ── */
   --alt-mesh-blend: multiply; /* light: multiply preserves saturation on white */
   --alt-mesh-bg: oklch(0.985 0 0); /* #fafafa — light hero background */
+  --alt-mesh-op-1: 0.17;
+  --alt-mesh-op-2: 0.21;
+  --alt-mesh-op-3: 0.14;
+  --alt-mesh-op-4: 0.19;
+  --alt-mesh-op-5: 0.17;
+  --alt-mesh-op-6: 0.12;
+  --alt-mesh-noise-opacity: 0.04;
 }
 
 .dark {
@@ -105,8 +112,15 @@
   --sidebar-ring: oklch(0.556 0 0);
 
   /* ── Mesh theme switching ── */
-  --alt-mesh-blend: normal; /* dark: standard alpha compositing */
+  --alt-mesh-blend: overlay; /* dark: overlay preserves contrast on near-black */
   --alt-mesh-bg: oklch(0.051 0 0); /* #080808 — dark hero background */
+  --alt-mesh-op-1: 0.66;
+  --alt-mesh-op-2: 0.84;
+  --alt-mesh-op-3: 0.44;
+  --alt-mesh-op-4: 0.64;
+  --alt-mesh-op-5: 0.36;
+  --alt-mesh-op-6: 0.4;
+  --alt-mesh-noise-opacity: 0.055;
 }
 
 @theme inline {
@@ -165,12 +179,12 @@
   --animate-nav-menu-out: nav-menu-out 200ms ease;
   --animate-blink: blink 1.2s infinite;
 
-  --animate-mesh-a: mesh-a 13s ease-in-out infinite alternate;
-  --animate-mesh-b: mesh-b 11s ease-in-out infinite alternate;
-  --animate-mesh-c: mesh-c 10s ease-in-out infinite alternate;
-  --animate-mesh-d: mesh-d 9s ease-in-out infinite alternate;
-  --animate-mesh-e: mesh-e 12s ease-in-out infinite alternate;
-  --animate-mesh-f: mesh-f 11s ease-in-out infinite alternate;
+  --animate-mesh-a: mesh-a 10s ease-in-out infinite;
+  --animate-mesh-b: mesh-b 11s ease-in-out infinite;
+  --animate-mesh-c: mesh-c 13s ease-in-out infinite;
+  --animate-mesh-d: mesh-d 9s ease-in-out infinite;
+  --animate-mesh-e: mesh-e 8s ease-in-out infinite;
+  --animate-mesh-f: mesh-f 9s ease-in-out infinite;
 
   @keyframes nav-menu-in {
     from {
@@ -206,51 +220,69 @@
   }
 
   @keyframes mesh-a {
-    from {
+    0%,
+    100% {
       transform: translate(0, 0) scale(1);
     }
-    to {
-      transform: translate(68px, -30px) scale(1.09);
+    33% {
+      transform: translate(68px, -50px) scale(1.07);
+    }
+    66% {
+      transform: translate(-42px, 38px) scale(0.94);
     }
   }
   @keyframes mesh-b {
-    from {
+    0%,
+    100% {
       transform: translate(0, 0) scale(1);
     }
-    to {
-      transform: translate(-40px, 68px) scale(0.93);
+    40% {
+      transform: translate(-58px, 64px) scale(1.09);
+    }
+    70% {
+      transform: translate(48px, -32px) scale(0.93);
     }
   }
   @keyframes mesh-c {
-    from {
-      transform: translate(0, 0) scale(1) rotate(-8deg);
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
     }
-    to {
-      transform: translate(50px, 50px) scale(1.05) rotate(0deg);
+    35% {
+      transform: translate(44px, 52px) rotate(8deg);
+    }
+    70% {
+      transform: translate(-54px, -38px) rotate(-7deg);
     }
   }
   @keyframes mesh-d {
-    from {
+    0%,
+    100% {
       transform: translate(0, 0) scale(1);
     }
-    to {
-      transform: translate(-68px, -20px) scale(1.07);
+    50% {
+      transform: translate(-56px, 50px) scale(1.06);
     }
   }
   @keyframes mesh-e {
-    from {
+    0%,
+    100% {
       transform: translate(0, 0) scale(1);
     }
-    to {
-      transform: translate(30px, -68px) scale(0.95);
+    45% {
+      transform: translate(52px, -60px) scale(1.08);
+    }
+    80% {
+      transform: translate(-36px, 32px) scale(0.94);
     }
   }
   @keyframes mesh-f {
-    from {
-      transform: translate(0, 0) scale(1);
+    0%,
+    100% {
+      transform: translateY(0);
     }
-    to {
-      transform: translate(-50px, 60px) scale(1.03);
+    50% {
+      transform: translateY(-28px);
     }
   }
 }
