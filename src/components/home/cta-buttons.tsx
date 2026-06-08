@@ -53,12 +53,7 @@ export function CtaButtons({ locale, social }: CtaButtonsProps) {
       data-testid="cta-buttons"
     >
       <div className="flex items-center justify-center gap-4 max-sm:w-full">
-        <Button
-          asChild
-          size="lg"
-          variant="destructive"
-          className="max-sm:flex-1"
-        >
+        <Button asChild size="lg" variant="default" className="max-sm:flex-1">
           <Link href={`/${locale}/projects`} data-testid="view-portfolio-btn">
             {getProjectsText()}
           </Link>
