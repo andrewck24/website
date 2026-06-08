@@ -4,16 +4,17 @@ name: andrewck24-design-system
 description: Design system for andrewck24.com — a stark black-and-ink duet on near-white canvas, broken at hero and card scale by a topographic-contour SVG mesh gradient (nested organic loops + diagonal cross-sweep band, rendered in cyan / blue / magenta / violet / amber / coral) that acts as the entire decorative system, layered beneath a square grid overlay as the OG brand surface. Typeset in a geometric sans for all narrative text and a monospaced face for technical labels.
 
 colors:
-  primary: "#171717"
+  graphite: "#171717"
   on-primary: "#ffffff"
   ink: "#171717"
-  body: "#4d4d4d"
-  mute: "#888888"
+  slate: "#4d4d4d"
+  smoke: "#888888"
   hairline: "#ebebeb"
-  hairline-strong: "#a1a1a1"
-  canvas: "#ffffff"
-  canvas-soft: "#fafafa"
-  canvas-soft-2: "#f5f5f5"
+  pewter: "#a1a1a1"
+  chalk: "#ffffff"
+  paper: "#fafafa"
+  fog: "#f5f5f5"
+  soot: "#080808"
   link: "#0070f3"
   link-deep: "#0761d1"
   link-bg-soft: "#d3e5ff"
@@ -147,32 +148,32 @@ spacing:
 
 components:
   nav-bar:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.body-sm}"
     height: 64px
     padding: "{spacing.sm} {spacing.lg}"
   nav-link:
-    textColor: "{colors.body}"
+    textColor: "{colors.slate}"
     typography: "{typography.body-sm}"
     rounded: "{rounded.full}"
     padding: "{spacing.xs} {spacing.sm}"
   nav-cta-signup:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.graphite}"
     textColor: "{colors.on-primary}"
     typography: "{typography.body-sm-strong}"
     rounded: "{rounded.sm}"
     padding: "0px {spacing.xs}"
     height: 28px
   nav-cta-login:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.body-sm-strong}"
     rounded: "{rounded.sm}"
     padding: "0px {spacing.xs}"
     height: 28px
   nav-cta-ask-ai:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     borderColor: "{colors.hairline}"
     typography: "{typography.body-sm-strong}"
@@ -180,72 +181,72 @@ components:
     padding: "0px {spacing.xs}"
     height: 28px
   button-primary:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.graphite}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button-lg}"
     rounded: "{rounded.pill}"
     padding: "0px {spacing.sm}"
   button-secondary:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.button-lg}"
     rounded: "{rounded.pill}"
     padding: "0px {spacing.sm}"
   button-primary-sm:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.graphite}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button-md}"
     rounded: "{rounded.pill}"
     padding: "0px {spacing.xs}"
   button-secondary-sm:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.button-md}"
     rounded: "{rounded.pill}"
     padding: "0px {spacing.xs}"
   tab-ghost:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.body-sm}"
     rounded: "{rounded.pill-sm}"
     padding: "0px {spacing.md}"
   icon-button-circular:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     borderColor: "{colors.hairline}"
     rounded: "{rounded.full}"
   card-marketing:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.body-md}"
     rounded: "{rounded.md}"
     padding: "{spacing.lg}"
   card-marketing-large:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.body-md}"
     rounded: "{rounded.lg}"
     padding: "{spacing.xl}"
   card-soft:
-    backgroundColor: "{colors.canvas-soft}"
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     typography: "{typography.body-md}"
     rounded: "{rounded.md}"
     padding: "{spacing.lg}"
   template-card:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.body-md}"
     rounded: "{rounded.md}"
     padding: "{spacing.md}"
   code-editor-mockup:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.graphite}"
     textColor: "{colors.on-primary}"
     typography: "{typography.code}"
     rounded: "{rounded.md}"
     padding: "{spacing.lg}"
   form-input:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     borderColor: "{colors.hairline}"
     typography: "{typography.body-sm}"
@@ -253,7 +254,7 @@ components:
     padding: "0px {spacing.sm}"
     height: 40px
   form-input-sm:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     borderColor: "{colors.hairline}"
     typography: "{typography.body-sm}"
@@ -261,7 +262,7 @@ components:
     padding: "0px {spacing.sm}"
     height: 32px
   form-input-lg:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     borderColor: "{colors.hairline}"
     typography: "{typography.body-md}"
@@ -269,67 +270,67 @@ components:
     padding: "0px {spacing.sm}"
     height: 48px
   badge-secondary:
-    backgroundColor: "{colors.canvas-soft}"
-    textColor: "{colors.body}"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.slate}"
     typography: "{typography.caption}"
     rounded: "{rounded.full}"
     padding: "0px {spacing.xs}"
   pricing-card:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.body-md}"
     rounded: "{rounded.lg}"
     padding: "{spacing.xl}"
   pricing-card-featured:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.graphite}"
     textColor: "{colors.on-primary}"
     typography: "{typography.body-md}"
     rounded: "{rounded.lg}"
     padding: "{spacing.xl}"
   logo-strip:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.body}"
+    backgroundColor: "{colors.chalk}"
+    textColor: "{colors.slate}"
     typography: "{typography.body-sm}"
     padding: "{spacing.lg} {spacing.xl}"
   hero-band:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.display-xl}"
     padding: "{spacing.4xl} {spacing.lg}"
   feature-mesh-band:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     textColor: "{colors.ink}"
     typography: "{typography.display-lg}"
     padding: "{spacing.5xl} {spacing.lg}"
   showcase-band-light:
-    backgroundColor: "{colors.canvas-soft}"
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     typography: "{typography.display-lg}"
     padding: "{spacing.5xl} {spacing.lg}"
   showcase-band-dark:
-    backgroundColor: "{colors.primary}"
+    backgroundColor: "{colors.graphite}"
     textColor: "{colors.on-primary}"
     typography: "{typography.display-lg}"
     padding: "{spacing.5xl} {spacing.lg}"
   footer:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.body}"
+    backgroundColor: "{colors.chalk}"
+    textColor: "{colors.slate}"
     typography: "{typography.body-sm}"
     padding: "{spacing.4xl} {spacing.lg}"
   link-inline:
     textColor: "{colors.link}"
     typography: "{typography.body-md}"
   banner-marketing:
-    backgroundColor: "{colors.canvas-soft}"
-    textColor: "{colors.body}"
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.slate}"
     typography: "{typography.body-sm}"
     rounded: "{rounded.full}"
     padding: "{spacing.xs} {spacing.sm}"
 
   # ─── Examples (illustrative) — auto-derived; resolve any TO_FILL markers below ───
   ex-pricing-tier:
-    description: "Default tier card. Mirrors pricing-card chrome on canvas-soft surface with a hairline border."
-    backgroundColor: "{colors.canvas-soft}"
+    description: "Default tier card. Mirrors pricing-card chrome on paper surface with a hairline border."
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     borderColor: "{colors.hairline}"
     rounded: "{rounded.lg}"
@@ -342,47 +343,47 @@ components:
     padding: "{spacing.xl}"
   ex-product-selector:
     description: "What's Included summary card — repurposed for the brand's GPU / inference / Pro feature tiers."
-    backgroundColor: "{colors.canvas-soft}"
+    backgroundColor: "{colors.paper}"
     rounded: "{rounded.md}"
     padding: "{spacing.lg}"
   ex-cart-drawer:
     description: "Subscription summary — line items per add-on (NOT a literal e-commerce cart)."
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     rounded: "{rounded.md}"
     padding: "{spacing.lg}"
     item-divider: "{colors.hairline}"
   ex-app-shell-row:
     description: "Sidebar nav row. Active state uses brand primary as a left-edge indicator bar."
-    backgroundColor: "{colors.canvas}"
-    activeIndicator: "{colors.primary}"
+    backgroundColor: "{colors.chalk}"
+    activeIndicator: "{colors.graphite}"
     rounded: "{rounded.sm}"
     padding: "{spacing.xs} {spacing.sm}"
   ex-data-table-cell:
     description: "Mirrors the brand's table chrome. Header uses caption-mono uppercase mono; body uses body-sm."
-    headerBackground: "{colors.canvas-soft}"
+    headerBackground: "{colors.paper}"
     headerTypography: "{typography.caption-mono}"
     bodyTypography: "{typography.body-sm}"
     cellPadding: "{spacing.xs} {spacing.sm}"
     rowBorder: "{colors.hairline}"
   ex-auth-form-card:
     description: "Sign-in / sign-up card. Mirrors card-marketing-large chrome with form-input primitives inside."
-    backgroundColor: "{colors.canvas-soft}"
+    backgroundColor: "{colors.paper}"
     rounded: "{rounded.lg}"
     padding: "{spacing.xl}"
   ex-modal-card:
     description: "Modal dialog surface — same chrome as card-marketing-large with Level 5 modal shadow."
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     rounded: "{rounded.lg}"
     padding: "{spacing.xl}"
   ex-empty-state-card:
-    description: "Empty-state illustration frame. Generous padding on canvas-soft."
-    backgroundColor: "{colors.canvas-soft}"
+    description: "Empty-state illustration frame. Generous padding on paper."
+    backgroundColor: "{colors.paper}"
     rounded: "{rounded.lg}"
     padding: "{spacing.3xl}"
     captionTypography: "{typography.body-md}"
   ex-toast:
     description: "Toast notification surface — flat-cornered card-marketing chrome with Level 4 shadow."
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.chalk}"
     rounded: "{rounded.md}"
     padding: "{spacing.sm} {spacing.md}"
     typography: "{typography.body-sm}"
@@ -390,16 +391,16 @@ components:
 
 ## Overview
 
-andrewck24.com is a personal portfolio and writing site for a software engineer based in Taipei, Taiwan. The design language is a direct interpretation of Vercel's aesthetic discipline — one of the cleanest stark systems on the web: near-white `{colors.canvas-soft}` body background, ink-near-black `{colors.ink}` text, a deliberate gray scale that gives every divider, border, and disabled state its own deliberate step. The site extends this system with a single signature decorative element: a **topographic-contour SVG mesh gradient** rendered in all six brand gradient tokens plus coral accent. That gradient is the entire decoration system.
+andrewck24.com is a personal portfolio and writing site for a software engineer based in Taipei, Taiwan. The design language is a direct interpretation of Vercel's aesthetic discipline — one of the cleanest stark systems on the web: near-white `{colors.paper}` body background, ink-near-black `{colors.ink}` text, a deliberate gray scale that gives every divider, border, and disabled state its own deliberate step. The site extends this system with a single signature decorative element: a **topographic-contour SVG mesh gradient** rendered in all six brand gradient tokens plus coral accent. That gradient is the entire decoration system.
 
-The surface hierarchy uses a four-step ladder: `{colors.canvas}` (pure white for cards and dialogs), `{colors.canvas-soft}` 98% (the page body — almost every section sits here), `{colors.canvas-soft-2}` 95% (occasional inset regions), `{colors.primary}` (the deep ink-near-black used as the polarity-flipped dark band when a section needs to invert). Shadows are exceptionally subtle — every elevated card carries a stacked shadow built from `0px 1px 1px #00000005` + `0px 2px 2px #0000000a` + an inset hairline border. Cards never float on a heavy drop-shadow; they sit on the page held by hairline + soft glow.
+The surface palette spans four neutral tones built around a strict two-role model — page canvas vs. elevated container, with the elevated surface always perceptibly lighter: `{colors.chalk}` (pure white — cards, dialogs, popovers), `{colors.paper}` 98% (the page body — almost every section sits here), `{colors.fog}` 95% (occasional inset regions, never a surface role of its own), `{colors.graphite}` (the deep ink-near-black used as the polarity-flipped dark band when a section needs to invert). Shadows are exceptionally subtle — every elevated card carries a stacked shadow built from `0px 1px 1px #00000005` + `0px 2px 2px #0000000a` + an inset hairline border. Cards never float on a heavy drop-shadow; they sit on the page held by hairline + soft glow.
 
 Type is the second decisive voice. Geist (geometric sans) carries display, body, and button — everything narrative — at weight 600 for display, 500 for buttons, 400 for body. Geist Mono carries technical labels: terminal mockups, code blocks, filename captions. Headlines are sentence-case with aggressive negative letter-spacing (`-2.4px` at 48 px hero) — the system never letter-spaces positively, never goes uppercase outside of mono labels.
 
 **Key Characteristics:**
 
-- A single black-ink primary CTA `{colors.primary}` carries every conversion target, paired with `button-secondary` for secondary actions. Marketing CTAs use the 100 px pill shape; nav-scale buttons use the 6 px square radius.
-- The **topographic-contour mesh gradient** is the only decorative chrome — used at hero and BusinessCard scale only, never miniaturised. Switching a section from `{colors.canvas-soft}` to `{colors.primary}` (the polarity-flipped dark band) is the chief depth cue between sections.
+- A single black-ink primary CTA `{colors.graphite}` carries every conversion target, paired with `button-secondary` for secondary actions. Marketing CTAs use the 100 px pill shape; nav-scale buttons use the 6 px square radius.
+- The **topographic-contour mesh gradient** is the only decorative chrome — used at hero and BusinessCard scale only, never miniaturised. Switching a section from `{colors.paper}` to `{colors.graphite}` (the polarity-flipped dark band) is the chief depth cue between sections.
 - OG images pair the mesh gradient with a **square grid overlay** (95 px grid, hairline lines at 4–6% opacity) as the second brand surface element.
 - Every section eyebrow and technical label uses `{typography.caption-mono}` or `{typography.code}`; everything narrative is in the geometric sans.
 - Subtle stacked-shadow elevation — three small offsets layered with 4–12% black opacity, plus an inset hairline ring — never a single heavy drop-shadow.
@@ -409,7 +410,7 @@ Type is the second decisive voice. Geist (geometric sans) carries display, body,
 
 ### Brand & Accent
 
-- **Ink** (`{colors.primary}` — `#171717`): The single primary CTA color. Black-near-pure ink that carries every Sign Up pill, every footer CTA, the dark-band polarity-flip. Used as text color throughout the page on light surfaces. (Resolved from `--alt-gray-1000`.)
+- **Graphite** (`{colors.graphite}` — `#171717`, inverts to near-white in dark mode): The single primary CTA color. Black-near-pure ink that carries every Sign Up pill, every footer CTA, the dark-band polarity-flip. Distinct from the non-inverting `{colors.ink}` despite sharing its light-mode hex — the two serve different roles (theme-inverting accent vs. permanent text color). (Resolved from `--alt-gray-1000`.)
 - **Cyan** (`{colors.cyan}` — `#50e3c2`): A signature mint-cyan used in the brand gradient and inside Geist-system spotlight tokens. Visible inside the hero gradient stops.
 - **Highlight Pink** (`{colors.highlight-pink}` — `#ff0080`): The brand's highlight magenta, used as the high-saturation stop in the preview-gradient pair.
 - **Violet** (`{colors.violet}` — `#7928ca`): The deep purple used as the start of the preview-gradient and inside developer-console highlights.
@@ -417,18 +418,23 @@ Type is the second decisive voice. Geist (geometric sans) carries display, body,
 
 ### Surface
 
-- **Canvas** (`{colors.canvas}` — `#ffffff`): The pure-white card / dialog / modal surface.
-- **Canvas Soft** (`{colors.canvas-soft}` — `#fafafa`): The default page background — 98 % white. Almost every section sits on this tone.
-- **Canvas Soft 2** (`{colors.canvas-soft-2}` — `#f5f5f5`): A slightly deeper inset surface for "code editor inner background", template-card hover states, and dropdown menus.
+The site defines exactly two surface roles — the page canvas (`{colors.paper}` light / `{colors.soot}` dark) and the elevated container surface (`{colors.chalk}` light / `{colors.ink}` dark) — with the elevated surface always perceptibly lighter than the page behind it, in both modes.
+
+**Component token assignments**: Card, Popover, and Empty-state all sit on the elevated surface — `--card` / `--popover` (Chalk on Paper in light mode, Ink on Soot in dark mode), which shadcn/ui keeps as parity-valued per-slot tokens. **Dialog is the deliberate exception**: its content surface is `--background` (Paper / Soot), not `--card` — a Dialog overlays the page rather than nesting inside another elevated surface, so it inherits the canvas role directly. Don't "fix" this by switching Dialog to `--card`; that would make the dialog indistinguishable from a card floating on its own backdrop.
+
+- **Chalk** (`{colors.chalk}` — `#ffffff`): Brightest, coolest white. The elevated card / dialog / popover / empty-state surface in light mode — pure white against the `{colors.paper}` page, so it reads as "popped above" the canvas.
+- **Paper** (`{colors.paper}` — `#fafafa`): Warm near-white. The default page background — 98% white. Almost every section sits on this tone.
+- **Fog** (`{colors.fog}` — `#f5f5f5`): Inset/recessed grayish-white. A slightly deeper inset surface for "code editor inner background", template-card hover states, and dropdown menus.
+- **Soot** (`{colors.soot}` — `#080808`): Near-black. The dark-mode page background — the canvas role's dark-mode counterpart to `{colors.paper}`, one step darker than `{colors.ink}` so elevated surfaces still read as "popped above" the page.
 - **Hairline** (`{colors.hairline}` — `#ebebeb`): 1 px dividers — table rows, card borders, input borders.
-- **Hairline Strong** (`{colors.hairline-strong}` — `#a1a1a1`): The 500-level gray, used as the slightly-stronger divider on light bands and as the deemphasised text color.
+- **Pewter** (`{colors.pewter}` — `#a1a1a1`): Stronger divider / de-emphasized text. The 500-level gray, used as the slightly-stronger divider on light bands and as the deemphasised text color.
 
 ### Text
 
-- **Ink** (`{colors.ink}` — `#171717`): Every heading and body paragraph on light surfaces.
-- **Body** (`{colors.body}` — `#4d4d4d`): Secondary text — sub-headings, body captions, nav-link inactive text, footer column body.
-- **Mute** (`{colors.mute}` — `#888888`): Lowest-priority text — placeholder text, fine print, low-key labels.
-- **On Primary** (`{colors.on-primary}` — `#ffffff`): All text on `{colors.primary}` surfaces.
+- **Ink** (`{colors.ink}` — `#171717`): Every heading and body paragraph on light surfaces. Also the elevated card / dialog / popover surface color in dark mode — one step lighter than `{colors.soot}`, preserving the "card pops off the page" relationship across modes.
+- **Slate** (`{colors.slate}` — `#4d4d4d`): Secondary text — sub-headings, body captions, nav-link inactive text, footer column body.
+- **Smoke** (`{colors.smoke}` — `#888888`): Lowest-priority text — placeholder text, fine print, low-key labels.
+- **On Primary** (`{colors.on-primary}` — `#ffffff`): All text on `{colors.graphite}` surfaces.
 
 ### Semantic
 
@@ -461,22 +467,23 @@ Design tokens are implemented as two layers of CSS custom properties in `globals
 
 Remapped from the default blue-gray tint to DESIGN.md neutral values. Consumed via Tailwind utilities (`bg-background`, `text-foreground`, `border-border`, etc.).
 
-| DESIGN.md token   | Shadcn var                             | Light mode                | Dark mode                   |
-| ----------------- | -------------------------------------- | ------------------------- | --------------------------- |
-| `canvas`          | `--background`                         | `oklch(1 0 0)`            | —                           |
-| `ink`             | `--foreground`                         | `oklch(0.205 0 0)`        | `oklch(1 0 0)`              |
-| `canvas`          | `--card`                               | `oklch(1 0 0)`            | `oklch(0.244 0 0)`          |
-| `ink`             | `--primary`                            | `oklch(0.205 0 0)`        | `oklch(0.940 0 0)` ¹        |
-| `on-primary`      | `--primary-foreground`                 | `oklch(1 0 0)`            | `oklch(0.205 0 0)`          |
-| `canvas-soft-2`   | `--secondary` / `--muted` / `--accent` | `oklch(0.970 0 0)`        | `oklch(0.279 0 0)`          |
-| `mute`            | `--muted-foreground`                   | `oklch(0.627 0 0)`        | `oklch(0.709 0 0)`          |
-| `error`           | `--destructive`                        | `oklch(0.596 0.245 29.2)` | `oklch(0.700 0.191 22.2)` ² |
-| `hairline`        | `--border` / `--input`                 | `oklch(0.940 0 0)`        | `oklch(1 0 0 / 10%)`        |
-| `hairline-strong` | `--ring`                               | `oklch(0.709 0 0)`        | `oklch(0.556 0 0)`          |
-| `canvas-soft`     | `--sidebar`                            | `oklch(0.985 0 0)`        | `oklch(0.244 0 0)`          |
+| DESIGN.md token      | Shadcn var                             | Light mode                | Dark mode                   |
+| -------------------- | -------------------------------------- | ------------------------- | --------------------------- |
+| `paper` / `soot`     | `--background`                         | `oklch(0.985 0 0)`        | `oklch(0.051 0 0)`          |
+| `chalk` / `ink`      | `--card` / `--popover`                 | `oklch(1 0 0)`            | `oklch(0.205 0 0)`          |
+| `ink` / `on-primary` | `--foreground`                         | `oklch(0.205 0 0)`        | `oklch(1 0 0)`              |
+| `graphite`           | `--primary`                            | `oklch(0.205 0 0)`        | `oklch(0.940 0 0)` ¹        |
+| `on-primary`         | `--primary-foreground`                 | `oklch(1 0 0)`            | `oklch(0.205 0 0)`          |
+| `fog`                | `--secondary` / `--muted` / `--accent` | `oklch(0.970 0 0)`        | `oklch(0.279 0 0)`          |
+| `smoke`              | `--muted-foreground`                   | `oklch(0.627 0 0)`        | `oklch(0.709 0 0)`          |
+| `error`              | `--destructive`                        | `oklch(0.596 0.245 29.2)` | `oklch(0.700 0.191 22.2)` ² |
+| `hairline`           | `--border` / `--input`                 | `oklch(0.940 0 0)`        | `oklch(1 0 0 / 10%)`        |
+| `pewter`             | `--ring`                               | `oklch(0.709 0 0)`        | `oklch(0.556 0 0)`          |
 
-> ¹ `--primary` flips polarity in dark mode (near-white) so shadcn Button remains readable on dark surfaces. Use `--alt-ink` when you need a non-inverting permanent-dark token.  
+> ¹ `--primary` flips polarity in dark mode (near-white) so shadcn Button remains readable on dark surfaces.  
 > ² Dark mode destructive is intentionally brighter than the light-mode error token for readability on dark surfaces.
+
+`--card` and `--popover` intentionally hold identical values in both modes — Chalk on Paper (light) and Ink on Soot (dark) — per shadcn/ui's per-component-slot convention. This is the elevated-surface role: it must always read as perceptibly _lighter_ than `--background` so cards, popovers, and dialogs visually separate from the page canvas.
 
 ### Layer 2 — `--alt-*` Overflow Vars
 
@@ -484,11 +491,8 @@ Tokens with no shadcn equivalent. Use `var(--alt-*)` directly in component style
 
 | DESIGN.md token          | CSS var                 | oklch                      | Hex       |
 | ------------------------ | ----------------------- | -------------------------- | --------- |
-| `canvas-soft`            | `--alt-canvas-soft`     | `oklch(0.985 0 0)`         | `#fafafa` |
-| `canvas-soft-2`          | `--alt-canvas-soft-2`   | `oklch(0.970 0 0)`         | `#f5f5f5` |
-| `ink` (non-inverting)    | `--alt-ink`             | `oklch(0.205 0 0)`         | `#171717` |
-| `body`                   | `--alt-body`            | `oklch(0.420 0 0)`         | `#4d4d4d` |
-| `hairline-strong`        | `--alt-hairline-strong` | `oklch(0.709 0 0)`         | `#a1a1a1` |
+| `slate`                  | `--alt-body`            | `oklch(0.420 0 0)`         | `#4d4d4d` |
+| `pewter`                 | `--alt-hairline-strong` | `oklch(0.709 0 0)`         | `#a1a1a1` |
 | `link`                   | `--alt-link`            | `oklch(0.573 0.214 258.2)` | `#0070f3` |
 | `link-deep`              | `--alt-link-deep`       | `oklch(0.516 0.189 258.3)` | `#0761d1` |
 | `link-bg-soft`           | `--alt-link-bg-soft`    | `oklch(0.917 0.040 257.5)` | `#d3e5ff` |
@@ -615,7 +619,7 @@ The `button-primary` pill renders at ~32 px tall in nav and ~48 px tall in marke
 
 - **Mesh gradient**: rendered as inline SVG or canvas-painted gradient; scales fluidly with the hero container; never crops, never tiles.
 - **Customer logos**: rendered as monochrome SVGs in the logo strip; consistent 24 px height.
-- **Code editor mockup**: dark `{colors.primary}` rectangle with mono text rendered inside; treated as an image at the layout level.
+- **Code editor mockup**: dark `{colors.graphite}` rectangle with mono text rendered inside; treated as an image at the layout level.
 - **Template thumbnails**: 16:9 landscape inside `{rounded.md}` card chrome; lazy-loaded; consistent grayscale palette in the placeholder state.
 
 ## Elevation & Depth
@@ -634,7 +638,7 @@ The brand uses STACKED shadows — multiple small offsets layered to fake natura
 ### Decorative Depth
 
 - **Mesh gradient as atmospheric depth**: the hero's multi-stop gradient is the brand's only "atmospheric" effect — applied as a flat 2-D backdrop rather than a 3-D illustration.
-- **Polarity-flipped dark band as section-depth**: switching the surface from `{colors.canvas-soft}` to `{colors.primary}` (the deep ink) is the brand's chief depth cue between bands.
+- **Polarity-flipped dark band as section-depth**: switching the surface from `{colors.paper}` to `{colors.graphite}` (the brand's deep neutral) is the brand's chief depth cue between bands.
 - **Inset-shadow + drop-shadow combo**: the cards' combination of an inset 1 px ring and a multi-stop drop produces a "card sits on the page" effect without ever feeling material-heavy.
 
 ## Shapes
@@ -667,77 +671,77 @@ The brand uses STACKED shadows — multiple small offsets layered to fake natura
 
 **`button-primary`** — the canonical 100-px-radius black pill, marketing scale.
 
-- Background `{colors.primary}`, text `{colors.on-primary}`, label set in `{typography.button-lg}`, padding `0px {spacing.sm}` 12 px, shape `{rounded.pill}` 100 px. Renders ~48 px tall when paired with the marketing flex layout.
+- Background `{colors.graphite}`, text `{colors.on-primary}`, label set in `{typography.button-lg}`, padding `0px {spacing.sm}` 12 px, shape `{rounded.pill}` 100 px. Renders ~48 px tall when paired with the marketing flex layout.
 
 **`button-secondary`** — the white pill paired with the black primary inside marketing bands.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, same typography + padding as `button-primary`, shape `{rounded.pill}`.
+- Background `{colors.chalk}`, text `{colors.ink}`, same typography + padding as `button-primary`, shape `{rounded.pill}`.
 
 **`button-primary-sm`** — the smaller-scale primary pill used inside nav and pricing-card CTAs.
 
-- Background `{colors.primary}`, text `{colors.on-primary}`, label set in `{typography.button-md}` (14 px / 500), shape `{rounded.pill}`.
+- Background `{colors.graphite}`, text `{colors.on-primary}`, label set in `{typography.button-md}` (14 px / 500), shape `{rounded.pill}`.
 
 **`button-secondary-sm`** — the smaller-scale white pill paired with `button-primary-sm`.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, same typography + shape as `button-primary-sm`.
+- Background `{colors.chalk}`, text `{colors.ink}`, same typography + shape as `button-primary-sm`.
 
 **`tab-ghost`** — the centred-row tab pill ("AI Apps / Web Apps / Ecommerce / Marketing / Platforms").
 
-- Background `{colors.canvas}`, text `{colors.ink}`, label set in `{typography.body-sm}`, padding `0px {spacing.md}`, shape `{rounded.pill-sm}` 64 px.
+- Background `{colors.chalk}`, text `{colors.ink}`, label set in `{typography.body-sm}`, padding `0px {spacing.md}`, shape `{rounded.pill-sm}` 64 px.
 
 **`icon-button-circular`** — the circular icon container (often a "?" or arrow inside).
 
-- Background `{colors.canvas}`, dark icon, 1 px solid hairline border, shape `{rounded.full}`.
+- Background `{colors.chalk}`, dark icon, 1 px solid hairline border, shape `{rounded.full}`.
 
 **Nav CTAs:**
 
 **`nav-cta-signup`** — the small black "Sign Up" button in the nav row.
 
-- Background `{colors.primary}`, text `{colors.on-primary}`, label `{typography.body-sm-strong}`, padding `0px {spacing.xs}`, height 28 px, shape `{rounded.sm}` 6 px (the brand's `--geist-radius`).
+- Background `{colors.graphite}`, text `{colors.on-primary}`, label `{typography.body-sm-strong}`, padding `0px {spacing.xs}`, height 28 px, shape `{rounded.sm}` 6 px (the brand's `--geist-radius`).
 
 **`nav-cta-login`** — the white "Log In" button in the nav.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, same typography / height / shape as `nav-cta-signup`.
+- Background `{colors.chalk}`, text `{colors.ink}`, same typography / height / shape as `nav-cta-signup`.
 
 **`nav-cta-ask-ai`** — the small "Ask AI" button with a faint border.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, 1 px solid `{colors.hairline}` border (extracted as `0px solid rgb(235, 235, 235)`), same typography / height / shape.
+- Background `{colors.chalk}`, text `{colors.ink}`, 1 px solid `{colors.hairline}` border (extracted as `0px solid rgb(235, 235, 235)`), same typography / height / shape.
 
 ### Cards & Containers
 
 **`card-marketing`** — the canonical marketing feature card (3-up section cards).
 
-- Background `{colors.canvas}`, text `{colors.ink}`, padding `{spacing.lg}` 24 px, shape `{rounded.md}` 8 px (the `--geist-marketing-radius`). Carries Level 3 soft-stack shadow.
+- Background `{colors.chalk}`, text `{colors.ink}`, padding `{spacing.lg}` 24 px, shape `{rounded.md}` 8 px (the `--geist-marketing-radius`). Carries Level 3 soft-stack shadow.
 
 **`card-marketing-large`** — the larger marketing card used for "compute model" / "AI Gateway" callouts.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, padding `{spacing.xl}`, shape `{rounded.lg}` 12 px. Carries Level 4 float-stack shadow.
+- Background `{colors.chalk}`, text `{colors.ink}`, padding `{spacing.xl}`, shape `{rounded.lg}` 12 px. Carries Level 4 float-stack shadow.
 
-**`card-soft`** — the soft-tinted card used inside cluster groups (lighter than canvas-soft).
+**`card-soft`** — the soft-tinted card used inside cluster groups (lighter than fog).
 
-- Background `{colors.canvas-soft}`, text `{colors.ink}`, padding `{spacing.lg}`, shape `{rounded.md}`.
+- Background `{colors.paper}`, text `{colors.ink}`, padding `{spacing.lg}`, shape `{rounded.md}`.
 
 **`template-card`** — the deploy-template card in the "Deploy your first app" grid.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, padding `{spacing.md}` 16 px, shape `{rounded.md}` 8 px. Hosts a 16:9 thumbnail at the top.
+- Background `{colors.chalk}`, text `{colors.ink}`, padding `{spacing.md}` 16 px, shape `{rounded.md}` 8 px. Hosts a 16:9 thumbnail at the top.
 
 **`code-editor-mockup`** — the dark code-preview surface inside marketing bands.
 
-- Background `{colors.primary}`, text `{colors.on-primary}`, body in `{typography.code}` (13 px / Geist Mono), padding `{spacing.lg}` 24 px, shape `{rounded.md}` 8 px.
+- Background `{colors.graphite}`, text `{colors.on-primary}`, body in `{typography.code}` (13 px / Geist Mono), padding `{spacing.lg}` 24 px, shape `{rounded.md}` 8 px.
 
 **`pricing-card`** — the default pricing-tier card.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, padding `{spacing.xl}` 32 px, shape `{rounded.lg}` 12 px. Inside: tier name in `{typography.display-md}`, price in `{typography.display-xl}`, feature list in `{typography.body-md}` rows, CTA at the bottom.
+- Background `{colors.chalk}`, text `{colors.ink}`, padding `{spacing.xl}` 32 px, shape `{rounded.lg}` 12 px. Inside: tier name in `{typography.display-md}`, price in `{typography.display-xl}`, feature list in `{typography.body-md}` rows, CTA at the bottom.
 
 **`pricing-card-featured`** — the polarity-flipped "Pro" tier card.
 
-- Background `{colors.primary}`, text `{colors.on-primary}`, same shape + padding as `pricing-card`. CTA inverts to `button-secondary-sm` (white pill on black card).
+- Background `{colors.graphite}`, text `{colors.on-primary}`, same shape + padding as `pricing-card`. CTA inverts to `button-secondary-sm` (white pill on black card).
 
 ### Inputs & Forms
 
 **`form-input`** — the canonical text input.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, 1 px solid `{colors.hairline}` border, body in `{typography.body-sm}` (14 px), padding `0px {spacing.sm}`, height 40 px (the brand's `--geist-form-height`), shape `{rounded.sm}` 6 px.
+- Background `{colors.chalk}`, text `{colors.ink}`, 1 px solid `{colors.hairline}` border, body in `{typography.body-sm}` (14 px), padding `0px {spacing.sm}`, height 40 px (the brand's `--geist-form-height`), shape `{rounded.sm}` 6 px.
 
 **`form-input-sm`** — small-height variant (32 px tall) for tight forms.
 
@@ -751,45 +755,45 @@ The brand uses STACKED shadows — multiple small offsets layered to fake natura
 
 **`nav-bar`** — the sticky top nav.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, height 64 px (the brand's `--header-height`), padding `{spacing.sm} {spacing.lg}`. Layout: logo left, link row centre, "Ask AI / Log In / Sign Up" cluster right.
+- Background `{colors.chalk}`, text `{colors.ink}`, height 64 px (the brand's `--header-height`), padding `{spacing.sm} {spacing.lg}`. Layout: logo left, link row centre, "Ask AI / Log In / Sign Up" cluster right.
 
 **`nav-link`** — the centred link row inside `nav-bar`.
 
-- Text `{colors.body}`, set in `{typography.body-sm}`, padding `{spacing.xs} {spacing.sm}`, shape `{rounded.full}` (ghost pill — visible only on hover or active, but the radius is documented).
+- Text `{colors.slate}`, set in `{typography.body-sm}`, padding `{spacing.xs} {spacing.sm}`, shape `{rounded.full}` (ghost pill — visible only on hover or active, but the radius is documented).
 
 **`footer`** — the bottom 4-column nav.
 
-- Background `{colors.canvas}`, text `{colors.body}`, padding `{spacing.4xl} {spacing.lg}`. Eyebrow column labels in `{typography.caption-mono}` (uppercase mono effect); link rows in `{typography.body-sm}`.
+- Background `{colors.chalk}`, text `{colors.slate}`, padding `{spacing.4xl} {spacing.lg}`. Eyebrow column labels in `{typography.caption-mono}` (uppercase mono effect); link rows in `{typography.body-sm}`.
 
 ### Signature Components
 
 **`hero-band`** — the white hero with the mesh gradient backdrop.
 
-- Background `{colors.canvas}` (or `{colors.canvas-soft}` on some surfaces), text `{colors.ink}`, padding `{spacing.4xl} {spacing.lg}`. Inside: a small mono badge above the headline, the headline in `{typography.display-xl}` (sentence-case, period-terminated), a body lead in `{typography.body-lg}`, then a CTA row with `button-primary` + `button-secondary`. The mesh gradient sits behind, scaled to occupy roughly the top half of the band.
+- Background `{colors.chalk}` (or `{colors.paper}` on some surfaces), text `{colors.ink}`, padding `{spacing.4xl} {spacing.lg}`. Inside: a small mono badge above the headline, the headline in `{typography.display-xl}` (sentence-case, period-terminated), a body lead in `{typography.body-lg}`, then a CTA row with `button-primary` + `button-secondary`. The mesh gradient sits behind, scaled to occupy roughly the top half of the band.
 
 **`feature-mesh-band`** — the secondary section that hosts a mesh-gradient atmospheric backdrop with feature copy on top.
 
-- Background `{colors.canvas}`, text `{colors.ink}`, padding `{spacing.5xl} {spacing.lg}`. Section headline in `{typography.display-lg}`; supporting body in `{typography.body-md}`.
+- Background `{colors.chalk}`, text `{colors.ink}`, padding `{spacing.5xl} {spacing.lg}`. Section headline in `{typography.display-lg}`; supporting body in `{typography.body-md}`.
 
 **`showcase-band-light`** — a soft-canvas section ("Deploy your first app in seconds").
 
-- Background `{colors.canvas-soft}`, text `{colors.ink}`, padding `{spacing.5xl} {spacing.lg}`.
+- Background `{colors.paper}`, text `{colors.ink}`, padding `{spacing.5xl} {spacing.lg}`.
 
 **`showcase-band-dark`** — the polarity-flipped dark band ("A compute model for all workloads").
 
-- Background `{colors.primary}`, text `{colors.on-primary}`, padding `{spacing.5xl} {spacing.lg}`. Section headline in `{typography.display-lg}` (white on black). Often contains a `code-editor-mockup` flush with the band.
+- Background `{colors.graphite}`, text `{colors.on-primary}`, padding `{spacing.5xl} {spacing.lg}`. Section headline in `{typography.display-lg}` (white on black). Often contains a `code-editor-mockup` flush with the band.
 
 **`logo-strip`** — the customer-logo wrapping row near the top of the page.
 
-- Background `{colors.canvas}`, text `{colors.body}`, padding `{spacing.lg} {spacing.xl}`. Logos rendered as monochrome SVGs at consistent height.
+- Background `{colors.chalk}`, text `{colors.slate}`, padding `{spacing.lg} {spacing.xl}`. Logos rendered as monochrome SVGs at consistent height.
 
 **`badge-secondary`** — the small inline metadata pill ("New", "Beta", "Live").
 
-- Background `{colors.canvas-soft}`, text `{colors.body}`, body in `{typography.caption}`, padding `0px {spacing.xs}`, shape `{rounded.full}`.
+- Background `{colors.paper}`, text `{colors.slate}`, body in `{typography.caption}`, padding `0px {spacing.xs}`, shape `{rounded.full}`.
 
 **`banner-marketing`** — the "Introducing X" announcement pill at the top of pages.
 
-- Background `{colors.canvas-soft}`, text `{colors.body}`, body in `{typography.body-sm}`, padding `{spacing.xs} {spacing.sm}`, shape `{rounded.full}`.
+- Background `{colors.paper}`, text `{colors.slate}`, body in `{typography.body-sm}`, padding `{spacing.xs} {spacing.sm}`, shape `{rounded.full}`.
 
 **`link-inline`** — body-copy inline links.
 
@@ -799,7 +803,7 @@ The brand uses STACKED shadows — multiple small offsets layered to fake natura
 
 > Auto-derived kit-mirror demonstration surfaces (`scripts/derive-examples-block.mjs`). Each `ex-*` entry references brand-native primitives so downstream consumers (`/preview-design`, `/generate-kit`) re-skin the same 10 surfaces consistently. `TO_FILL` markers indicate missing primitives — resolve in the LLM judgment pass.
 
-**`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with brand canvas-soft surface.
+**`ex-pricing-tier`** — Default Pricing tier card. Re-uses feature-card chrome with brand paper surface.
 
 - Properties: `backgroundColor`, `textColor`, `borderColor`, `rounded`, `padding`
 
@@ -876,7 +880,7 @@ The filter region MUST be significantly larger than the viewport (negative x/y, 
 
 - Normal alpha compositing on `<g>`
 - Shape opacity: 0.34–0.86
-- Text over mesh: use `{colors.on-primary}` (#fff) for body text; `{colors.hairline-strong}` (#a1a1a1) for eyebrows — `{colors.mute}` (#888) is insufficient contrast over bright gradient pools
+- Text over mesh: use `{colors.on-primary}` (#fff) for body text; `{colors.pewter}` (#a1a1a1) for eyebrows — `{colors.smoke}` (#888) is insufficient contrast over bright gradient pools
 
 **Light mode** (background `#fafafa`):
 
@@ -976,7 +980,7 @@ These are the converged production directions for each page surface. Prototype v
 | Text layout  | Center-left: eyebrow (display-sm, hairline-strong) · name (display-xl, on-primary) · separator · desc (body-md, hairline-strong) |
 | Noise        | fractalNoise baseFrequency=0.74, overlay blend                                                                                   |
 
-Text contrast rule: eyebrow and desc use `{colors.hairline-strong}` (#a1a1a1), NOT `{colors.mute}` — mesh gradient behind text locally lightens the background.
+Text contrast rule: eyebrow and desc use `{colors.pewter}` (#a1a1a1), NOT `{colors.smoke}` — mesh gradient behind text locally lightens the background.
 
 The same composition applies to the general (home/about) static OG image. Notes and Projects OG images use the same topographic composition with a dynamic seed derived from the article slug for shape variation.
 
@@ -994,7 +998,7 @@ The same composition applies to the general (home/about) static OG image. Notes 
 
 **Terminal mockup**: frosted glass panel floating above mesh
 
-- Dark: `background: rgba(10,10,10,.68)` + `backdrop-filter: blur(12px)` + box-shadow `0 0 0 1px rgba(255,255,255,.04), 0 8px 28px rgba(0,0,0,.55), 0 20px 48px rgba(0,0,0,.22)`
+- Dark: `background: rgba(8,8,8,.68)` (68% `{colors.soot}` — derived from `--background`, not a standalone swatch) + `backdrop-filter: blur(12px)` + box-shadow `0 0 0 1px rgba(255,255,255,.04), 0 8px 28px rgba(0,0,0,.55), 0 20px 48px rgba(0,0,0,.22)`
 - Light: `background: rgba(255,255,255,.78)` + same backdrop-filter + box-shadow `0 0 0 1px rgba(255,255,255,.9), 0 4px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.07)`
 
 **Text tokens over dark mesh**:
@@ -1037,15 +1041,15 @@ The same composition applies to the general (home/about) static OG image. Notes 
 
 ### Do
 
-- Reserve `{colors.primary}` (`#171717`) for primary CTAs. Black ink IS the conversion target.
+- Reserve `{colors.graphite}` (`#171717`) for primary CTAs. Black ink IS the conversion target.
 - Use `{rounded.pill}` 100 px for marketing-scale CTAs and `{rounded.sm}` 6 px for nav-scale buttons.
 - Set every headline in `{typography.display-*}` weight 600, sentence-case. Aggressive negative tracking is part of the voice.
 - Use the topographic-contour mesh gradient at hero/card scale only — home hero, About BusinessCard, and OG images. Nowhere else.
-- On dark surfaces with mesh gradient behind text, upgrade muted text: use `{colors.on-primary}` for body/bio, `{colors.hairline-strong}` for eyebrows. `{colors.mute}` (#888) fails contrast over bright gradient pools.
+- On dark surfaces with mesh gradient behind text, upgrade muted text: use `{colors.on-primary}` for body/bio, `{colors.pewter}` for eyebrows. `{colors.smoke}` (#888) fails contrast over bright gradient pools.
 - Use `mix-blend-mode: multiply` on the shape `<g>` for light-mode mesh — the only way to preserve color saturation on white.
 - Use CSS custom properties (`--mesh-blend`, `--mesh-op-*`) for theme switching — never `useTheme()` inline, which causes hydration flash.
 - Layer stacked shadows (multiple small offsets with inset hairline) rather than single heavy drops.
-- Cycle surfaces in `{colors.canvas-soft}` → `{colors.canvas}` → `{colors.primary}` polarity-flipped bands; the dark band IS the depth cue.
+- Cycle surfaces in `{colors.paper}` → `{colors.chalk}` → `{colors.graphite}` polarity-flipped bands; the dark band IS the depth cue.
 - Set every code block and technical eyebrow in `{typography.code}` / `{typography.caption-mono}`.
 
 ### Don't
@@ -1053,7 +1057,7 @@ The same composition applies to the general (home/about) static OG image. Notes 
 - Don't use the mesh gradient outside home hero, About BusinessCard, and OG images. It belongs to those three surfaces and nowhere else.
 - Don't use only a single colour from the gradient token pairs. The topographic composition requires all six gradient stops + coral accent to be coherent.
 - Don't change the shape language away from topographic contour (nested organic loops + cross-sweep band). Other shape styles (geometric blobs, Aurora ribbons, dot grids) were explored and rejected.
-- Don't use `{colors.mute}` (#888) as text colour over mesh gradient backgrounds in dark mode — insufficient contrast.
+- Don't use `{colors.smoke}` (#888) as text colour over mesh gradient backgrounds in dark mode — insufficient contrast.
 - Don't render the mesh gradient via `useTheme()` + conditional props. Use CSS custom properties to avoid flash.
 - Don't render headlines in all-caps. Sentence-case + negative tracking is non-negotiable.
 - Don't use a single heavy drop-shadow on cards. Stacked small offsets + inset hairline ring only.
