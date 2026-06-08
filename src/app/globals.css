@@ -13,11 +13,15 @@
   );
 
   /* ── Shadcn base — aligned to DESIGN.md neutral values (blue tint removed) ── */
-  --background: oklch(1 0 0); /* canvas #ffffff */
+  --background: oklch(0.985 0 0); /* Paper #fafafa — page canvas */
   --foreground: oklch(0.205 0 0); /* ink #171717 */
-  --card: oklch(1 0 0); /* canvas */
+  /* --card and --popover intentionally hold identical values (Chalk #ffffff) —
+     kept as separate tokens per shadcn/ui's per-component-slot convention */
+  --card: oklch(
+    1 0 0
+  ); /* Chalk #ffffff — elevated surface, lighter than page */
   --card-foreground: oklch(0.205 0 0); /* ink */
-  --popover: oklch(1 0 0); /* canvas */
+  --popover: oklch(1 0 0); /* Chalk #ffffff */
   --popover-foreground: oklch(0.205 0 0); /* ink */
   --primary: oklch(0.205 0 0); /* ink — dark mode flips to near-white */
   --primary-foreground: oklch(1 0 0); /* on-primary #ffffff */
@@ -36,19 +40,7 @@
   --chart-3: var(--alt-grad-ship-s); /* coral  #ff4d4d */
   --chart-4: var(--alt-grad-dev-e); /* teal   #00dfd8 */
   --chart-5: var(--alt-grad-ship-e); /* amber  #f9cb28 */
-  --sidebar: oklch(0.985 0 0); /* canvas-soft #fafafa */
-  --sidebar-foreground: oklch(0.205 0 0); /* ink */
-  --sidebar-primary: oklch(0.205 0 0); /* ink */
-  --sidebar-primary-foreground: oklch(1 0 0); /* on-primary */
-  --sidebar-accent: oklch(0.97 0 0); /* canvas-soft-2 */
-  --sidebar-accent-foreground: oklch(0.205 0 0); /* ink */
-  --sidebar-border: oklch(0.94 0 0); /* hairline */
-  --sidebar-ring: oklch(0.709 0 0); /* hairline-strong */
-
   /* ── --alt-* overflow tokens (no shadcn equivalent) ── */
-  --alt-canvas-soft: oklch(0.985 0 0); /* #fafafa — page body tint */
-  --alt-canvas-soft-2: oklch(0.97 0 0); /* #f5f5f5 — inset surface */
-  --alt-ink: oklch(0.205 0 0); /* #171717 — non-inverting (always dark) */
   --alt-body: oklch(0.42 0 0); /* #4d4d4d — secondary text */
   --alt-hairline-strong: oklch(0.709 0 0); /* #a1a1a1 — stronger divider */
   --alt-link: oklch(0.573 0.214 258.2); /* #0070f3 */
@@ -67,7 +59,6 @@
 
   /* ── Mesh theme switching ── */
   --alt-mesh-blend: multiply; /* light: multiply preserves saturation on white */
-  --alt-mesh-bg: oklch(0.985 0 0); /* #fafafa — light hero background */
   --alt-mesh-op-1: 0.17;
   --alt-mesh-op-2: 0.21;
   --alt-mesh-op-3: 0.14;
@@ -79,11 +70,15 @@
 
 .dark {
   /* ── Shadcn base — dark mode overrides ── */
-  --background: oklch(0.205 0 0); /* primary #171717 */
+  --background: oklch(0.051 0 0); /* Soot #080808 — page canvas */
   --foreground: oklch(1 0 0); /* on-primary #ffffff */
-  --card: oklch(0.244 0 0); /* slightly elevated dark surface */
+  /* --card and --popover intentionally hold identical values (Ink #171717) —
+     kept as separate tokens per shadcn/ui's per-component-slot convention */
+  --card: oklch(
+    0.205 0 0
+  ); /* Ink #171717 — elevated surface, lighter than page */
   --card-foreground: oklch(1 0 0);
-  --popover: oklch(0.244 0 0);
+  --popover: oklch(0.205 0 0); /* Ink #171717 */
   --popover-foreground: oklch(1 0 0);
   --primary: oklch(0.94 0 0); /* hairline — near-white CTA on dark */
   --primary-foreground: oklch(0.205 0 0); /* ink on white button */
@@ -102,18 +97,8 @@
   --chart-3: var(--alt-grad-ship-s); /* coral  #ff4d4d */
   --chart-4: var(--alt-grad-dev-e); /* teal   #00dfd8 */
   --chart-5: var(--alt-grad-ship-e); /* amber  #f9cb28 */
-  --sidebar: oklch(0.244 0 0);
-  --sidebar-foreground: oklch(1 0 0);
-  --sidebar-primary: oklch(0.573 0.214 258.2); /* link blue for active nav */
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.279 0 0);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-
   /* ── Mesh theme switching ── */
   --alt-mesh-blend: overlay; /* dark: overlay preserves contrast on near-black */
-  --alt-mesh-bg: oklch(0.051 0 0); /* #080808 — dark hero background */
   --alt-mesh-op-1: 0.66;
   --alt-mesh-op-2: 0.84;
   --alt-mesh-op-3: 0.44;
@@ -140,14 +125,6 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --radius: var(--radius);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -162,9 +139,6 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   /* --alt-* Tailwind utilities */
-  --color-alt-canvas-soft: var(--alt-canvas-soft);
-  --color-alt-canvas-soft-2: var(--alt-canvas-soft-2);
-  --color-alt-ink: var(--alt-ink);
   --color-alt-body: var(--alt-body);
   --color-alt-hairline-strong: var(--alt-hairline-strong);
   --color-alt-link: var(--alt-link);

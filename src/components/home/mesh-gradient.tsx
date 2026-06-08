@@ -6,7 +6,7 @@ export function MeshGradientBackground() {
       viewBox="0 0 1400 600"
       aria-hidden="true"
     >
-      <rect width="1400" height="600" fill="var(--alt-mesh-bg)" />
+      <rect width="1400" height="600" fill="var(--background)" />
       <defs>
         <filter
           id="home-mesh-blur"
