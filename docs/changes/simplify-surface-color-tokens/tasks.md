@@ -1,3 +1,5 @@
+# Tasks
+
 ## 1. Surface-color token values (two-surface-role-model, card-elevation-contrast)
 
 - [x] 1.1 Implement the design's "two-role surface model with elevation" decision by updating `:root` and `.dark` in `src/app/globals.css` so `--background` resolves to `#fafafa` (light) / `#080808` (dark) and `--card`/`--popover` resolve to `#ffffff` (light) / `#171717` (dark) — satisfying the two-surface-role-model and card-elevation-contrast requirements (card always perceptibly lighter than the page in both modes). Verify with `grep -E "^\s*--(background|card|popover):" src/app/globals.css` showing the new values in both blocks, and a manual visual check confirming cards read as "popped above" the page in both light and dark mode.
@@ -21,5 +23,5 @@
 
 ## 5. Final verification
 
-- [ ] 5.1 Run `pnpm type-check` and `pnpm build`, confirming both complete with no errors — establishing that the token renames and removals introduced no broken references anywhere in the codebase.
-- [ ] 5.2 Perform a manual visual pass in both light and dark mode across: the home page (mesh-gradient background + both CTA buttons), a `Card`-bearing page (e.g. Projects or About), a `Dialog` (e.g. resume download dialog), a `Popover`, an `Empty` state (e.g. a not-found page), and at least one `outline`-variant button (e.g. Dialog "Close" or `GithubInfo`) — confirming card-family surfaces read as visually elevated relative to the page background in both modes (per card-elevation-contrast), the CTA button is no longer destructive-colored, the outline button's translucent fill blends consistently in both themes with no mode-specific token split, and no translucent wrapper panels remain. Record the result as the change's final acceptance check.
+- [x] 5.1 Run `pnpm type-check` and `pnpm build`, confirming both complete with no errors — establishing that the token renames and removals introduced no broken references anywhere in the codebase.
+- [x] 5.2 Perform a manual visual pass in both light and dark mode across: the home page (mesh-gradient background + both CTA buttons), a `Card`-bearing page (e.g. Projects or About), a `Dialog` (e.g. resume download dialog), a `Popover`, an `Empty` state (e.g. a not-found page), and at least one `outline`-variant button (e.g. Dialog "Close" or `GithubInfo`) — confirming card-family surfaces read as visually elevated relative to the page background in both modes (per card-elevation-contrast), the CTA button is no longer destructive-colored, the outline button's translucent fill blends consistently in both themes with no mode-specific token split, and no translucent wrapper panels remain. Record the result as the change's final acceptance check.
