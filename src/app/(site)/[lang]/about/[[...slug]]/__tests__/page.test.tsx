@@ -11,10 +11,6 @@ jest.mock("../../../../../../lib/sanity/client", () => ({
   client: { fetch: jest.fn() },
 }));
 
-jest.mock("../../../../../../components/about/personal-info", () => ({
-  PersonalInfo: () => null,
-}));
-
 jest.mock("../../../../../../components/about/business-card", () => ({
   BusinessCard: ({
     lang,
@@ -97,7 +93,7 @@ describe("AboutPage", () => {
     expect(mockNotFound).not.toHaveBeenCalled();
   });
 
-  it("renders BusinessCard instead of PersonalInfo", async () => {
+  it("renders BusinessCard", async () => {
     mockFetch
       .mockResolvedValueOnce({ title: "About", body: [] })
       .mockResolvedValueOnce(null);
@@ -106,7 +102,6 @@ describe("AboutPage", () => {
     const { queryByTestId } = render(jsx as React.ReactElement);
 
     expect(queryByTestId("business-card")).toBeInTheDocument();
-    expect(queryByTestId("about-personal-info")).not.toBeInTheDocument();
   });
 
   it("passes pdfUrls from siteSettings to BusinessCard", async () => {
