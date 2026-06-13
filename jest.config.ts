@@ -24,7 +24,7 @@ const config: Config = {
   coverageReporters: ["text", "lcov", "html"],
   // Allow ESM modules to be transformed by Jest
   transformIgnorePatterns: [
-    "/node_modules/(?!(\\.pnpm/(.+/)?)?(sanity|@sanity|geist)/)",
+    "/node_modules/(?!(\\.pnpm/(.+/)?)?(sanity|@sanity|ogl)/)",
   ],
 };
 

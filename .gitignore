@@ -40,3 +40,5 @@ GEMINI.md
 next-env.d.ts
 .spectra/
 docs/.vector-search.db*
+
+certificates
