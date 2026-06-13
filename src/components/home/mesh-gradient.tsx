@@ -177,6 +177,22 @@ export function MeshGradientBackground() {
       }
       document.addEventListener("visibilitychange", handleVisibilityChange);
 
+      // reduced-motion 下不跑 rAF loop，syncSaturation 因此不會再被呼叫。主題切換
+      // （html.dark class 變動）時 uSaturation 會卡在載入當下的值（light=2.8 / dark=1），
+      // 造成深底過飽和或白底沖淡。掛一個僅監看 class 的 MutationObserver，切換時讀一次
+      // 飽和度並重畫單幀補上。有動畫時 loop 已逐幀處理，故只在 reduced-motion 才需要。
+      let themeObserver: MutationObserver | undefined;
+      if (reduceMotion) {
+        themeObserver = new MutationObserver(() => {
+          syncSaturation();
+          renderer.render({ scene: mesh });
+        });
+        themeObserver.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      }
+
       if (!reduceMotion) {
         rafId = requestAnimationFrame(loop);
       }
@@ -184,6 +200,7 @@ export function MeshGradientBackground() {
       teardown = () => {
         cancelAnimationFrame(rafId);
         resizeObserver.disconnect();
+        themeObserver?.disconnect();
         document.removeEventListener(
           "visibilitychange",
           handleVisibilityChange
