@@ -20,12 +20,15 @@ export function BusinessCard({ lang, pdfUrls }: BusinessCardProps) {
   return (
     <div
       data-testid="about-business-card"
-      className="from-gradient-3 to-gradient-5 w-full rounded-2xl bg-linear-to-br px-4 pt-12 pb-4"
+      className="from-chart-3 to-chart-5 w-full rounded-2xl bg-linear-to-br px-4 pt-12 pb-4"
     >
-      <h1 className="mb-6 scroll-m-20 text-4xl font-bold tracking-tight text-[oklch(0.984_0.003_247.858)]">
+      <h1
+        className="text-primary-foreground mb-6 scroll-m-20 text-4xl font-bold tracking-tight"
+        data-testid="about-business-card-name"
+      >
         Andrew Tseng
       </h1>
-      <p className="mb-4 text-[oklch(0.704_0.04_256.788)]">Software Engineer</p>
+      <p className="text-primary-foreground mb-4">Software Engineer</p>
       <div className="flex flex-row items-center justify-end gap-1">
         <Button variant="ghost" size="icon" asChild>
           <Link href="https://github.com/andrewck24">
