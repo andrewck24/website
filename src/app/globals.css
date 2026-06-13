@@ -57,14 +57,21 @@
   --alt-grad-ship-s: oklch(0.673 0.215 25); /* #ff4d4d coral */
   --alt-grad-ship-e: oklch(0.858 0.167 91.2); /* #f9cb28 amber */
 
+  /* ── Mesh layer opacities — theme-INDEPENDENT (same in light/dark), so defined
+     once here and inherited by .dark. Only blend / canvas-filter / noise-opacity
+     differ per theme (see .dark below). ── */
+  --alt-mesh-op-1: 0.66;
+  --alt-mesh-op-2: 0.84;
+  --alt-mesh-op-3: 0.44;
+  --alt-mesh-op-4: 0.64;
+  --alt-mesh-op-5: 0.36;
+  --alt-mesh-op-6: 0.4;
+
   /* ── Mesh theme switching ── */
   --alt-mesh-blend: multiply; /* light: multiply preserves saturation on white */
-  --alt-mesh-op-1: 0.17;
-  --alt-mesh-op-2: 0.21;
-  --alt-mesh-op-3: 0.14;
-  --alt-mesh-op-4: 0.19;
-  --alt-mesh-op-5: 0.17;
-  --alt-mesh-op-6: 0.12;
+  /* light bg desaturates the mesh (alpha-compositing toward white); boost chroma back.
+     Read by the shader as the uSaturation uniform (not a CSS filter) — see mesh-gradient-*.tsx */
+  --alt-mesh-saturation: 2.8;
   --alt-mesh-noise-opacity: 0.04;
 }
 
@@ -97,14 +104,10 @@
   --chart-3: var(--alt-grad-ship-s); /* coral  #ff4d4d */
   --chart-4: var(--alt-grad-dev-e); /* teal   #00dfd8 */
   --chart-5: var(--alt-grad-ship-e); /* amber  #f9cb28 */
-  /* ── Mesh theme switching ── */
+  /* ── Mesh theme switching — only the 3 vars that actually differ from :root.
+     (--alt-mesh-op-1..6 are theme-independent → inherited from :root, not repeated) ── */
   --alt-mesh-blend: overlay; /* dark: overlay preserves contrast on near-black */
-  --alt-mesh-op-1: 0.66;
-  --alt-mesh-op-2: 0.84;
-  --alt-mesh-op-3: 0.44;
-  --alt-mesh-op-4: 0.64;
-  --alt-mesh-op-5: 0.36;
-  --alt-mesh-op-6: 0.4;
+  --alt-mesh-saturation: 1; /* dark bg already shows full chroma, no boost (identity) */
   --alt-mesh-noise-opacity: 0.055;
 }
 
@@ -153,6 +156,7 @@
   --animate-nav-menu-out: nav-menu-out 200ms ease;
   --animate-blink: blink 1.2s infinite;
 
+  --animate-mesh-unified: mesh-unified 22s ease-in-out infinite;
   --animate-mesh-a: mesh-a 10s ease-in-out infinite;
   --animate-mesh-b: mesh-b 11s ease-in-out infinite;
   --animate-mesh-c: mesh-c 13s ease-in-out infinite;
@@ -193,6 +197,18 @@
     }
   }
 
+  @keyframes mesh-unified {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    33% {
+      transform: translate(20px, -14px);
+    }
+    66% {
+      transform: translate(-16px, 10px);
+    }
+  }
   @keyframes mesh-a {
     0%,
     100% {

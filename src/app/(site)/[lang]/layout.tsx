@@ -115,13 +115,13 @@ export default async function Layout({ children, params }: LangLayoutProps) {
   const { lang } = await params;
 
   return (
-    <div>
+    <div className="relative">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd }}
       />
       <LangSetter lang={lang} />
-      <div className="flex min-h-screen flex-col items-center">
+      <div className="flex min-h-dvh flex-col items-center">
         <NavLayout lang={lang}>{children}</NavLayout>
       </div>
     </div>

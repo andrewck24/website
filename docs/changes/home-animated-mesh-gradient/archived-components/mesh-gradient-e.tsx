@@ -3,7 +3,7 @@
 import { Mesh, Plane, Program, Renderer } from "ogl";
 import { useEffect, useRef } from "react";
 
-import { fragmentShader, vertexShader } from "./mesh-gradient-shaders";
+import { fragmentShader, vertexShader } from "./mesh-gradient-e-shaders";
 
 // CSS var 名稱對應到 shader 的 uColor{i} / uOpacity{i} uniforms
 const LAYERS = [
@@ -35,7 +35,7 @@ function readCssNumber(varName: string): number {
   );
 }
 
-export function MeshGradientBackground() {
+export function MeshGradientBackgroundE() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -93,8 +93,8 @@ export function MeshGradientBackground() {
       const geometry = new Plane(gl, {
         width: 2,
         height: 2,
-        // 彩帶成形已移至 fragment shader 逐像素計算；vertex 只承載平滑場
-        // （帶座標、低頻 warp），96² 已足夠，較 128² 省約 44% vertex 階段運算
+        // 成形已在 fragment 逐像素計算，vertex 只承載平滑場（帶座標 + 低頻 noise）；
+        // 96² 足以平滑內插這些低頻內容，較 128² 省約 44% vertex 階段運算
         widthSegments: 96,
         heightSegments: 96,
       });
@@ -220,7 +220,7 @@ export function MeshGradientBackground() {
         aria-hidden="true"
       >
         <defs>
-          <filter id="home-mesh-noise">
+          <filter id="home-mesh-noise-e">
             <feTurbulence
               type="fractalNoise"
               baseFrequency="0.74"
@@ -235,7 +235,7 @@ export function MeshGradientBackground() {
           width="1400"
           height="600"
           fill="#888"
-          filter="url(#home-mesh-noise)"
+          filter="url(#home-mesh-noise-e)"
           style={{
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             mixBlendMode: "var(--alt-mesh-blend)" as any,

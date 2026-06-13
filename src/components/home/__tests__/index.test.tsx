@@ -30,11 +30,9 @@ jest.mock("../../../lib/data/social-links", () => ({
   },
 }));
 
-// Mock TerminalAnimation component
-jest.mock("../terminal-animation", () => ({
-  TerminalAnimation: () => (
-    <div data-testid="terminal-animation">Terminal Animation Mock</div>
-  ),
+// Mock the WebGL mesh gradient (ogl is ESM/WebGL — not needed in jsdom unit tests)
+jest.mock("../mesh-gradient", () => ({
+  MeshGradientBackground: () => <div data-testid="mesh-gradient" />,
 }));
 
 import { ProfileHero } from "@/components/home";
@@ -70,12 +68,12 @@ describe("ProfileHero", () => {
   });
 
   describe("Composition", () => {
-    it("renders the CTA buttons and terminal animation alongside the profile", () => {
+    it("renders the CTA buttons and mesh gradient alongside the profile", () => {
       render(<ProfileHero locale="zh-TW" />);
 
       expect(screen.getByTestId("profile-hero-section")).toBeInTheDocument();
       expect(screen.getByTestId("cta-buttons")).toBeInTheDocument();
-      expect(screen.getByTestId("terminal-animation")).toBeInTheDocument();
+      expect(screen.getByTestId("mesh-gradient")).toBeInTheDocument();
     });
   });
 });
