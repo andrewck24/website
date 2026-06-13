@@ -15,18 +15,47 @@ const LAYERS = [
   { color: "--alt-grad-ship-s", opacity: "--alt-mesh-op-6" },
 ] as const;
 
-// 將任意 CSS 顏色（含 oklch()）轉換為 0..1 的 RGB
-function readCssColor(
-  ctx2d: CanvasRenderingContext2D,
-  varName: string
+// oklch(L C H) → gamma 編碼 sRGB 0..1（Björn Ottosson 的 oklab↔linear-sRGB 矩陣）。
+// 取代過去用 Canvas 2D fillStyle 讀色的做法：後者在「CSS 已支援 oklch、但 Canvas
+// fillStyle 尚未支援」的瀏覽器（如較舊 Safari）上會靜默忽略賦值、讀回預設黑 → 整條
+// 彩帶變黑。本專案所有 --alt-grad-* token 皆定義為 oklch 字面值，故可確定性轉換、無瀏覽器相依。
+function oklchToRgb(
+  L: number,
+  C: number,
+  hDeg: number
 ): [number, number, number] {
+  const h = (hDeg * Math.PI) / 180;
+  const a = C * Math.cos(h);
+  const b = C * Math.sin(h);
+
+  const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
+  const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
+  const s_ = L - 0.0894841775 * a - 1.291485548 * b;
+
+  const l = l_ * l_ * l_;
+  const m = m_ * m_ * m_;
+  const s = s_ * s_ * s_;
+
+  const lr = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
+  const lg = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
+  const lb = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
+
+  const gamma = (x: number) =>
+    x >= 0.0031308 ? 1.055 * Math.pow(x, 1 / 2.4) - 0.055 : 12.92 * x;
+  const clamp = (x: number) => Math.min(1, Math.max(0, gamma(x)));
+  return [clamp(lr), clamp(lg), clamp(lb)];
+}
+
+// 讀取 oklch token CSS 變數並轉為 0..1 sRGB。L 容許百分比寫法（C/H 不會是百分比）。
+function readCssColor(varName: string): [number, number, number] {
   const value = getComputedStyle(document.documentElement)
     .getPropertyValue(varName)
     .trim();
-  ctx2d.fillStyle = value;
-  ctx2d.fillRect(0, 0, 1, 1);
-  const [r, g, b] = ctx2d.getImageData(0, 0, 1, 1).data;
-  return [r / 255, g / 255, b / 255];
+  const [L, C, H] = value
+    .replace(/^oklch\(|\)$/g, "")
+    .split(/[\s,/]+/)
+    .map((n) => (n.endsWith("%") ? parseFloat(n) / 100 : parseFloat(n)));
+  return oklchToRgb(L, C, H);
 }
 
 function readCssNumber(varName: string): number {
@@ -73,13 +102,6 @@ export function MeshGradientBackground() {
       });
       const gl = renderer.gl;
 
-      const colorCtx = document.createElement("canvas").getContext("2d", {
-        willReadFrequently: true,
-      });
-      if (!colorCtx) return;
-      colorCtx.canvas.width = 1;
-      colorCtx.canvas.height = 1;
-
       const initialUniforms: Record<string, { value: unknown }> = {
         uTime: { value: 0 },
         uResolution: { value: [1, 1] },
@@ -115,10 +137,7 @@ export function MeshGradientBackground() {
       // 已統一），只需讀一次，不需 MutationObserver。
       function applyColors() {
         LAYERS.forEach((layer, i) => {
-          program.uniforms[`uColor${i}`].value = readCssColor(
-            colorCtx!,
-            layer.color
-          );
+          program.uniforms[`uColor${i}`].value = readCssColor(layer.color);
           program.uniforms[`uOpacity${i}`].value = readCssNumber(layer.opacity);
         });
         renderer.render({ scene: mesh });
