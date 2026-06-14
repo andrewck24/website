@@ -15,10 +15,19 @@ const LAYERS = [
   { color: "--alt-grad-ship-s", opacity: "--alt-mesh-op-6" },
 ] as const;
 
+// linear-sRGB → gamma 編碼 sRGB，並 clamp 到 0..1。oklch／lab 兩條轉換共用。
+function encodeSrgb(
+  lr: number,
+  lg: number,
+  lb: number
+): [number, number, number] {
+  const gamma = (x: number) =>
+    x >= 0.0031308 ? 1.055 * Math.pow(x, 1 / 2.4) - 0.055 : 12.92 * x;
+  const clamp = (x: number) => Math.min(1, Math.max(0, gamma(x)));
+  return [clamp(lr), clamp(lg), clamp(lb)];
+}
+
 // oklch(L C H) → gamma 編碼 sRGB 0..1（Björn Ottosson 的 oklab↔linear-sRGB 矩陣）。
-// 取代過去用 Canvas 2D fillStyle 讀色的做法：後者在「CSS 已支援 oklch、但 Canvas
-// fillStyle 尚未支援」的瀏覽器（如較舊 Safari）上會靜默忽略賦值、讀回預設黑 → 整條
-// 彩帶變黑。本專案所有 --alt-grad-* token 皆定義為 oklch 字面值，故可確定性轉換、無瀏覽器相依。
 function oklchToRgb(
   L: number,
   C: number,
@@ -40,22 +49,67 @@ function oklchToRgb(
   const lg = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
   const lb = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s;
 
-  const gamma = (x: number) =>
-    x >= 0.0031308 ? 1.055 * Math.pow(x, 1 / 2.4) - 0.055 : 12.92 * x;
-  const clamp = (x: number) => Math.min(1, Math.max(0, gamma(x)));
-  return [clamp(lr), clamp(lg), clamp(lb)];
+  return encodeSrgb(lr, lg, lb);
 }
 
-// 讀取 oklch token CSS 變數並轉為 0..1 sRGB。L 容許百分比寫法（C/H 不會是百分比）。
+// CSS lab(L a b)（D50 白點、L 為 0..100）→ gamma 編碼 sRGB 0..1。
+// 矩陣為 XYZ(D50)→linear-sRGB（已含 Bradford D50→D65 適配）。
+function labToRgb(L: number, a: number, b: number): [number, number, number] {
+  const fy = (L + 16) / 116;
+  const fx = fy + a / 500;
+  const fz = fy - b / 200;
+  const d = 6 / 29;
+  const f = (t: number) => (t > d ? t * t * t : 3 * d * d * (t - 4 / 29));
+  // D50 參考白
+  const X = 0.96422 * f(fx);
+  const Y = 1.0 * f(fy);
+  const Z = 0.82521 * f(fz);
+
+  const lr =
+    3.1341359569958707 * X - 1.6173863321612538 * Y - 0.4906619260083285 * Z;
+  const lg =
+    -0.9787684492715117 * X + 1.9161415056362626 * Y + 0.0334540188714209 * Z;
+  const lb =
+    0.0719453633431094 * X - 0.2289917277763315 * Y + 1.4052427608680376 * Z;
+
+  return encodeSrgb(lr, lg, lb);
+}
+
+// 讀取顏色 token 並轉為 gamma 編碼 sRGB 0..1。getComputedStyle 對「已註冊為 <color>
+// 的 custom property」回傳的是正規化計算值，格式隨瀏覽器而異（Chrome→lab()、Safari
+// 可能 oklch()／color(srgb …)），故依函式名分派、不假設單一格式——避免單一格式解析
+// 在某些瀏覽器上 parseFloat 失敗回 NaN、整條彩帶失去 chroma 變灰階。
 function readCssColor(varName: string): [number, number, number] {
   const value = getComputedStyle(document.documentElement)
     .getPropertyValue(varName)
     .trim();
-  const [L, C, H] = value
-    .replace(/^oklch\(|\)$/g, "")
-    .split(/[\s,/]+/)
-    .map((n) => (n.endsWith("%") ? parseFloat(n) / 100 : parseFloat(n)));
-  return oklchToRgb(L, C, H);
+  const parts = value
+    .slice(value.indexOf("(") + 1, value.lastIndexOf(")"))
+    .split(/[\s,/]+/);
+
+  if (value.startsWith("rgb")) {
+    return [
+      parseFloat(parts[0]) / 255,
+      parseFloat(parts[1]) / 255,
+      parseFloat(parts[2]) / 255,
+    ];
+  }
+  if (value.startsWith("color(srgb")) {
+    // color(srgb r g b)：已是 gamma 編碼 sRGB 0..1
+    return [parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3])];
+  }
+  if (value.startsWith("lab")) {
+    return labToRgb(
+      parseFloat(parts[0]), // L 為 0..100（% 寫法 parseFloat 自動截斷）
+      parseFloat(parts[1]),
+      parseFloat(parts[2])
+    );
+  }
+  // oklch()：L 可為 0..1 或百分比；C/H 不會是百分比
+  const L = parts[0].endsWith("%")
+    ? parseFloat(parts[0]) / 100
+    : parseFloat(parts[0]);
+  return oklchToRgb(L, parseFloat(parts[1]), parseFloat(parts[2]));
 }
 
 function readCssNumber(varName: string): number {
