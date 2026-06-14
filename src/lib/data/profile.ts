@@ -3,7 +3,7 @@ export const profileData = {
     name: "Andrew Tseng",
     title: "軟體工程師",
     bio: "專精於 React 和 Node.js 的全端開發，致力於打造高品質的使用者體驗。",
-    location: "台灣 台北",
+    location: "Taipei, Taiwan",
   },
   en: {
     name: "Andrew Tseng",

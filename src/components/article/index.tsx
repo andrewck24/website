@@ -51,7 +51,7 @@ export function Article<T extends BaseArticle = BaseArticle>({
         className="aspect-video"
       />
 
-      <article className="bg-background/50 my-4 flex flex-col-reverse lg:mt-8">
+      <article className="my-4 flex flex-col-reverse lg:mt-8">
         <div className="prose prose-gray dark:prose-invert mt-6 overflow-x-hidden">
           <PortableText
             value={article.body}

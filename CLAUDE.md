@@ -27,7 +27,8 @@ Changes can be parked（暫存）— temporarily moved out of `docs/changes/`. P
 
 <!-- SPECTRA:END -->
 
-- Colors must use CSS variables defined in [globals.css](/src/app/globals.css)
+- Design system spec lives at [docs/DESIGN.md](/docs/DESIGN.md) — consult it for color tokens, typography, mesh gradient spec, and page design decisions
+- Token system: two layers in [globals.css](/src/app/globals.css) — (1) shadcn base vars (`--background`, `--foreground`, `--border`, etc.) used via Tailwind utilities; (2) `--alt-*` vars for tokens without shadcn equivalents (`--alt-canvas-soft`, `--alt-body`, `--alt-hairline-strong`, `--alt-mesh-blend`, mesh gradient stops, etc.). Never use raw hex in component code.
 - Components must use existing components in `@/components/ui`, or add new shadcn/ui components
 - When `/spectra-apply`ing a change:
   - Commit after each task section; message states the section purpose and includes related artifacts (tasks.md, spec files, etc.)

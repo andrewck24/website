@@ -37,7 +37,7 @@ export default async function AboutPage({ params }: PageProps) {
           ja: siteSettings?.resumePdfJaUrl ?? null,
         }}
       />
-      <article className="prose bg-background/50 prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl px-0 py-6">
+      <article className="prose prose-neutral dark:prose-invert my-4 flex-2 rounded-2xl px-0 py-6">
         {about?.body && (
           <PortableText
             value={about.body}
