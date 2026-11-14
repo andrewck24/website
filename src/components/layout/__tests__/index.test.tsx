@@ -12,31 +12,36 @@ import React from "react";
 import { render, screen, act } from "@testing-library/react";
 import { NavLayout } from "@/components/layout";
 
-let observerCallback: IntersectionObserverCallback;
-const observeMock = jest.fn();
-const disconnectMock = jest.fn();
+function setScrollY(scrollY: number) {
+  Object.defineProperty(window, "scrollY", {
+    configurable: true,
+    value: scrollY,
+  });
+  window.dispatchEvent(new Event("scroll"));
+}
 
 beforeEach(() => {
-  observeMock.mockClear();
-  disconnectMock.mockClear();
-  global.IntersectionObserver = jest.fn((cb) => {
-    observerCallback = cb;
-    return { observe: observeMock, disconnect: disconnectMock };
-  }) as unknown as typeof IntersectionObserver;
+  Object.defineProperty(window, "scrollY", {
+    configurable: true,
+    value: 0,
+  });
 });
 
 describe("NavLayout", () => {
-  it("renders sentinel as first child of main", () => {
+  it("keeps isScrolled false at the 4px threshold", () => {
     render(
       <NavLayout lang="en">
         <div>content</div>
       </NavLayout>
     );
-    const main = screen.getByRole("main");
-    expect(main.firstElementChild).toHaveAttribute("id", "nav-sentinel");
+    act(() => setScrollY(4));
+    expect(screen.getByTestId("navbar")).toHaveAttribute(
+      "data-scrolled",
+      "false"
+    );
   });
 
-  it("renders children after sentinel", () => {
+  it("renders children", () => {
     render(
       <NavLayout lang="en">
         <div>content</div>
@@ -76,56 +81,48 @@ describe("NavLayout", () => {
     );
   });
 
-  it("sets isScrolled true when sentinel leaves viewport", () => {
+  it("sets isScrolled true when scrollY passes the 4px threshold", () => {
     render(
       <NavLayout lang="en">
         <div>content</div>
       </NavLayout>
     );
-    act(() => {
-      observerCallback(
-        [{ isIntersecting: false } as IntersectionObserverEntry],
-        {} as IntersectionObserver
-      );
-    });
+    act(() => setScrollY(5));
     expect(screen.getByTestId("navbar")).toHaveAttribute(
       "data-scrolled",
       "true"
     );
   });
 
-  it("sets isScrolled false when sentinel re-enters viewport", () => {
+  it("sets isScrolled false when returning to the top", () => {
     render(
       <NavLayout lang="en">
         <div>content</div>
       </NavLayout>
     );
-    act(() => {
-      observerCallback(
-        [{ isIntersecting: false } as IntersectionObserverEntry],
-        {} as IntersectionObserver
-      );
-    });
-    act(() => {
-      observerCallback(
-        [{ isIntersecting: true } as IntersectionObserverEntry],
-        {} as IntersectionObserver
-      );
-    });
+    act(() => setScrollY(5));
+    act(() => setScrollY(0));
     expect(screen.getByTestId("navbar")).toHaveAttribute(
       "data-scrolled",
       "false"
     );
   });
 
-  it("observes sentinel element on mount", () => {
+  it("updates isScrolled when the scroll position changes again", () => {
     render(
       <NavLayout lang="en">
         <div>content</div>
       </NavLayout>
     );
-    expect(observeMock).toHaveBeenCalledWith(
-      expect.objectContaining({ id: "nav-sentinel" })
+    act(() => setScrollY(10));
+    expect(screen.getByTestId("navbar")).toHaveAttribute(
+      "data-scrolled",
+      "true"
+    );
+    act(() => setScrollY(3));
+    expect(screen.getByTestId("navbar")).toHaveAttribute(
+      "data-scrolled",
+      "false"
     );
   });
 });
