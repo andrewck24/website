@@ -178,7 +178,7 @@ Any dependency upgrade that crosses a major version boundary SHALL be individual
 
 - **WHEN** a dependency is upgraded across a major version boundary
 - **THEN** `pnpm build` exits 0 with no module resolution errors
-- **THEN** `pnpm type-check` exits 0 with no new type errors
+- **THEN** `pnpm typecheck` exits 0 with no new type errors
 - **THEN** `pnpm lint` exits 0 with no new warnings
 - **THEN** `pnpm test` exits 0 with all tests passing
 
